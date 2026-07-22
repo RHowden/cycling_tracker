@@ -1,0 +1,20 @@
+# Full-stack mode: API + Postgres both containerized.
+# Used less often day-to-day — mainly to confirm the Dockerfile builds,
+# to test the whole stack together before pushing, or as what a deploy
+# target/CI would actually run.
+#
+# Usage: docker compose -f docker-compose.full.yml up
+services:
+  api:
+    build: .
+    ports: ["5000:8080"]
+    depends_on: [db]
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_PASSWORD: devpassword
+    ports: ["5432:5432"]
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+volumes:
+  pgdata:

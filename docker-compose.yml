@@ -1,0 +1,12 @@
+# Day-to-day dev mode: Postgres only. Run the API natively with `dotnet run`
+# for fast hot reload — containerized dotnet needs a rebuild/restart per change.
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_PASSWORD: devpassword
+    ports: ["5432:5432"]
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+volumes:
+  pgdata:
