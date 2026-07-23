@@ -59,8 +59,17 @@
 }
 
 .register-error {
+  margin: 0;
+  padding: 10px 12px 10px 28px;
+  background: #241416;
+  border: 1px solid #4a2226;
+  border-radius: 4px;
   color: #ff8787;
   font-size: 13px;
+  line-height: 1.5;
+}
+
+.register-error li {
   margin: 0;
 }
 

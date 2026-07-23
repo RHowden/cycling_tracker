@@ -9,20 +9,20 @@ export function RegisterForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [status, setStatus] = useState<Status>("idle");
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessages, setErrorMessages] = useState<string[]>([]);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setStatus("submitting");
-    setErrorMessage("");
+    setErrorMessages("");
 
     try {
       await register({ email, password });
       setStatus("success");
     } catch (err) {
       setStatus("error");
-      setErrorMessage(
-        err instanceof ApiError ? err.message : "Something went wrong. Try again.",
+      setErrorMessages(
+        err instanceof ApiError ? err.messages : ["Something went wrong. Try again."],
       );
     }
   }
@@ -62,7 +62,7 @@ export function RegisterForm() {
         />
       </label>
 
-      {status === "error" && <p className="register-error">{errorMessage}</p>}
+      {status === "error" && <p className="register-error">{errorMessages}</p>}
 
       <button type="submit" disabled={status === "submitting"}>
         {status === "submitting" ? "Creating account…" : "Register"}
