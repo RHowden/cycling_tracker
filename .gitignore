@@ -1,6 +1,34 @@
-**/bin/
-**/obj/
+# ---- Node / Vite frontend ----
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# Vite cache
+.vite/
+
+# Editor/OS noise
+.vscode/*
+!.vscode/extensions.json
+.DS_Store
+Thumbs.db
+
+# ---- .NET API ----
+bin/
+obj/
 *.user
-*.suo
-*.log
+
+# Rider/VS
+.vs/
+.idea/
+
+# Secrets - never commit actual connection strings/tokens
 appsettings.Development.json
+appsettings.*.local.json
+*.env
+.env
+
+# EF Core
+*.db
+*.db-shm
+*.db-wal
