@@ -14,7 +14,7 @@ export function RegisterForm() {
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setStatus("submitting");
-    setErrorMessages("");
+    setErrorMessages([""]);
 
     try {
       await register({ email, password });
