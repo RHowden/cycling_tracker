@@ -1,0 +1,71 @@
+.register-card {
+  width: 320px;
+  margin: 0 auto;
+  padding: 32px 28px;
+  background: #14181d;
+  border: 1px solid #262c33;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.register-title {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 15px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #9fe870;
+  margin: 0 0 4px 0;
+}
+
+.register-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  color: #a7b0ba;
+}
+
+.register-field input {
+  background: #0e1114;
+  border: 1px solid #2b323a;
+  border-radius: 4px;
+  padding: 10px 12px;
+  font-size: 14px;
+  color: #e7ebee;
+  outline: none;
+}
+
+.register-field input:focus {
+  border-color: #9fe870;
+}
+
+.register-card button {
+  margin-top: 4px;
+  padding: 11px;
+  background: #9fe870;
+  color: #10140f;
+  border: none;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.register-card button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.register-error {
+  color: #ff8787;
+  font-size: 13px;
+  margin: 0;
+}
+
+.register-success {
+  color: #9fe870;
+  font-size: 14px;
+  margin: 0;
+}
