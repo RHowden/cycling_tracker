@@ -8,3 +8,19 @@ export interface RegisterRequest {
 export interface RegisterResponse {
   [key: string]: unknown;
 }
+
+export interface LoginRequest {
+  email: string;
+  password: string;
+  twoFactorCode: string | null;
+  twoFactorRecoveryCode: string | null;
+}
+
+// Shape from ASP.NET Core Identity's built-in MapIdentityApi() login endpoint.
+// If AuthController wraps/renames this, update here only.
+export interface LoginResponse {
+  tokenType: string;
+  accessToken: string;
+  expiresIn: number;
+  refreshToken: string;
+}

@@ -5,7 +5,11 @@ import "./RegisterForm.css";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
-export function RegisterForm() {
+interface RegisterFormProps {
+  onNavigateToLogin: () => void;
+}
+
+export function RegisterForm({ onNavigateToLogin }: RegisterFormProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [status, setStatus] = useState<Status>("idle");
@@ -14,7 +18,7 @@ export function RegisterForm() {
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setStatus("submitting");
-    setErrorMessages([""]);
+    setErrorMessages([]);
 
     try {
       await register({ email, password });
@@ -30,7 +34,10 @@ export function RegisterForm() {
   if (status === "success") {
     return (
       <div className="register-card">
-        <p className="register-success">Account created. You can log in now.</p>
+        <p className="register-success">Account created.</p>
+        <button type="button" className="register-link" onClick={onNavigateToLogin}>
+          Log in now
+        </button>
       </div>
     );
   }
@@ -62,10 +69,20 @@ export function RegisterForm() {
         />
       </label>
 
-      {status === "error" && <p className="register-error">{errorMessages}</p>}
+      {status === "error" && (
+        <ul className="register-error">
+          {errorMessages.map((msg) => (
+            <li key={msg}>{msg}</li>
+          ))}
+        </ul>
+      )}
 
       <button type="submit" disabled={status === "submitting"}>
         {status === "submitting" ? "Creating account…" : "Register"}
+      </button>
+
+      <button type="button" className="register-link" onClick={onNavigateToLogin}>
+        Already have an account? Log in
       </button>
     </form>
   );

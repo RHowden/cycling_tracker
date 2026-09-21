@@ -78,3 +78,14 @@
   font-size: 14px;
   margin: 0;
 }
+
+.register-link {
+  background: none;
+  border: none;
+  color: #7d8994;
+  font-size: 12px;
+  cursor: pointer;
+  padding: 0;
+  text-align: center;
+  text-decoration: underline;
+}

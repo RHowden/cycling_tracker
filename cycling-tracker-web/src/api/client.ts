@@ -1,6 +1,6 @@
 // Base path for all API calls. Left as "/api" so the Vite dev-server proxy
 // (see vite.config.ts) and the production same-origin deploy both just work.
-const API_BASE = "/api";
+const API_BASE = `${import.meta.env.VITE_API_BASE_URL}/api`;
 
 // ASP.NET Core's default validation failure shape (ValidationProblemDetails):
 // { "title": "...", "status": 400, "errors": { "FieldOrCode": ["message", ...] } }
