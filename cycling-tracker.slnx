@@ -1,3 +1,4 @@
 <Solution>
   <Project Path="CyclingTracker.Api/CyclingTracker.Api.csproj" />
+  <Project Path="CyclingTracker.Tests/CyclingTracker.Tests.csproj" />
 </Solution>
