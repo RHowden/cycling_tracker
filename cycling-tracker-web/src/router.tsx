@@ -2,6 +2,7 @@
 import { createBrowserRouter, Navigate } from "react-router";
 
 import { ProtectedRoute } from "./components/ProtectedRoute";
+import { ErrorElement } from "./components/ErrorElement/ErrorElement.tsx";
 
 import AuthLayout from "./layouts/AuthLayout/AuthLayout";
 import { LoginForm } from "./pages/LoginForm/LoginForm";
@@ -23,6 +24,7 @@ export const router = createBrowserRouter([
   // ─── 1. PUBLIC / AUTH ROUTES (Nested under AuthLayout) ───
   {
     element: <AuthLayout />, // <-- No 'path' property means it wraps both routes cleanly
+    errorElement: <ErrorElement />,
     children: [
       {
         path: "login", // Matches "/login" exactly
@@ -40,6 +42,7 @@ export const router = createBrowserRouter([
       {
         path: "/dashboard",
         element: <AppLayout />,
+        errorElement: <ErrorElement />,
         children: [
           {
             index: true,

@@ -1,0 +1,31 @@
+/* src/components/ErrorElement/ErrorElement.css */
+.error-boundary-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px; /* Adapts cleanly if nested */
+  padding: 2rem;
+  box-sizing: border-box;
+}
+.error-boundary-card {
+  background-color: #fff;
+  border: 1px solid #fee2e2;
+  padding: 2.5rem;
+  border-radius: 12px;
+  max-width: 500px;
+  text-align: center;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05);
+}
+.error-icon { font-size: 3.5rem; display: block; margin-bottom: 1rem; }
+.error-stack-trace {
+  background-color: #f8fafc;
+  color: #ef4444;
+  padding: 1rem;
+  border-radius: 6px;
+  font-family: monospace;
+  font-size: 0.85rem;
+  text-align: left;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  border: 1px solid #cbd5e1;
+}

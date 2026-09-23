@@ -58,7 +58,7 @@ export function SummaryChart({ data, loading, error }: SummaryChartProps) {
     if (error) {
         return (
             <div className="summary-chart__status summary-chart__status--error">
-                Couldn't load your training data. {error.message}
+                Couldn't load your training data. {error}
             </div>
         );
     }

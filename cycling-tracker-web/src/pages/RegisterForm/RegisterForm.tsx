@@ -7,7 +7,7 @@ import "./RegisterForm.css";
 export function RegisterForm() {
   const navigate = useNavigate();
 
-    async function handleLoginAction(prevState: any, formData: FormData) {
+    async function handleLoginAction(_: any, formData: FormData) {
       const email = formData.get("email") as string;
       const password = formData.get("password") as string;
   
