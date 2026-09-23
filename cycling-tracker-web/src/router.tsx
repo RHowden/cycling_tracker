@@ -1,6 +1,8 @@
 // src/router.tsx
 import { createBrowserRouter, Navigate } from "react-router";
 
+import { ProtectedRoute } from "./components/ProtectedRoute";
+
 import AuthLayout from "./layouts/AuthLayout/AuthLayout";
 import { LoginForm } from "./pages/LoginForm/LoginForm";
 import { RegisterForm } from "./pages/RegisterForm/RegisterForm";
@@ -33,17 +35,22 @@ export const router = createBrowserRouter([
 
   // ─── 2. PROTECTED APPLICATION ROUTES (Nested under AppLayout) ───
   {
-    path: "/dashboard",
-    element: <AppLayout />, 
+    element: <ProtectedRoute />, // <-- Blocks unauthorized access globally
     children: [
       {
-        index: true, // Matches "/dashboard" exactly
-        element: <Dashboard />, 
-      },
-      {
-        path: "sessions/:id", // Matches "/dashboard/sessions/123"
-        element: <Session />, 
-      },
-    ],
+        path: "/dashboard",
+        element: <AppLayout />,
+        children: [
+          {
+            index: true, // Matches "/dashboard" exactly
+            element: <Dashboard />,
+          },
+          {
+            path: "sessions/:id", // Matches "/dashboard/sessions/123"
+            element: <Session />,
+          },
+        ],
+      }
+    ]
   },
 ]);

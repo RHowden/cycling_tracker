@@ -1,19 +1,14 @@
-import { useState, FormEvent } from "react";
 import { Outlet, Link, useNavigate } from "react-router";
-import type { LoginResponse } from "../../types/auth";
+
 import "./AppLayout.css";
 
 export function AppLayout() {
   const navigate = useNavigate();
-  const [session, setSession] = useState<LoginResponse | null>(null);
 
   const handleSignOut = () => {
-    setSession(null);
-    
-    // 2. Kick them back to the login page
+    localStorage.removeItem("authToken");
     navigate("/login");
   };
-
 
   return (
     <div className="app-layout-container">
@@ -22,7 +17,7 @@ export function AppLayout() {
         <div className="sidebar-logo">
           <h2> Cycling Tracker</h2>
         </div>
-        
+
         <nav className="sidebar-links">
           <Link to="/dashboard" className="sidebar-link">Dashboard Home</Link>
           <Link to="/dashboard/upload" className="sidebar-link">Upload File</Link>
@@ -45,7 +40,7 @@ export function AppLayout() {
         {/* ─── DYNAMIC CONTENT AREA ─── */}
         <main className="app-content-slot">
           {/* This is where DashboardHome, ResourceDetails, etc. will inject */}
-          <Outlet /> 
+          <Outlet />
         </main>
       </div>
     </div>

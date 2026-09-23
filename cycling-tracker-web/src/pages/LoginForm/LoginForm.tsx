@@ -1,18 +1,13 @@
-import { useState, useActionState } from "react";
+import { useActionState } from "react";
 import { useNavigate } from "react-router";
 
 import { login } from "../../api/auth";
-import type { LoginResponse } from "../../types/auth";
 import { ApiError } from "../../api/client";
 
 import "./LoginForm.css";
 
 export function LoginForm() {
   const navigate = useNavigate();
-  // Kept in memory only for now - lost on refresh. Persisting this (and
-  // attaching it to future API calls) is a follow-up step, not needed
-  // just to prove the login round-trip works.
-  const [session, setSession] = useState<LoginResponse | null>(null);
 
   async function handleLoginAction(prevState: any, formData: FormData) {
     const email = formData.get("email") as string;
@@ -20,7 +15,7 @@ export function LoginForm() {
 
     try {
       const result = await login(email, password);
-      setSession(result);
+      localStorage.setItem("authToken", result.accessToken); ;
       navigate('/dashboard');
 
       return { success: true, error: null };
