@@ -5,18 +5,18 @@ import {
     YAxis,
     CartesianGrid,
     Tooltip,
-    Legend,
     ResponsiveContainer
 } from 'recharts';
+import { useState } from 'react';
 
-import React, { useState } from 'react';
-import { Session } from "../../types/session";
+import { TrainingDay } from "../../types/session";
+
 import './SummaryChart.css'
 
 interface SummaryChartProps {
-    data: Session[] | undefined;
+    data: TrainingDay[] | undefined;
     loading: boolean;
-    error: Error | null;
+    error: string | null;
 }
 
 interface MetricConfig {
@@ -49,7 +49,7 @@ type MetricKey = keyof typeof SECONDARY_METRICS;
  *     avgHr: number,
  *   }
  */
-function SummaryChart({ data, loading, error }: SummaryChartProps) {
+export function SummaryChart({ data, loading, error }: SummaryChartProps) {
     if (loading) {
         return <div className="Summary-chart__status">Loading sessions…</div>;
     }

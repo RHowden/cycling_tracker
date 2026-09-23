@@ -1,57 +1,45 @@
-import { useState, FormEvent } from "react";
+import { useActionState } from "react";
 import { register } from "../../api/auth";
 import { ApiError } from "../../api/client";
+import { useNavigate } from "react-router";
 import "./RegisterForm.css";
 
-type Status = "idle" | "submitting" | "success" | "error";
+export function RegisterForm() {
+  const navigate = useNavigate();
 
-interface RegisterFormProps {
-  onNavigateToLogin: () => void;
-}
-
-export function RegisterForm({ onNavigateToLogin }: RegisterFormProps) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [status, setStatus] = useState<Status>("idle");
-  const [errorMessages, setErrorMessages] = useState<string[]>([]);
-
-  async function handleSubmit(e: FormEvent) {
-    e.preventDefault();
-    setStatus("submitting");
-    setErrorMessages([]);
-
-    try {
-      await register({ email, password });
-      setStatus("success");
-    } catch (err) {
-      setStatus("error");
-      setErrorMessages(
-        err instanceof ApiError ? err.messages : ["Something went wrong. Try again."],
-      );
+    async function handleLoginAction(prevState: any, formData: FormData) {
+      const email = formData.get("email") as string;
+      const password = formData.get("password") as string;
+  
+      try {
+        await register({ email, password });
+        navigate("/dashboard", { state: { notice: "Project created successfully!" } });
+  
+        return { success: true, error: null };
+      } catch (err: any) {
+        const apiError = err as ApiError;
+      
+        return { success: false, error: apiError.messages || "Failed to register" };
+      }
     }
-  }
-
-  if (status === "success") {
-    return (
-      <div className="register-card">
-        <p className="register-success">Account created.</p>
-        <button type="button" className="register-link" onClick={onNavigateToLogin}>
-          Log in now
-        </button>
-      </div>
-    );
-  }
+  
+    // 2. Pass the action to useActionState
+    // It gives you: [the current state returned by the action, the trigger function, a built-in loading boolean]
+    const [state, formAction, isPending] = useActionState(handleLoginAction, {
+      success: false,
+      error: null,
+    });  
+  
 
   return (
-    <form className="register-card" onSubmit={handleSubmit}>
+    <form className="register-card" action={formAction}>
       <h1 className="register-title">Create your account</h1>
 
       <label className="register-field">
         <span>Email</span>
         <input
           type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          name="email"
           required
           autoComplete="email"
         />
@@ -61,28 +49,23 @@ export function RegisterForm({ onNavigateToLogin }: RegisterFormProps) {
         <span>Password</span>
         <input
           type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          name="password"
           required
           autoComplete="new-password"
           minLength={8}
         />
       </label>
 
-      {status === "error" && (
+      {state.error && (
         <ul className="register-error">
-          {errorMessages.map((msg) => (
+          {state.error.map((msg) => (
             <li key={msg}>{msg}</li>
           ))}
         </ul>
       )}
 
-      <button type="submit" disabled={status === "submitting"}>
-        {status === "submitting" ? "Creating account…" : "Register"}
-      </button>
-
-      <button type="button" className="register-link" onClick={onNavigateToLogin}>
-        Already have an account? Log in
+      <button type="submit" disabled={isPending}>
+        {isPending ? "Creating account…" : "Register"}
       </button>
     </form>
   );

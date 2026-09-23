@@ -1,12 +1,8 @@
 import "./Dashboard.css";
 import { useTrainingData } from "../../hooks/useTrainingData.ts";
-import SummaryChart from "../../components/SummaryChart/SummaryChart.tsx";
+import { SummaryChart } from "../../components/SummaryChart/SummaryChart.tsx";
 
-interface DashboardProps {
-  onLogout: () => void;
-}
-
-export function Dashboard({ onLogout }: DashboardProps) {
+export function Dashboard() {
   const { sessions, loading, error } = useTrainingData();
 
   if (loading) return <p>Loading…</p>;
@@ -15,10 +11,7 @@ export function Dashboard({ onLogout }: DashboardProps) {
   return (
     <div className="dashboard-card">
       <h1 className="dashboard-title">Dashboard</h1>
-      <SummaryChart data={sessions} loading={loading} error={error} />
-      <button type="button" onClick={onLogout}>
-        Log out
-      </button>
+      <SummaryChart data={sessions} loading={loading} error={error} />      
     </div>
   );
 }

@@ -1,43 +1,52 @@
-import { useState, FormEvent } from "react";
+import { useState, useActionState } from "react";
+import { useNavigate } from "react-router";
+
 import { login } from "../../api/auth";
+import type { LoginResponse } from "../../types/auth";
 import { ApiError } from "../../api/client";
+
 import "./LoginForm.css";
 
-type Status = "idle" | "submitting" | "error";
-
-
 export function LoginForm() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [status, setStatus] = useState<Status>("idle");
-  const [errorMessages, setErrorMessages] = useState<string[]>([]);
+  const navigate = useNavigate();
+  // Kept in memory only for now - lost on refresh. Persisting this (and
+  // attaching it to future API calls) is a follow-up step, not needed
+  // just to prove the login round-trip works.
+  const [session, setSession] = useState<LoginResponse | null>(null);
 
-  async function handleSubmit(e: FormEvent) {
-    e.preventDefault();
-    setStatus("submitting");
-    setErrorMessages([]);
+  async function handleLoginAction(prevState: any, formData: FormData) {
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
 
     try {
       const result = await login(email, password);
-      onSuccess(result);
-    } catch (err) {
-      setStatus("error");
-      setErrorMessages(
-        err instanceof ApiError ? err.messages : ["Something went wrong. Try again."],
-      );
+      setSession(result);
+      navigate('/dashboard');
+
+      return { success: true, error: null };
+    } catch (err: any) {
+      const apiError = err as ApiError;
+    
+      return { success: false, error: apiError.messages || "Failed to log in" };
     }
   }
 
+  // 2. Pass the action to useActionState
+  // It gives you: [the current state returned by the action, the trigger function, a built-in loading boolean]
+  const [state, formAction, isPending] = useActionState(handleLoginAction, {
+    success: false,
+    error: null,
+  });
+
   return (
-    <form className="login-card" onSubmit={handleSubmit}>
+    <form className="login-card" action={formAction}>
       <h1 className="login-title">Log in</h1>
 
       <label className="login-field">
         <span>Email</span>
         <input
           type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          name="email"
           required
           autoComplete="email"
         />
@@ -47,28 +56,23 @@ export function LoginForm() {
         <span>Password</span>
         <input
           type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          name="password"
           required
           autoComplete="current-password"
         />
       </label>
 
-      {status === "error" && (
+      {state.error && (
         <ul className="login-error">
-          {errorMessages.map((msg) => (
+          {state.error.map((msg) => (
             <li key={msg}>{msg}</li>
           ))}
         </ul>
       )}
 
-      <button type="submit" disabled={status === "submitting"}>
-        {status === "submitting" ? "Logging in…" : "Log in"}
-      </button>
-
-      <button type="button" className="login-link" onClick={onNavigateToRegister}>
-        Need an account? Register
-      </button>
+      <button type="submit" disabled={isPending}>
+        {isPending ? "Logging in…" : "Log in"}
+      </button>      
     </form>
   );
 }
