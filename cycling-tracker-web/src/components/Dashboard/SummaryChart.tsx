@@ -11,6 +11,7 @@ import {
 
 import React, { useState } from 'react';
 import { Session } from "../../types/session";
+import './SummaryChart.css'
 
 interface SummaryChartProps {
     data: Session[] | undefined;
@@ -75,15 +76,15 @@ function SummaryChart({ data, loading, error }: SummaryChartProps) {
     const activeMetric = SECONDARY_METRICS[activeKey];
 
     return (
-        <div className="summary-chart">
+        <div className="training-chart">
             {/* Header and Toggle Controls */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+            <div className="training-chart-header">
                 <div>
-                    <h3 style={{ margin: 0 }}>Training Events Log</h3>
+                    <h3 className="training-chart-title">Training Events Log</h3>
                 </div>
 
                 {/* Toggle Menu */}
-                <div style={{ display: 'flex', gap: '8px', background: '#f3f4f6', padding: '4px', borderRadius: '8px' }}>
+                <div className="training-chart-toggle-menu">
                     {Object.keys(SECONDARY_METRICS).map((key) => {
                         const metricKey = key as MetricKey;
                         const isSelected = activeKey === metricKey;
@@ -91,8 +92,8 @@ function SummaryChart({ data, loading, error }: SummaryChartProps) {
                             <button
                                 key={key}
                                 onClick={() => setActiveKey(metricKey)}
+                                className="training-chart-toggle-btn"
                                 style={{
-                                    padding: '6px 12px', border: 'none', borderRadius: '6px', fontSize: '14px', cursor: 'pointer',
                                     backgroundColor: isSelected ? '#fff' : 'transparent',
                                     color: isSelected ? '#1f2937' : '#4b5563',
                                     boxShadow: isSelected ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
@@ -106,12 +107,12 @@ function SummaryChart({ data, loading, error }: SummaryChartProps) {
             </div>
 
             {/* --- GRAPH 1: ANCHOR TIME DATA (STAYS FIXED) --- */}
-            <div style={{ marginBottom: '16px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0 10px', marginBottom: '6px' }}>
-                    <span style={{ fontSize: '13px', fontWeight: 600, color: '#4b5563' }}>Workout Duration</span>
-                    <span style={{ fontSize: '12px', color: '#9ca3af' }}>Min</span>
+            <div className="training-chart-graph-section">
+                <div className="training-chart-graph-header">
+                    <span className="training-chart-label-duration">Workout Duration</span>
+                    <span className="training-chart-label-unit">Min</span>
                 </div>
-                <div style={{ width: '100%', height: 130 }}>
+                <div className="training-chart-wrapper-top">
                     <ResponsiveContainer>
                         <BarChart data={data} syncId="trainingTimeline" margin={{ top: 5, right: 5, left: -20, bottom: 5 }}>
                             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f3f4f6" />
@@ -129,17 +130,18 @@ function SummaryChart({ data, loading, error }: SummaryChartProps) {
 
             {/* --- GRAPH 2: PERFORMANCE METRIC (CHANGES DYNAMICALLY) --- */}
             <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0 10px', marginBottom: '6px' }}>
-                    <span style={{ fontSize: '13px', fontWeight: 600, color: activeMetric.color }}>{activeMetric.label}</span>
-                    <span style={{ fontSize: '12px', color: '#9ca3af' }}>{activeMetric.unit}</span>
+                <div className="training-chart-graph-header">
+                    <span style={{ fontSize: '13px', fontWeight: 600, color: activeMetric.color }}>
+                        {activeMetric.label}
+                    </span>
+                    <span className="training-chart-label-unit">{activeMetric.unit}</span>
                 </div>
-                <div style={{ width: '100%', height: 155 }}>
+                <div className="training-chart-wrapper-bottom">
                     <ResponsiveContainer>
                         <BarChart data={data} syncId="trainingTimeline" margin={{ top: 5, right: 5, left: -20, bottom: 20 }}>
                             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f3f4f6" />
                             <XAxis dataKey="date" hide />
 
-                            {/* 🌟 The YAxis scale and color auto-update to match the selected button */}
                             <YAxis tick={{ fill: '#9ca3af', fontSize: 11 }} axisLine={false} tickLine={false} />
 
                             <Tooltip
@@ -147,9 +149,8 @@ function SummaryChart({ data, loading, error }: SummaryChartProps) {
                                 formatter={(value) => [`${value} ${activeMetric.unit}`, activeMetric.label]}
                             />
 
-                            {/* 🌟 The Bar targets the dynamic metric configuration properties */}
                             <Bar
-                                key={activeMetric.key} // Forces fresh mount animation on selection change
+                                key={activeMetric.key}
                                 dataKey={activeMetric.key}
                                 fill={activeMetric.color}
                                 radius={[4, 4, 0, 0]}
