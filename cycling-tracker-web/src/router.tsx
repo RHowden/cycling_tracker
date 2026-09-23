@@ -11,6 +11,8 @@ import { AppLayout } from "./layouts/AppLayout/AppLayout";
 import { Dashboard } from "./pages/Dashboard/Dashboard";
 import { Session } from "./pages/Session/Session";
 
+import { NotFound } from './pages/NotFound/NotFound.tsx';
+
 export const router = createBrowserRouter([
   // Automatically redirect a bare "/" URL straight to the login page
   {
@@ -32,25 +34,27 @@ export const router = createBrowserRouter([
       },
     ],
   },
-
-  // ─── 2. PROTECTED APPLICATION ROUTES (Nested under AppLayout) ───
   {
-    element: <ProtectedRoute />, // <-- Blocks unauthorized access globally
+    element: <ProtectedRoute />,
     children: [
       {
         path: "/dashboard",
         element: <AppLayout />,
         children: [
           {
-            index: true, // Matches "/dashboard" exactly
+            index: true,
             element: <Dashboard />,
           },
           {
-            path: "sessions/:id", // Matches "/dashboard/sessions/123"
+            path: "sessions/:id",
             element: <Session />,
           },
         ],
       }
     ]
+  },
+  {
+    path: "*",
+    element: <NotFound />,
   },
 ]);
