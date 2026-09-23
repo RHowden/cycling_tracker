@@ -13,7 +13,7 @@ export function RegisterForm() {
   
       try {
         await register({ email, password });
-        navigate("/dashboard", { state: { notice: "Project created successfully!" } });
+        navigate("/dashboard");
   
         return { success: true, error: null };
       } catch (err: any) {
