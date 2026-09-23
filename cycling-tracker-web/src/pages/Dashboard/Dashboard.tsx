@@ -1,6 +1,6 @@
 import "./Dashboard.css";
 import { useTrainingData } from "../../hooks/useTrainingData.ts";
-import SummaryChart from "./SummaryChart.tsx";
+import SummaryChart from "../../components/SummaryChart/SummaryChart.tsx";
 
 interface DashboardProps {
   onLogout: () => void;
@@ -23,4 +23,3 @@ export function Dashboard({ onLogout }: DashboardProps) {
   );
 }
 
-export default Dashboard;

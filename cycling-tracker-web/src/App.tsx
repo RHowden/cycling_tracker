@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { RegisterForm } from "./components/RegisterForm/RegisterForm";
-import { LoginForm } from "./components/LoginForm/LoginForm";
-import { Dashboard } from "./components/Dashboard/Dashboard";
+import { RegisterForm } from "./pages/RegisterForm/RegisterForm";
+import { LoginForm } from "./pages/LoginForm/LoginForm";
+import { Dashboard } from "./pages/Dashboard/Dashboard";
 import type { LoginResponse } from "./types/auth";
 
 type Page = "register" | "login" | "dashboard";

@@ -1,17 +1,12 @@
 import { useState, FormEvent } from "react";
 import { login } from "../../api/auth";
 import { ApiError } from "../../api/client";
-import type { LoginResponse } from "../../types/auth";
 import "./LoginForm.css";
 
 type Status = "idle" | "submitting" | "error";
 
-interface LoginFormProps {
-  onSuccess: (result: LoginResponse) => void;
-  onNavigateToRegister: () => void;
-}
 
-export function LoginForm({ onSuccess, onNavigateToRegister }: LoginFormProps) {
+export function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [status, setStatus] = useState<Status>("idle");

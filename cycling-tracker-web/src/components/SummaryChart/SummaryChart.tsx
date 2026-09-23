@@ -164,4 +164,3 @@ function SummaryChart({ data, loading, error }: SummaryChartProps) {
     );
 }
 
-export default SummaryChart;
