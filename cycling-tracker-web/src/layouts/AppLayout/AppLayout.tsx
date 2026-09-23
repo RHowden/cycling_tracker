@@ -20,21 +20,16 @@ export function AppLayout() {
 
         <nav className="sidebar-links">
           <Link to="/dashboard" className="sidebar-link">Dashboard Home</Link>
-          <Link to="/dashboard/upload" className="sidebar-link">Upload File</Link>
-          <Link to="/dashboard/resources/create" className="sidebar-link">New Resource</Link>
         </nav>
 
-        <div className="sidebar-footer">
-          <button onClick={handleSignOut} className="sign-out-button">
-            Sign Out
-          </button>
-        </div>
       </aside>
 
       {/* ─── RIGHT MAIN WRAPPER ─── */}
       <div className="app-main-wrapper">
         <header className="app-top-header">
-          <span>Welcome Back, Athlete!</span>
+          <button onClick={handleSignOut} className="sign-out-button">
+            Sign Out
+          </button>
         </header>
 
         {/* ─── DYNAMIC CONTENT AREA ─── */}

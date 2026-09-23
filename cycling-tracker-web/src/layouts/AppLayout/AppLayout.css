@@ -43,13 +43,8 @@
   color: #ffffff;
 }
 
-.sidebar-footer {
-  border-top: 1px solid #334155;
-  padding-top: 1rem;
-}
 
 .sign-out-button {
-  width: 100%;
   background-color: #ef4444; /* Red button */
   color: white;
   border: none;

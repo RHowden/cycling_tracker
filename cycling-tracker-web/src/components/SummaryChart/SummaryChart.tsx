@@ -9,9 +9,10 @@ import {
 } from 'recharts';
 import { useState } from 'react';
 
-import { TrainingDay } from "../../types/session";
+import { TrainingDay } from '../../types/session';
 
 import './SummaryChart.css'
+import { useNavigate } from 'react-router';
 
 interface SummaryChartProps {
     data: TrainingDay[] | undefined;
@@ -70,6 +71,15 @@ export function SummaryChart({ data, loading, error }: SummaryChartProps) {
         );
     }
 
+    const navigate = useNavigate();
+
+    // Recharts passes the clicked item data into the handler callback
+    const handleBarClick = (data: any) => {
+        if (data && data.id) {
+            // Navigates directly to /dashboard/sessions/123
+            navigate(`sessions/${data.id}`);
+        }
+    };
 
     //const [activeKey, setActiveKey] = useState('power');
     const [activeKey, setActiveKey] = useState<MetricKey>('hr');
@@ -122,7 +132,13 @@ export function SummaryChart({ data, loading, error }: SummaryChartProps) {
                                 cursor={{ fill: '#f3f4f6', opacity: 0.6 }}
                                 formatter={(value) => [`${value} Min`, 'Duration']}
                             />
-                            <Bar dataKey="durationMin" fill="#9ca3af" radius={[4, 4, 0, 0]} barSize={16} />
+                            <Bar
+                                dataKey="durationMin" 
+                                fill="#9ca3af"
+                                radius={[4, 4, 0, 0]} 
+                                barSize={16} 
+                                onClick={handleBarClick}
+                                style={{ cursor: "pointer" }} />
                         </BarChart>
                     </ResponsiveContainer>
                 </div>
@@ -155,6 +171,8 @@ export function SummaryChart({ data, loading, error }: SummaryChartProps) {
                                 fill={activeMetric.color}
                                 radius={[4, 4, 0, 0]}
                                 barSize={16}
+                                onClick={handleBarClick}
+                                style={{ cursor: "pointer" }}
                             />
                         </BarChart>
                     </ResponsiveContainer>
