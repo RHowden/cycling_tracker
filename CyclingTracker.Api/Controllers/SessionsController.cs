@@ -1,23 +1,33 @@
-using CyclingTracker.Api.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using CyclingTracker.Api.Data;
+using CyclingTracker.Api.Extensions;
 
-namespace CyclingTracker.Api.Controllers
+namespace CyclingTracker.Api.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+public class SessionsController : ControllerBase
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class SessionsController : ControllerBase
+    [HttpGet]
+    [Authorize]
+    public IActionResult GetSessions([FromQuery] DateTime? from, [FromQuery] DateTime? to)
     {
-        [HttpGet]
-        public IActionResult GetSessions([FromQuery] DateTime? from, [FromQuery] DateTime? to)
-        {
-            return Ok(SampleData.Sessions);
-        }
+        string currentUserId = User.GetUserId();
+        var sessions = SampleData.Sessions.Where(s => s.UserId == currentUserId);
 
-        [HttpGet("{id}")]
-        public IActionResult GetSession(int id)
-        {
-            var session =  SampleData.Sessions.FirstOrDefault(s => s.Id == id);
-            return Ok(session);
-        }
+        return Ok(sessions);
+    }
+
+    [HttpGet("{id}")]
+    [Authorize]
+    public IActionResult GetSession(int id)
+    {
+        string currentUserId = User.GetUserId();
+        
+        var session = SampleData.Sessions
+            .Where(s => s.UserId == currentUserId)
+            .FirstOrDefault(s => s.Id == id);
+        return Ok(session);
     }
 }
