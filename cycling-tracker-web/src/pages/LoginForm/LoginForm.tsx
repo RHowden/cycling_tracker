@@ -3,25 +3,27 @@ import { useNavigate } from "react-router";
 
 import { login } from "../../api/auth";
 import { ApiError } from "../../api/ApiError";
+import { useAuth } from "../../components/AuthContext";
 
 import "./LoginForm.css";
 
 export function LoginForm() {
   const navigate = useNavigate();
+  const { refresh } = useAuth();
 
   async function handleLoginAction(_: any, formData: FormData) {
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
 
     try {
-      const result = await login(email, password);
-      localStorage.setItem("authToken", result.accessToken);
+      await login(email, password);
+      await refresh();
       navigate('/dashboard');
 
       return { success: true, error: null };
     } catch (err: any) {
       const apiError = err as ApiError;
-    
+
       return { success: false, error: apiError.messages || "Failed to log in" };
     }
   }
@@ -67,7 +69,7 @@ export function LoginForm() {
 
       <button type="submit" disabled={isPending}>
         {isPending ? "Logging in…" : "Log in"}
-      </button>      
+      </button>
     </form>
   );
 }

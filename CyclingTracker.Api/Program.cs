@@ -1,5 +1,7 @@
 using CyclingTracker.Api.Data;
 using CyclingTracker.Api.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 
@@ -30,6 +32,33 @@ builder.Services.AddCors(options =>
               .AllowAnyMethod()
               .AllowCredentials(); // Required if you use cookies or identity sessions
     });
+});
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    // Prevent the 404 redirect loop. Force a clean 401 instead so you can see if auth fails.
+    options.Events.OnRedirectToLogin = context =>
+    {
+        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+        return Task.CompletedTask;
+    };
+
+    // 👈 CRITICAL: Allows the cookie to be sent across different ports (localhost:3000 -> 5206)
+    options.Cookie.SameSite = SameSiteMode.None; 
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // SameSite=None requires Secure
+});
+
+builder.Services.Configure<CookieAuthenticationOptions>(IdentityConstants.ExternalScheme, options =>
+{
+    options.Cookie.SameSite = SameSiteMode.None;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+});
+
+// 🟢 ADD THIS: Configure the Two-Factor cookie to allow cross-origin deletion
+builder.Services.Configure<CookieAuthenticationOptions>(IdentityConstants.TwoFactorUserIdScheme, options =>
+{
+    options.Cookie.SameSite = SameSiteMode.None;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
 });
 
 var app = builder.Build();

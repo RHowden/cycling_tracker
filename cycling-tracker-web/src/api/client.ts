@@ -6,25 +6,18 @@ import { parseErrorMessages } from "./parseErrorMessages";
 // (see vite.config.ts) and the production same-origin deploy both just work.
 const API_BASE = `${import.meta.env.VITE_API_BASE_URL}/api`;
 
+export async function apiRequestVoid(
+  path: string,
+  options: { method?: string; body?: unknown } = {},
+): Promise<void> {
+  await performRequest(path, options);
+}
+
 export async function apiRequest<TResponse>(
   path: string,
   options: { method?: string; body?: unknown } = {},
 ): Promise<TResponse> {
-  const { method = "GET", body } = options;
-  let res: Response;
-  try {
-    res = await fetch(`${API_BASE}${path}`, {
-      method,
-      headers: body ? { "Content-Type": "application/json" } : undefined,
-      body: body ? JSON.stringify(body) : undefined,
-    });
-  } catch {
-    throw new ApiError(0, ["Network error — please check your connection."]);
-  }
-
-  if (!res.ok) {
-    throw new ApiError(res.status, await parseErrorMessages(res));
-  }
+  const res = await performRequest(path, options);
 
   if (res.status === 204) {
     return undefined as TResponse;
@@ -41,4 +34,28 @@ export async function apiRequest<TResponse>(
   } catch {
     throw new ApiError(res.status, ["Received an invalid response from the server."]);
   }
+}
+
+async function performRequest(
+  path: string,
+  options: { method?: string; body?: unknown } = {},
+): Promise<Response> {
+  const { method = "GET", body } = options;
+  let res: Response;
+  try {
+    res = await fetch(`${API_BASE}${path}`, {
+      method,
+      credentials: "include",
+      headers: body ? { "Content-Type": "application/json" } : undefined,
+      body: body ? JSON.stringify(body) : undefined,
+    });
+  } catch {
+    throw new ApiError(0, ["Network error — please check your connection."]);
+  }
+
+  if (!res.ok) {
+    throw new ApiError(res.status, await parseErrorMessages(res));
+  }
+
+  return res;
 }
