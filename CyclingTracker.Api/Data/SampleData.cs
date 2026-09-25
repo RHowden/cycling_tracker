@@ -15,7 +15,7 @@ public class SampleData
             currentDate = currentDate.AddDays(rnd.Next(1, 5)); 
             sessions.Add(new
                 {
-                    Id = 1, // Uses the loop index (1, 2, 3...)
+                    Id = i,
                     Date = currentDate.ToString("yyyy-MM-dd"), // Increments the date
                     Type = "Run",
                     DistanceKm = rnd.Next(50),

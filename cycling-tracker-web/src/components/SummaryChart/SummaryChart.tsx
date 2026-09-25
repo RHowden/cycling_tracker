@@ -16,8 +16,6 @@ import { useNavigate } from 'react-router';
 
 interface SummaryChartProps {
     data: TrainingDay[] | undefined;
-    loading: boolean;
-    error: string | null;
 }
 
 interface MetricConfig {
@@ -50,19 +48,7 @@ type MetricKey = keyof typeof SECONDARY_METRICS;
  *     avgHr: number,
  *   }
  */
-export function SummaryChart({ data, loading, error }: SummaryChartProps) {
-    if (loading) {
-        return <div className="Summary-chart__status">Loading sessions…</div>;
-    }
-
-    if (error) {
-        return (
-            <div className="summary-chart__status summary-chart__status--error">
-                Couldn't load your training data. {error}
-            </div>
-        );
-    }
-
+export function SummaryChart({ data }: SummaryChartProps) {
     if (!data || data.length === 0) {
         return (
             <div className="summary-chart__status">

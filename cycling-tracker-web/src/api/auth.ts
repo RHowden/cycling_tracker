@@ -1,4 +1,4 @@
-import { apiPost } from "./client";
+import { apiRequest } from "./client";
 import type {
   RegisterRequest,
   RegisterResponse,
@@ -7,7 +7,7 @@ import type {
 } from "../types/auth";
 
 export function register(data: RegisterRequest): Promise<RegisterResponse> {
-  return apiPost<RegisterResponse>("/auth/register", { method: "POST", body: data });
+  return apiRequest<RegisterResponse>("/auth/register", { method: "POST", body: data });
 }
 
 export function login(email: string, password: string): Promise<LoginResponse> {
@@ -17,6 +17,6 @@ export function login(email: string, password: string): Promise<LoginResponse> {
     twoFactorCode: null,
     twoFactorRecoveryCode: null,
   };
-  return apiPost<LoginResponse>("/auth/login", { method: "POST", body: data });
+  return apiRequest<LoginResponse>("/auth/login", { method: "POST", body: data });
 }
 

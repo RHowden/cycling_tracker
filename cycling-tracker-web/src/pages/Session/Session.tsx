@@ -1,30 +1,27 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
+
+import { useTrainingSession } from '../../hooks/useTrainingData';
 import './Session.css';
 
-interface SessionData {
-    date: string;
-    type: string;
-    durationMin: number;
-    avgHr: number;
-    avgPower: number;
-    distance: number;
-}
 
 export function Session() {
-    // 1. Grab the dynamic :id parameter from the URL path
-    //const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
+    const { id } = useParams<{ id: string }>();
+    const { session, loading, error } = useTrainingSession(id);
 
-    // Mock initial data based on your specific fields
-    const [session, _] = useState<SessionData>({
-        date: '2026-09-23',
-        type: 'Road Cycling',
-        durationMin: 90,
-        avgHr: 145,
-        avgPower: 210,
-        distance: 42.5,
-    });
+    if (loading) return <p>Loading…</p>;
+    if (error) {
+        return (
+            <div>
+                <p>Error loading sessions:</p>
+                <ul>
+                    {error.map((msg, i) => (
+                        <li key={i}>{msg}</li>
+                    ))}
+                </ul>
+            </div>
+        );
+    }
 
 
     return (
@@ -37,7 +34,7 @@ export function Session() {
                 <h1>Session Details </h1>
             </header>
 
-            <div className="session-card view-stats">
+            {session && <div className="session-card view-stats">
                 <div className="stats-grid">
                     <div className="stat-box">
                         <span className="stat-label">Date</span>
@@ -65,6 +62,7 @@ export function Session() {
                     </div>
                 </div>
             </div>
+            }
         </div>
     );
 }

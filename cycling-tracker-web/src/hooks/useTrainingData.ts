@@ -1,32 +1,47 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 
-import { apiPost } from "../api/client";
-import { Session, TrainingDay } from "../types/session";
+import { apiRequest } from "../api/client";
+import { Session } from "../types/session";
 import { fillDateGaps } from "../utils/fillDataGaps";
+import { ApiError } from "../api/ApiError";
 
-export function useTrainingData() {
-  const [sessions, setSessions] = useState<TrainingDay[]>([]);
+function useApiResource<T>(url: string | null) {
+  const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string[] | null>(null);
 
   useEffect(() => {
+    if (!url) return;
+    const nullCheckedUrl = url;
     let cancelled = false;
 
-    async function fetchSessions() {
+    async function fetchData() {
       try {
         setLoading(true);
-        const data = await apiPost<Session[]>("/sessions");
-        if (!cancelled) setSessions(fillDateGaps(data));
+        setError(null);
+        const result = await apiRequest<T>(nullCheckedUrl);
+        if (!cancelled) setData(result);
       } catch (err) {
-        if (!cancelled) setError(err instanceof Error ? err.message : "Unknown error");
+        if (!cancelled) setError(err instanceof ApiError ? err.messages : ["Unknown error"]);
       } finally {
         if (!cancelled) setLoading(false);
       }
     }
 
-    fetchSessions();
+    fetchData();
     return () => { cancelled = true; };
-  }, []);
+  }, [url]);
 
+  return { data, loading, error };
+}
+
+export function useTrainingData() {
+  const { data, loading, error } = useApiResource<Session[]>("/sessions");
+  const sessions = useMemo(() => (data ? fillDateGaps(data) : []), [data]);
   return { sessions, loading, error };
+}
+
+export function useTrainingSession(id: string | undefined) {
+  const { data: session, loading, error } = useApiResource<Session>(`/sessions/${id}`);
+  return { session, loading, error };
 }

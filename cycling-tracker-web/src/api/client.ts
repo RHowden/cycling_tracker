@@ -6,7 +6,7 @@ import { parseErrorMessages } from "./parseErrorMessages";
 // (see vite.config.ts) and the production same-origin deploy both just work.
 const API_BASE = `${import.meta.env.VITE_API_BASE_URL}/api`;
 
-export async function apiPost<TResponse>(
+export async function apiRequest<TResponse>(
   path: string,
   options: { method?: string; body?: unknown } = {},
 ): Promise<TResponse> {
@@ -35,7 +35,7 @@ export async function apiPost<TResponse>(
   if (!text) {
     throw new ApiError(res.status, ["Received an empty response from the server."]);
   }
-  
+
   try {
     return JSON.parse(text) as TResponse;
   } catch {
