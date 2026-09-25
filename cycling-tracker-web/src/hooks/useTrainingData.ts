@@ -1,9 +1,8 @@
-// hooks/useTrainingData.ts
 import { useEffect, useState } from "react";
+
+import { apiPost } from "../api/client";
 import { Session, TrainingDay } from "../types/session";
 import { fillDateGaps } from "../utils/fillDataGaps";
-
-const API_BASE = "https://localhost:7285/api";
 
 export function useTrainingData() {
   const [sessions, setSessions] = useState<TrainingDay[]>([]);
@@ -16,9 +15,7 @@ export function useTrainingData() {
     async function fetchSessions() {
       try {
         setLoading(true);
-        const res = await fetch(`${API_BASE}/sessions`);
-        if (!res.ok) throw new Error(`Request failed: ${res.status}`);
-        const data: Session[] = await res.json();
+        const data = await apiPost<Session[]>("/sessions");
         if (!cancelled) setSessions(fillDateGaps(data));
       } catch (err) {
         if (!cancelled) setError(err instanceof Error ? err.message : "Unknown error");

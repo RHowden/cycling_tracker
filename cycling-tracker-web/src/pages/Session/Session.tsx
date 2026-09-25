@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useParams, useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 import './Session.css';
 
 interface SessionData {
@@ -13,11 +13,11 @@ interface SessionData {
 
 export function Session() {
     // 1. Grab the dynamic :id parameter from the URL path
-    const { id } = useParams<{ id: string }>();
+    //const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
 
     // Mock initial data based on your specific fields
-    const [session, setSession] = useState<SessionData>({
+    const [session, _] = useState<SessionData>({
         date: '2026-09-23',
         type: 'Road Cycling',
         durationMin: 90,

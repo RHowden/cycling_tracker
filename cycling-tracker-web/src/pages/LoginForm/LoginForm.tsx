@@ -2,7 +2,7 @@ import { useActionState } from "react";
 import { useNavigate } from "react-router";
 
 import { login } from "../../api/auth";
-import { ApiError } from "../../api/client";
+import { ApiError } from "../../api/ApiError";
 
 import "./LoginForm.css";
 
@@ -15,7 +15,7 @@ export function LoginForm() {
 
     try {
       const result = await login(email, password);
-      localStorage.setItem("authToken", result.accessToken); ;
+      localStorage.setItem("authToken", result.accessToken);
       navigate('/dashboard');
 
       return { success: true, error: null };

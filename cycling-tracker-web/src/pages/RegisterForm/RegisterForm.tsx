@@ -1,6 +1,6 @@
 import { useActionState } from "react";
 import { register } from "../../api/auth";
-import { ApiError } from "../../api/client";
+import { ApiError } from "../../api/ApiError";
 import { useNavigate } from "react-router";
 import "./RegisterForm.css";
 

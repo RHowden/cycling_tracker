@@ -7,15 +7,16 @@ import type {
 } from "../types/auth";
 
 export function register(data: RegisterRequest): Promise<RegisterResponse> {
-  return apiPost<RegisterRequest, RegisterResponse>("/auth/register", data);
+  return apiPost<RegisterResponse>("/auth/register", { method: "POST", body: data });
 }
 
 export function login(email: string, password: string): Promise<LoginResponse> {
-  const body: LoginRequest = {
+  const data: LoginRequest = {
     email,
     password,
     twoFactorCode: null,
     twoFactorRecoveryCode: null,
   };
-  return apiPost<LoginRequest, LoginResponse>("/auth/login", body);
+  return apiPost<LoginResponse>("/auth/login", { method: "POST", body: data });
 }
+
