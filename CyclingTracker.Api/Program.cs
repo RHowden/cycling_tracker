@@ -17,6 +17,8 @@ builder.Services
     .AddIdentityApiEndpoints<Athlete>()
     .AddEntityFrameworkStores<AppDbContext>();
 
+builder.Services.AddScoped<IFitImportService, FitImportService>();
+
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();

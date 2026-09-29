@@ -12,6 +12,6 @@ export async function uploadFitFile(file: File): Promise<Session> {
     const form = new FormData();
     form.append("file", file);
 
-    return apiRequest<Session>("/sessions/import", { method: "POST", body: form });
+    return apiRequest<Session>("/import/import", { method: "POST", body: form });
 }
 

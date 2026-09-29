@@ -1,4 +1,6 @@
 <Solution>
+  <Project Path="CyclingTracker.Api.IntegrationTests/CyclingTracker.Api.IntegrationTests.csproj" />
+  <Project Path="CyclingTracker.Api.UnitTests/CyclingTracker.Api.UnitTests.csproj" />
   <Project Path="CyclingTracker.Api/CyclingTracker.Api.csproj" />
   <Project Path="FitFileParsing.Tests/FitFileParser.Tests.csproj" />
   <Project Path="FitFileParsing/FitFileParsing.csproj" />
