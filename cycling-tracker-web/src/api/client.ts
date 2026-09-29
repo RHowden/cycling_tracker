@@ -3,7 +3,6 @@
 import { ApiError } from "./ApiError";
 import { parseErrorMessages } from "./parseErrorMessages";
 
-// (see vite.config.ts) and the production same-origin deploy both just work.
 const API_BASE = `${import.meta.env.VITE_API_BASE_URL}/api`;
 
 export async function apiRequestVoid(
