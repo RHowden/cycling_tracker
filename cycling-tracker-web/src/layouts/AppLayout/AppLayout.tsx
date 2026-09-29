@@ -29,7 +29,11 @@ export function AppLayout() {
         </div>
 
         <nav className="sidebar-links">
-          <Link to="/dashboard" className="sidebar-link">Dashboard Home</Link>
+          <Link to="/dashboard" className="sidebar-link">Dashboard</Link>
+        </nav>
+
+        <nav className="sidebar-links">
+          <Link to="/upload" className="sidebar-link">Upload</Link>
         </nav>
 
       </aside>
