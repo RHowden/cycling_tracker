@@ -40,13 +40,15 @@ async function performRequest(
   options: { method?: string; body?: unknown } = {},
 ): Promise<Response> {
   const { method = "GET", body } = options;
+  const isForm = body instanceof FormData;
+
   let res: Response;
   try {
     res = await fetch(`${API_BASE}${path}`, {
       method,
       credentials: "include",
-      headers: body ? { "Content-Type": "application/json" } : undefined,
-      body: body ? JSON.stringify(body) : undefined,
+      headers: body && !isForm ? { "Content-Type": "application/json" } : undefined,
+      body: !body ? undefined : isForm ? body : JSON.stringify(body),
     });
   } catch {
     throw new ApiError(0, ["Network error — please check your connection."]);
