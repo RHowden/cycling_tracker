@@ -17,4 +17,8 @@
     <PackageReference Include="Scalar.AspNetCore" Version="2.16.16" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\FitFileParsing\FitFileParsing.csproj" />
+  </ItemGroup>
+
 </Project>
