@@ -17,14 +17,7 @@ public class ActivityMapper
         CreatedAtUtc = DateTime.UtcNow
     };
 
-    private static DateTime ToUtc(DateTime value) => value.Kind switch
-    {
-        DateTimeKind.Utc => value,
-        DateTimeKind.Local => value.ToUniversalTime(),
-        _ => DateTime.SpecifyKind(value, DateTimeKind.Utc) // Unspecified: assume UTC
-    };
-
-    private static SportType ToSportType(string? sport) =>
+    public static SportType ToSportType(string? sport) =>
         sport?.Trim().ToLowerInvariant() switch
         {
             "running" => SportType.Running,
@@ -33,4 +26,11 @@ public class ActivityMapper
             "training" => SportType.Strength,
             _ => SportType.Other
         };
+
+    private static DateTime ToUtc(DateTime value) => value.Kind switch
+    {
+        DateTimeKind.Utc => value,
+        DateTimeKind.Local => value.ToUniversalTime(),
+        _ => DateTime.SpecifyKind(value, DateTimeKind.Utc) // Unspecified: assume UTC
+    };
 }
