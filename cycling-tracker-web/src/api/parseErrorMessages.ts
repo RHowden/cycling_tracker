@@ -4,18 +4,25 @@ export async function parseErrorMessages(res: Response): Promise<string[]> {
 
   try {
     const body: ValidationProblemDetails = JSON.parse(text);
+
     if (body.errors) {
-      // Flatten { field: [msg, msg], field2: [msg] } into a list of messages.
-      // Identity's messages are already human-readable on their own
-      // (e.g. "Passwords must have at least one non alphanumeric character.")
-      // — the error codes as keys are the noisy/technical part, so we drop them.
       const messages = Object.values(body.errors).flat();
       return messages.length ? messages : [genericMessage(res.status)];
     }
-    // Structured JSON but no `errors` field (e.g. a plain ProblemDetails) —
-    // title is written to be user-facing, safe to show.
+
+    if (body.error) {
+      // If it's a Microsoft OAuth error object with a description
+      if (typeof body.error === 'object' && body.error.message) {
+        return [body.error.message];
+      }
+      // If body.error is just a raw string code
+      if (typeof body.error === 'string') {
+        return [body.error];
+      }
+    }
     return [body.title ?? genericMessage(res.status)];
-  } catch {
+  }
+  catch {
     // Not JSON at all — most likely a 5xx dev-mode exception page or raw
     // stack trace. Never show that to the user; log it for us to debug.
     console.error("Unexpected error response from API:", text);
@@ -28,6 +35,7 @@ export async function parseErrorMessages(res: Response): Promise<string[]> {
 interface ValidationProblemDetails {
   title?: string;
   errors?: Record<string, string[]>;
+  error?: string | { message?: string };
 }
 
 function genericMessage(status: number): string {
