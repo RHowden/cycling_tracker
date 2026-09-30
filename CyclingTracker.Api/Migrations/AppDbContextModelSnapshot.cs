@@ -121,7 +121,8 @@ namespace CyclingTracker.Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId", "StartTimeUtc");
+                    b.HasIndex("UserId", "StartTimeUtc")
+                        .IsUnique();
 
                     b.ToTable("Sessions");
                 });
