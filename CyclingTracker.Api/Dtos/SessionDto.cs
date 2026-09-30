@@ -1,3 +1,3 @@
 namespace CyclingTracker.Api.Dtos;
 
-public record SessionDto(Guid Id, double Duration);
+public record SessionDto(Guid Id);

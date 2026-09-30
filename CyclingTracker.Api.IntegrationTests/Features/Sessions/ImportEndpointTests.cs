@@ -25,7 +25,7 @@ public class ImportEndpointTests : IClassFixture<CustomWebApplicationFactory<Pro
         var newSessionId = Guid.NewGuid();
         _factory.FitImportServiceMock
             .Setup(s => s.ImportAsync(It.IsAny<IFormFile>(), It.IsAny<Guid>()))
-            .ReturnsAsync(Result<SessionDto>.Success(new SessionDto(newSessionId, 32.4)));
+            .ReturnsAsync(Result<SessionDto>.Success(new SessionDto(newSessionId)));
 
         // Create actual HTTP multipart form content matching a browser upload
         using var content = new MultipartFormDataContent();

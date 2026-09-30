@@ -47,7 +47,7 @@ public class ImportControllerTests
         var expectedSessionID = Guid.NewGuid();
         _importService
             .Setup(s => s.ImportAsync(It.IsAny<IFormFile>(), It.IsAny<Guid>()))
-            .ReturnsAsync(Result<SessionDto>.Success(new SessionDto(expectedSessionID, 5)));
+            .ReturnsAsync(Result<SessionDto>.Success(new SessionDto(expectedSessionID)));
 
         var controller = CreateController();
         var file = CreateFormFile(new byte[] { 1, 2, 3 });
@@ -147,7 +147,7 @@ public class ImportControllerTests
         // Tell our mock service to return a happy success result wrapper
         _importService
             .Setup(s => s.ImportAsync(It.IsAny<IFormFile>(), expectedUserId))
-            .ReturnsAsync(Result<SessionDto>.Success(new SessionDto(new Guid(), 5)));
+            .ReturnsAsync(Result<SessionDto>.Success(new SessionDto(new Guid())));
 
         var controller = CreateController(expectedUserId);
         var file = CreateFormFile(new byte[] { 1, 2, 3 });
