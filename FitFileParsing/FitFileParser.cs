@@ -58,13 +58,13 @@ public class FitFileParser
             _ => sport.ToString()
         };
 
-        double durationMin = (session.GetTotalElapsedTime() ?? 0f) / 60.0;
+        double duration = session.GetTotalElapsedTime() ?? 0f;
         int? avgHr = session.GetAvgHeartRate();
         int? avgPower = session.GetAvgPower();
         float distance = session.GetTotalDistance() ?? 0f;
 
         var startTime = fitMessages.SessionMesgs[0].GetStartTime().GetDateTime();
 
-        return new ActivityData(startTime, sportType, durationMin, avgHr, avgPower, distance);
+        return new ActivityData(startTime, sportType, duration, avgHr, avgPower, distance);
     }
 }

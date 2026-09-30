@@ -46,7 +46,7 @@ export function Session() {
                     </div>
                     <div className="stat-box">
                         <span className="stat-label">Duration</span>
-                        <span className="stat-value">{session.durationMin} mins</span>
+                        <span className="stat-value">{session.duration} seconds</span>
                     </div>
                     <div className="stat-box">
                         <span className="stat-label">Distance</span>

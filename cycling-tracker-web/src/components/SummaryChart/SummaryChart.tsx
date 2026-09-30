@@ -106,7 +106,7 @@ export function SummaryChart({ data }: SummaryChartProps) {
             <div className="training-chart-graph-section">
                 <div className="training-chart-graph-header">
                     <span className="training-chart-label-duration">Workout Duration</span>
-                    <span className="training-chart-label-unit">Min</span>
+                    <span className="training-chart-label-unit">Second</span>
                 </div>
                 <div className="training-chart-wrapper-top">
                     <ResponsiveContainer>
@@ -119,7 +119,7 @@ export function SummaryChart({ data }: SummaryChartProps) {
                                 formatter={(value) => [`${value} Min`, 'Duration']}
                             />
                             <Bar
-                                dataKey="durationMin" 
+                                dataKey="duration" 
                                 fill="#9ca3af"
                                 radius={[4, 4, 0, 0]} 
                                 barSize={16} 

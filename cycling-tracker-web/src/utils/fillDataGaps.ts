@@ -15,9 +15,9 @@ export function fillDateGaps(sessions: Session[]): TrainingDay[] {
 
     result.push(
       session
-        ? { date: dateStr, hasSession: true, id: session.id, type: session.type, durationMin: session.durationMin,
+        ? { date: dateStr, hasSession: true, id: session.id, type: session.type, duration: session.duration,
              avgHr: session.avgHr, avgPower: session.avgPower, distance: session.distance }
-        : { date: dateStr, hasSession: false, id: null, type: null, durationMin: null, avgHr: null, 
+        : { date: dateStr, hasSession: false, id: null, type: null, duration: null, avgHr: null, 
             avgPower: null, distance: null }
     );
 
