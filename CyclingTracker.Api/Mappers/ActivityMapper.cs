@@ -9,10 +9,10 @@ public class ActivityMapper
     {
         UserId = userId,
         StartTimeUtc = ToUtc(dto.StartTime),
-        Sport = ToSportType(dto.Sport),
-        Duration = TimeSpan.FromSeconds(dto.DurationSeconds),
-        DistanceMetres = dto.DistanceMetres,
-        AvgHeartRate = dto.AvgHeartRate,
+        Sport = ToSportType(dto.Type),
+        Duration = TimeSpan.FromSeconds(dto.Duration),
+        DistanceMetres = dto.Distance,
+        AvgHeartRate = dto.AvgHr,
         AvgPowerWatts = dto.AvgPower,
         CreatedAtUtc = DateTime.UtcNow
     };
