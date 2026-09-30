@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using Dynastream.Fit;
+﻿using Dynastream.Fit;
 
 namespace FitFileParsing;
 
