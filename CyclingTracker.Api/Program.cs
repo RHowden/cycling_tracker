@@ -1,5 +1,6 @@
 using CyclingTracker.Api.Data;
 using CyclingTracker.Api.Models;
+using FitFileParsing;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -18,6 +19,7 @@ builder.Services
     .AddEntityFrameworkStores<AppDbContext>();
 
 builder.Services.AddScoped<IFitImportService, FitImportService>();
+builder.Services.AddScoped<IFitFileParser, FitFileParser>();
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
