@@ -66,4 +66,31 @@ public class SessionEndpointTests : IClassFixture<IntegrationFactory>, IDisposab
         Assert.NotNull(content);
         Assert.Single(content);
     }
+
+    [Fact]
+    public async Task GetSessionById_SessionExists_Returns200Ok_WithJsonPayload()
+    {
+        // Arrange: Pull the strict stubbed User ID out of the cached options scheme
+        var optionsMonitor = _factory.Services.GetRequiredService<IOptionsMonitor<FakeAuthHandlerOptions>>();
+        var currentOptions = optionsMonitor.Get(FakeAuthHandler.AuthenticationScheme);
+        var expectedUserId = Guid.Parse(currentOptions.DefaultUserId);
+
+        var targetSessionId = Guid.NewGuid();
+        var mockSession = new SessionIndexDto(targetSessionId, DateTime.UtcNow, "Cycling", 3600, 25000, 140, 200);
+
+        // Strict mock setup matches the targeted session ID and the authenticated user ID
+        _queryMock
+            .Setup(s => s.GetSessionByIdAsync(targetSessionId, expectedUserId))
+            .ReturnsAsync(mockSession);
+
+        // Act
+        var response = await _client.GetAsync($"/api/sessions/{targetSessionId}");
+
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+        var content = await response.Content.ReadFromJsonAsync<SessionIndexDto>();
+        Assert.NotNull(content);
+        Assert.Equal(targetSessionId, content.Id);
+    }
 }

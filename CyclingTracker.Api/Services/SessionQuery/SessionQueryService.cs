@@ -18,12 +18,28 @@ public class SessionQueryService(AppDbContext db) : ISessionQueryService
                 s.Id,
                 s.StartTimeUtc,
                 s.Sport.ToString(),
-                // Postgres / EF translation for TimeSpan to total seconds
                 s.Duration.Duration().TotalSeconds,
                 s.DistanceMetres,
                 s.AvgHeartRate,
                 s.AvgPowerWatts
             ))
             .ToListAsync();
+    }
+
+    public async Task<SessionIndexDto?> GetSessionByIdAsync(Guid sessionId, Guid userId)
+    {
+          return await db.Set<Session>()
+            .AsNoTracking()
+            .Where(s => s.Id == sessionId && s.UserId == userId)
+            .Select(s => new SessionIndexDto(
+                s.Id,
+                s.StartTimeUtc,
+                s.Sport.ToString(),
+                s.Duration.TotalSeconds,
+                s.DistanceMetres,
+                s.AvgHeartRate,
+                s.AvgPowerWatts
+            ))
+            .SingleOrDefaultAsync();
     }
 }

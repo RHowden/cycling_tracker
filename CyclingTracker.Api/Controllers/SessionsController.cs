@@ -26,13 +26,20 @@ public class SessionsController(ISessionQueryService sessionQueryService) : Cont
 
     [HttpGet("{id}")]
     [Authorize]
-    public IActionResult GetSession(int id)
+    public async Task<IActionResult> GetSession(Guid id)
     {
-        string currentUserId = User.GetUserId();
+        if (!Guid.TryParse(User.GetUserId(), out var userId))
+        {
+            return BadRequest("Invalid or missing user identifier.");
+        }
 
-        var session = SampleData.Sessions
-            .Where(s => s.UserId == currentUserId)
-            .FirstOrDefault(s => s.Id == id);
+        var session = await sessionQueryService.GetSessionByIdAsync(id, userId);
+
+        if (session == null)
+        {
+            return NotFound();
+        }
+
         return Ok(session);
     }
 }
