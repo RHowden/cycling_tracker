@@ -1,6 +1,7 @@
 ﻿using System.Security.Claims;
 using CyclingTracker.Api.Controllers;
 using CyclingTracker.Api.Dtos;
+using CyclingTracker.Api.Services;
 using CyclingTracker.Api.Shared;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

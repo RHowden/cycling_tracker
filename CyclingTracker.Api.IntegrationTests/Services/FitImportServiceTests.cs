@@ -1,12 +1,13 @@
 using CyclingTracker.Api.Dtos;
 using CyclingTracker.Api.Mappers;
 using CyclingTracker.Api.Models;
+using CyclingTracker.Api.Services;
 using CyclingTracker.Api.Shared;
 using FitFileParsing;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
-namespace CyclingTracker.Api.IntegrationTests;
+namespace CyclingTracker.Api.IntegrationTests.Services;
 
 public class FakeFitParser(ActivityData activity) : IFitFileParser
 {

@@ -8,7 +8,6 @@ namespace CyclingTracker.Api.IntegrationTests.Infrastructure;
 
 public class FakeAuthHandlerOptions : AuthenticationSchemeOptions
 {
-    // You can set a default User ID for all tests here
     public string DefaultUserId { get; set; } = Guid.NewGuid().ToString();
 }
 

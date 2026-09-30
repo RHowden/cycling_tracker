@@ -9,8 +9,9 @@ using Microsoft.AspNetCore.Http;
 using Moq;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Mvc.Testing;
+using CyclingTracker.Api.Services;
 
-namespace CyclingTracker.Api.IntegrationTests;
+namespace CyclingTracker.Api.IntegrationTests.Features;
 
 public class ImportEndpointTests : IClassFixture<IntegrationFactory>, IDisposable
 {

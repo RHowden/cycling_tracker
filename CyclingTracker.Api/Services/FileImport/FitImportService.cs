@@ -6,6 +6,8 @@ using FitFileParsing;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 
+namespace CyclingTracker.Api.Services;
+
 public class FitImportService(AppDbContext db, IFitFileParser parser) : IFitImportService
 {
     public async Task<Result<SessionDto>> ImportAsync(IFormFile fitFile, Guid userId)
