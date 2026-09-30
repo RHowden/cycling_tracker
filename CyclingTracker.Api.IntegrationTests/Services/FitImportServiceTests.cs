@@ -1,6 +1,3 @@
-using System.ComponentModel.Design;
-using System.Diagnostics;
-using CyclingTracker.Api.Data;
 using CyclingTracker.Api.Dtos;
 using CyclingTracker.Api.Mappers;
 using CyclingTracker.Api.Models;
@@ -8,33 +5,8 @@ using CyclingTracker.Api.Shared;
 using FitFileParsing;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Testcontainers.PostgreSql;
 
-namespace CyclingTracker.Api.Tests;
-
-public class PostgresFixture : IAsyncLifetime
-{
-    private readonly PostgreSqlContainer _container = new PostgreSqlBuilder("postgres:16-alpine")
-        .Build();
-
-    public string ConnectionString => _container.GetConnectionString();
-
-    public async Task InitializeAsync()
-    {
-        await _container.StartAsync();
-        await using var db = CreateDb();
-        await db.Database.MigrateAsync();
-    }
-
-    public Task DisposeAsync() => _container.DisposeAsync().AsTask();
-
-    public AppDbContext CreateDb() =>
-        new(new DbContextOptionsBuilder<AppDbContext>()
-            .UseNpgsql(ConnectionString)
-            .Options);
-}
-
-// ---------- Fake parser: hands back a ready-made DTO, no real FIT bytes needed ----------
+namespace CyclingTracker.Api.IntegrationTests;
 
 public class FakeFitParser(ActivityData activity) : IFitFileParser
 {
@@ -47,13 +19,15 @@ public class ThrowingFitParser : IFitFileParser
         throw new InvalidDataException("Corrupt FIT file");
 }
 
-// ---------- Tests ----------
 
-public class FitImportServiceTests(PostgresFixture pg) : IClassFixture<PostgresFixture>
+[Collection("Postgres")]
+
+public class FitImportServiceTests(PostgresFixture pg) : DbTestBase(pg)
 {
     private static readonly DateTime StartTime =
         new(2026, 9, 1, 7, 30, 0, DateTimeKind.Utc);
 
+    
     [Fact]
     public async Task FitImport_ValidFile_PersistsSessionAndReturnsSuccess()
     {

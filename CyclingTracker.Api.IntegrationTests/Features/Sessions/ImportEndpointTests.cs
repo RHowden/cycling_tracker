@@ -1,21 +1,39 @@
 using System.Net;
 using System.Net.Http.Headers;
+using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using CyclingTracker.Api.Dtos;
+using CyclingTracker.Api.IntegrationTests.Infrastructure;
 using CyclingTracker.Api.Shared;
 using Microsoft.AspNetCore.Http;
 using Moq;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace CyclingTracker.Api.IntegrationTests;
 
-public class ImportEndpointTests : IClassFixture<CustomWebApplicationFactory<Program>>
+public class ImportEndpointTests : IClassFixture<IntegrationFactory>, IDisposable
 {
     private readonly HttpClient _client;
-    private readonly CustomWebApplicationFactory<Program> _factory;
+    private readonly Mock<IFitImportService> _importMock = new();
+    private readonly WebApplicationFactory<Program> _factory;
 
-    public ImportEndpointTests(CustomWebApplicationFactory<Program> factory)
+    public ImportEndpointTests(IntegrationFactory factory)
     {
-        _factory = factory;
+        _factory = factory.WithWebHostBuilder(builder =>
+            builder.ConfigureTestServices(services =>
+            {
+                services.RemoveAll<IFitImportService>();
+                services.AddScoped(_ => _importMock.Object);
+            }));
+
         _client = _factory.CreateClient();
+    }
+
+    public void Dispose()
+    {
+        _factory.Dispose();
+        GC.SuppressFinalize(this);
     }
 
     [Fact]
@@ -23,7 +41,7 @@ public class ImportEndpointTests : IClassFixture<CustomWebApplicationFactory<Pro
     {
         // Arrange
         var newSessionId = Guid.NewGuid();
-        _factory.FitImportServiceMock
+        _importMock
             .Setup(s => s.ImportAsync(It.IsAny<IFormFile>(), It.IsAny<Guid>()))
             .ReturnsAsync(Result<SessionDto>.Success(new SessionDto(newSessionId)));
 

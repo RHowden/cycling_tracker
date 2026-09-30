@@ -15,7 +15,7 @@ public class SampleData
             currentDate = currentDate.AddDays(rnd.Next(1, 5));
             sessions.Add(new
             {
-                UserId = "01a0c431-b2d6-7015-b7e7-8def6b11e34f",
+                UserId = "01a0f238-6d07-77ba-8760-c2fb2b896b82",
                 Id = i,
                 Date = currentDate.ToString("yyyy-MM-dd"), // Increments the date
                 Type = "Run",

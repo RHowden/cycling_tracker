@@ -37,7 +37,7 @@ function useApiResource<T>(url: string | null) {
 
 export function useTrainingData() {
   const { data, loading, error } = useApiResource<Session[]>("/sessions");
-  const sessions = useMemo(() => (data ? fillDateGaps(data) : []), [data]);
+  const sessions = useMemo(() => (data && data.length ? fillDateGaps(data) : []), [data]);
   return { sessions, loading, error };
 }
 
