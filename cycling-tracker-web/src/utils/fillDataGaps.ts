@@ -51,7 +51,6 @@ export function fillDateGaps(sessions: Session[]): TrainingDay[] {
 
     // Securely move forward by exactly one calendar day
     cursor.setUTCDate(cursor.getUTCDate() + 1);
-    debugger
   }
 
   return result;
