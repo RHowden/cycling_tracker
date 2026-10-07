@@ -1,6 +1,6 @@
-// Base path for all API calls. Left as "/api" so the Vite dev-server proxy
+import { z } from "zod";
 
-import { ApiError } from "./ApiError";
+import { ApiError, ResponseShapeError } from "./apiErrors";
 import { parseErrorMessages } from "./parseErrorMessages";
 
 const API_BASE = `${import.meta.env.VITE_API_BASE_URL}/api`;
@@ -12,27 +12,34 @@ export async function apiRequestVoid(
   await performRequest(path, options);
 }
 
-export async function apiRequest<TResponse>(
+export async function apiRequest<S extends z.ZodType>(
   path: string,
+  schema: S,
   options: { method?: string; body?: unknown } = {},
-): Promise<TResponse> {
+): Promise<z.output<S>> {
   const res = await performRequest(path, options);
 
-  if (res.status === 204) {
-    return undefined as TResponse;
+  let json: unknown = undefined;
+
+  if (res.status !== 204) {
+    const text = await res.text();
+
+    if (!text) {
+      throw new ApiError(res.status, ["Received an empty response from the server."]);
+    }
+
+    try {
+      json = JSON.parse(text);
+    } catch {
+      throw new ApiError(res.status, ["Received an invalid response from the server."]);
+    }
   }
 
-  const text = await res.text();
-
-  if (!text) {
-    throw new ApiError(res.status, ["Received an empty response from the server."]);
+  const result = schema.safeParse(json);
+  if (!result.success) {
+    throw new ResponseShapeError(path, result.error);
   }
-
-  try {
-    return JSON.parse(text) as TResponse;
-  } catch {
-    throw new ApiError(res.status, ["Received an invalid response from the server."]);
-  }
+  return result.data;
 }
 
 async function performRequest(

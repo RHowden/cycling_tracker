@@ -9,7 +9,7 @@ import {
 } from 'recharts';
 import { useState } from 'react';
 
-import { TrainingDay } from '../../types/session';
+import { TrainingDay } from '../../api/schemas';
 
 import './SummaryChart.css'
 import { useNavigate } from 'react-router';
@@ -26,9 +26,9 @@ interface MetricConfig {
 }
 
 const SECONDARY_METRICS = {
-    hr: { label: 'Avg HR', unit: 'BPM', color: '#dc2626', key: 'avgHr' },
-    power: { label: 'Avg Power', unit: 'W', color: '#2563eb', key: 'avgPower' },
-    distance: { label: 'Distance', unit: 'km', color: '#10b981', key: 'distance' },
+    hr: { label: 'Avg HR', unit: 'BPM', color: '#dc2626', key: 'avgHeartRate' },
+    power: { label: 'Avg Power', unit: 'W', color: '#2563eb', key: 'avgPowerWatts' },
+    distance: { label: 'Distance', unit: 'km', color: '#10b981', key: 'distanceMetres' },
 } as const satisfies Record<string, MetricConfig>;
 
 type MetricKey = keyof typeof SECONDARY_METRICS;
@@ -67,7 +67,6 @@ export function SummaryChart({ data }: SummaryChartProps) {
         }
     };
 
-    //const [activeKey, setActiveKey] = useState('power');
     const [activeKey, setActiveKey] = useState<MetricKey>('hr');
     const activeMetric = SECONDARY_METRICS[activeKey];
 
@@ -112,17 +111,22 @@ export function SummaryChart({ data }: SummaryChartProps) {
                     <ResponsiveContainer>
                         <BarChart data={data} syncId="trainingTimeline" margin={{ top: 5, right: 5, left: -20, bottom: 5 }}>
                             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f3f4f6" />
-                            <XAxis dataKey="date" hide />
-                            <YAxis tick={{ fill: '#9ca3af', fontSize: 11 }} axisLine={false} tickLine={false} />
+                            <XAxis dataKey="startTimeUtc" hide />
+                            <YAxis
+                                tick={{ fill: '#9ca3af', fontSize: 11 }}
+                                axisLine={false}
+                                tickLine={false}
+                                tickFormatter={(val) => `${Math.round(val / 60)}m`}
+                            />
                             <Tooltip
                                 cursor={{ fill: '#f3f4f6', opacity: 0.6 }}
-                                formatter={(value) => [`${value} Min`, 'Duration']}
+                                formatter={(value: any) => [`${(value / 60).toFixed(1)} Min`, 'Duration']}
                             />
                             <Bar
-                                dataKey="duration" 
+                                dataKey="durationSeconds"
                                 fill="#9ca3af"
-                                radius={[4, 4, 0, 0]} 
-                                barSize={16} 
+                                radius={[4, 4, 0, 0]}
+                                barSize={16}
                                 onClick={handleBarClick}
                                 style={{ cursor: "pointer" }} />
                         </BarChart>

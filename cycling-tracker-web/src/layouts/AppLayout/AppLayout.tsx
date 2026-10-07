@@ -3,7 +3,7 @@ import { Outlet, Link, useNavigate } from "react-router";
 import "./AppLayout.css";
 import { apiRequestVoid } from "../../api/client";
 import { useState } from "react";
-import { UserInfo } from "../../types/auth";
+import { UserInfo } from "../../api/schemas";
 
 export function AppLayout() {
   const navigate = useNavigate();

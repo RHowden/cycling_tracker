@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { uploadFitFile, validateFitFile } from "../api/fitAPI";
-import type { Session } from "../types/session"; 
+import type { Session } from  "../api/schemas"; 
 
 export type UploadStatus = "uploading" | "done" | "error";
 

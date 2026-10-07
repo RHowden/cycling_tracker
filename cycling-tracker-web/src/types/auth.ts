@@ -9,8 +9,3 @@ export interface LoginRequest {
   twoFactorCode: string | null;
   twoFactorRecoveryCode: string | null;
 }
-
-export interface UserInfo {
-  email: string;
-  isEmailConfirmed: boolean;
-}

@@ -1,12 +1,24 @@
 import { useEffect, useState, useMemo } from "react";
 
 import { apiRequest } from "../api/client";
-import { Session } from "../types/session";
+import { SessionSchema, SessionsResponseSchema } from  "../api/schemas";
 import { fillDateGaps } from "../utils/fillDataGaps";
-import { ApiError } from "../api/ApiError";
+import { ApiError } from "../api/apiErrors";
+import z from "zod";
 
-function useApiResource<T>(url: string | null) {
-  const [data, setData] = useState<T | null>(null);
+export function useTrainingData() {
+  const { data, loading, error } = useApiResource("/sessions", SessionsResponseSchema);
+  const sessions = useMemo(() => (data && data.length ? fillDateGaps(data) : []), [data]);
+  return { sessions, loading, error };
+}
+
+export function useTrainingSession(id: string | undefined) {
+  const { data: session, loading, error } = useApiResource(`/sessions/${id}`, SessionSchema);
+  return { session, loading, error };
+}
+
+function useApiResource<T extends z.ZodType>(url: string | null, schema: T ) {
+  const [data, setData] = useState<z.output<T> | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string[] | null>(null);
 
@@ -19,7 +31,7 @@ function useApiResource<T>(url: string | null) {
       try {
         setLoading(true);
         setError(null);
-        const result = await apiRequest<T>(nullCheckedUrl);
+        const result = await apiRequest(nullCheckedUrl, schema);
         if (!cancelled) setData(result);
       } catch (err) {
         if (!cancelled) setError(err instanceof ApiError ? err.messages : ["Unknown error"]);
@@ -35,13 +47,3 @@ function useApiResource<T>(url: string | null) {
   return { data, loading, error };
 }
 
-export function useTrainingData() {
-  const { data, loading, error } = useApiResource<Session[]>("/sessions");
-  const sessions = useMemo(() => (data && data.length ? fillDateGaps(data) : []), [data]);
-  return { sessions, loading, error };
-}
-
-export function useTrainingSession(id: string | undefined) {
-  const { data: session, loading, error } = useApiResource<Session>(`/sessions/${id}`);
-  return { session, loading, error };
-}

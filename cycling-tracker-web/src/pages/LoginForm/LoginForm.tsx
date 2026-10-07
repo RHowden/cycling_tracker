@@ -2,7 +2,7 @@ import { useActionState } from "react";
 import { useNavigate } from "react-router";
 
 import { login } from "../../api/auth";
-import { ApiError } from "../../api/ApiError";
+import { ApiError } from "../../api/apiErrors";
 import { useAuth } from "../../components/AuthContext";
 
 import "./LoginForm.css";

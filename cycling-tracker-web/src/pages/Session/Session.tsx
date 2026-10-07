@@ -38,27 +38,27 @@ export function Session() {
                 <div className="stats-grid">
                     <div className="stat-box">
                         <span className="stat-label">Date</span>
-                        <span className="stat-value">{session.date}</span>
+                        <span className="stat-value">{session.startTimeUtc.toLocaleTimeString()}</span>
                     </div>
                     <div className="stat-box">
                         <span className="stat-label">Type</span>
-                        <span className="stat-value">{session.type}</span>
+                        <span className="stat-value">{session.sport}</span>
                     </div>
                     <div className="stat-box">
                         <span className="stat-label">Duration</span>
-                        <span className="stat-value">{session.duration} seconds</span>
+                        <span className="stat-value">{session.durationSeconds} seconds</span>
                     </div>
                     <div className="stat-box">
                         <span className="stat-label">Distance</span>
-                        <span className="stat-value">{session.distance} km</span>
+                        <span className="stat-value">{session.distanceMetres} km</span>
                     </div>
                     <div className="stat-box">
                         <span className="stat-label">Avg Heart Rate</span>
-                        <span className="stat-value">{session.avgHr} bpm</span>
+                        <span className="stat-value">{session.avgHeartRate  } bpm</span>
                     </div>
                     <div className="stat-box">
                         <span className="stat-label">Avg Power</span>
-                        <span className="stat-value">{session.avgPower} W</span>
+                        <span className="stat-value">{session.avgPowerWatts} W</span>
                     </div>
                 </div>
             </div>

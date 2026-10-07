@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { apiRequest } from "../api/client";
-import { UserInfo } from "../types/auth"
+import { UserInfo, UserInfoSchema } from "../api/schemas"
 
 type AuthState = "loading" | "authenticated" | "unauthenticated";
 
@@ -15,7 +15,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const checkAuth = async () => {
         try {
-            const info = await apiRequest<UserInfo>("/auth/manage/info");
+            const info = await apiRequest("/auth/manage/info", UserInfoSchema);
             setUser(info);
             setStatus("authenticated");
         } catch {

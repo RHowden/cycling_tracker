@@ -1,4 +1,4 @@
-import type { Session } from "../types/session";
+import { SessionSchema, type Session } from "../api/schemas"
 import { apiRequest } from "./client";
 const MAX_SIZE_MB = 20;
 
@@ -12,6 +12,6 @@ export async function uploadFitFile(file: File): Promise<Session> {
     const form = new FormData();
     form.append("file", file);
 
-    return apiRequest<Session>("/import/import", { method: "POST", body: form });
+    return apiRequest("/import/import", SessionSchema, { method: "POST", body: form });
 }
 

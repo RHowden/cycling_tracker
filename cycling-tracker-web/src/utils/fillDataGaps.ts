@@ -1,27 +1,57 @@
-import { Session, TrainingDay } from "../types/session.ts"
+import { Session, TrainingDay } from "../api/schemas";
+
 export function fillDateGaps(sessions: Session[]): TrainingDay[] {
-  const byDate = new Map(sessions.map((s) => [s.date, s]));
+  if (sessions.length === 0) return [];
+
+  const toDateString = (date: Date) => date.toISOString().slice(0, 10);
+
+  const orderedSessions = [...sessions].sort((a, b) => a.startTimeUtc.getTime() - b.startTimeUtc.getTime());
+
+  const byDate = new Map(
+    orderedSessions.map((s) => [toDateString(s.startTimeUtc), s])
+  );
+  
   const result: TrainingDay[] = [];
 
-  const startDate: string = sessions[0].date;
-  const endDate: string = sessions[sessions.length - 1].date;
+  // 3. Extract the clean string boundaries
+  const startDateStr = toDateString(orderedSessions[0].startTimeUtc);
+  const endDateStr = toDateString(orderedSessions[orderedSessions.length - 1].startTimeUtc);
 
-  const cursor = new Date(startDate);
-  const end = new Date(endDate);
+  // 4. Initialize our loop cursor using pure UTC midnight boundaries
+  const cursor = new Date(startDateStr);
+  const end = new Date(endDateStr);
 
-  while (cursor <= end) {
-    const dateStr = cursor.toISOString().split('T')[0];
-    const session = byDate.get(dateStr);
+  while (cursor <= end) {    
+    const currentDateStr = toDateString(cursor);
+    const session = byDate.get(currentDateStr);
 
     result.push(
       session
-        ? { date: dateStr, hasSession: true, id: session.id, type: session.type, duration: session.duration,
-             avgHr: session.avgHr, avgPower: session.avgPower, distance: session.distance }
-        : { date: dateStr, hasSession: false, id: null, type: null, duration: null, avgHr: null, 
-            avgPower: null, distance: null }
+        ? {
+          date: currentDateStr, // Clean string for Recharts to consume effortlessly
+          hasSession: true, 
+          id: session.id, 
+          sport: session.sport, 
+          durationSeconds: session.durationSeconds,
+          avgHeartRate: session.avgHeartRate, 
+          avgPowerWatts: session.avgPowerWatts, 
+          distanceMetres: session.distanceMetres
+        }
+        : {
+          date: currentDateStr, // Pure missing gap day
+          hasSession: false, 
+          id: null, 
+          sport: null, 
+          durationSeconds: null,   
+          avgHeartRate: null,   
+          avgPowerWatts: null, 
+          distanceMetres: null    
+        }
     );
 
-    cursor.setDate(cursor.getDate() + 1);
+    // Securely move forward by exactly one calendar day
+    cursor.setUTCDate(cursor.getUTCDate() + 1);
+    debugger
   }
 
   return result;
