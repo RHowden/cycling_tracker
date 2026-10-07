@@ -5,7 +5,7 @@ export const UserInfoSchema = z.object ({
   email: z.string(),
   isEmailConfirmed: z.boolean()
 });
-export type UsderInfo = z.infer<typeof UserInfoSchema>;
+export type UserInfo = z.infer<typeof UserInfoSchema>;
 
 export const SessionSchema = z.object({
   id: z.string(),
