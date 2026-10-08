@@ -15,11 +15,13 @@ export async function parseErrorMessages(res: Response): Promise<string[]> {
       if (typeof body.error === 'object' && body.error.message) {
         return [body.error.message];
       }
-      // If body.error is just a raw string code
-      if (typeof body.error === 'string') {
-        return [body.error];
-      }
     }
+
+    if (body.detail) return [body.detail];
+
+    // If body.error is just a raw string code
+    if (typeof body.error === 'string') return [body.error];
+
     return [body.title ?? genericMessage(res.status)];
   }
   catch {
@@ -34,6 +36,7 @@ export async function parseErrorMessages(res: Response): Promise<string[]> {
 // { "title": "...", "status": 400, "errors": { "FieldOrCode": ["message", ...] } }
 interface ValidationProblemDetails {
   title?: string;
+  detail?: string;
   errors?: Record<string, string[]>;
   error?: string | { message?: string };
 }

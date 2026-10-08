@@ -36,16 +36,13 @@ export function AppLayout() {
           <Link to="/upload" className="sidebar-link">Upload</Link>
         </nav>
 
+        <button onClick={handleSignOut} className="sign-out-button">
+            Sign Out
+          </button>
       </aside>
 
       {/* ─── RIGHT MAIN WRAPPER ─── */}
       <div className="app-main-wrapper">
-        <header className="app-top-header">
-          <button onClick={handleSignOut} className="sign-out-button">
-            Sign Out
-          </button>
-        </header>
-
         {/* ─── DYNAMIC CONTENT AREA ─── */}
         <main className="app-content-slot">
           {/* This is where DashboardHome, ResourceDetails, etc. will inject */}

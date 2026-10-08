@@ -42,8 +42,8 @@
   color: #ffffff;
 }
 
-
 .sign-out-button {
+  margin-top: auto;
   background-color: #ef4444; /* Red button */
   color: white;
   border: none;
@@ -64,15 +64,6 @@
   flex-direction: column;
   background-color: #f1f5f9; /* Light grey background */
   overflow: hidden;
-}
-
-.app-top-header {
-  background-color: #ffffff;
-  padding: 1rem 2rem;
-  border-bottom: 1px solid #e2e8f0;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
 }
 
 .app-content-slot {

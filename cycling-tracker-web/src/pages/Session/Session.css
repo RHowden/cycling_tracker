@@ -130,3 +130,14 @@
   background-color: #f8fafc;
   color: #1e293b;
 }
+
+.delete-session-button {
+  margin-left: auto;
+  background-color: #ef4444; /* Red button */
+  color: white;
+  border: none;
+  padding: 0.75rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
