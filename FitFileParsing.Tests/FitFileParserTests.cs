@@ -58,7 +58,7 @@ public class FitFileParserTests
         var result = subject.Parse(stream);
 
         // Assert
-        var expected = new ActivityData(expectedStartTime, "Run", 1800.0, 155, 250, 10000f);
+        var expected = new ActivityData(expectedStartTime, "Running", 1800.0, 155, 250, 10000f);
         Assert.Equal(expected, result);
     }
 

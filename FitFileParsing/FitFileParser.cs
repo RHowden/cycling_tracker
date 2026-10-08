@@ -48,13 +48,6 @@ public class FitFileParser
         // Convert Garmin's Sport enum to a clean string format matching your requirements
         Sport sport = session.GetSport() ?? Sport.Generic;
 
-        string sportType = sport switch
-        {
-            Sport.Running => "Run",
-            Sport.Cycling => "Bike",
-            _ => sport.ToString()
-        };
-
         double duration = session.GetTotalElapsedTime() ?? 0f;
         int? avgHr = session.GetAvgHeartRate();
         int? avgPower = session.GetAvgPower();
@@ -62,6 +55,6 @@ public class FitFileParser
 
         var startTime = fitMessages.SessionMesgs[0].GetStartTime().GetDateTime();
 
-        return new ActivityData(startTime, sportType, duration, avgHr, avgPower, distance);
+        return new ActivityData(startTime, sport.ToString(), duration, avgHr, avgPower, distance);
     }
 }
