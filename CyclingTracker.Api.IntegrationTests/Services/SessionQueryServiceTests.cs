@@ -1,7 +1,5 @@
-using CyclingTracker.Api.Dtos;
 using CyclingTracker.Api.Models;
 using CyclingTracker.Api.Services;
-using Microsoft.EntityFrameworkCore;
 
 namespace CyclingTracker.Api.IntegrationTest.Services;
 
