@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { ApiError, ResponseShapeError } from "./apiErrors";
+import { ApiError } from "./apiErrors";
 import { parseErrorMessages } from "./parseErrorMessages";
 
 const API_BASE = `${import.meta.env.VITE_API_BASE_URL}/api`;
@@ -37,7 +37,11 @@ export async function apiRequest<S extends z.ZodType>(
 
   const result = schema.safeParse(json);
   if (!result.success) {
-    throw new ResponseShapeError(path, result.error);
+    console.error("Unexpected API response format", z.treeifyError(result.error));
+
+    // 2. Give the user a friendly, generic message (or a clean list of fields)
+    const friendlyMessage = "The data returned from the server was invalid.";
+    throw new ApiError(res.status, [friendlyMessage]);
   }
   return result.data;
 }
