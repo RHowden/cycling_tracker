@@ -3,6 +3,7 @@ using CyclingTracker.Api.Controllers;
 using CyclingTracker.Api.Dtos;
 using CyclingTracker.Api.Services;
 using CyclingTracker.Api.Shared;
+using CyclingTracker.Api.Enums;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -126,7 +127,7 @@ public class ImportControllerTests
         var error = "error occured";
         _importService
           .Setup(s => s.ImportAsync(It.IsAny<IFormFile>(), It.IsAny<Guid>()))
-          .ReturnsAsync(Result<SessionDto>.Failure(error));
+          .ReturnsAsync(Result<SessionDto>.Failure(ServiceErrorType.Failure, error));
 
         var controller = CreateController();
         var file = CreateFormFile(new byte[] { 1, 2, 3 });

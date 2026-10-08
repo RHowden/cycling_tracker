@@ -1,3 +1,4 @@
+using CyclingTracker.Api.Enums;
 using CyclingTracker.Api.Models;
 using CyclingTracker.Api.Shared;
 using Microsoft.EntityFrameworkCore;
@@ -10,12 +11,12 @@ public class SessionDeletionService(DbContext db) : ISessionDeletionService
     {
         if (sessionId == Guid.Empty)
         {
-            return Result.Failure("Session ID cannot be empty.");
+            return Result.Failure(ServiceErrorType.ValidationError, "Session ID cannot be empty.");
         }
 
         if (userId == Guid.Empty)
         {
-            return Result.Failure("User ID cannot be empty.");
+            return Result.Failure(ServiceErrorType.ValidationError, "User ID cannot be empty.");
         }
 
         try
@@ -25,12 +26,12 @@ public class SessionDeletionService(DbContext db) : ISessionDeletionService
 
             if (session is null)
             {
-                return Result.Failure("Session not found.");
+                return Result.Failure(ServiceErrorType.ResourceNotFound, "Session not found.");
             }
 
             if (session.UserId != userId)
             {
-                return Result.Failure("Unauthorized: Invalid combination of session and user Id.");
+                return Result.Failure(ServiceErrorType.AccessDenied, "Unauthorized: Invalid combination of session and user Id.");
             }
 
             db.Set<Session>().Remove(session);
@@ -40,7 +41,7 @@ public class SessionDeletionService(DbContext db) : ISessionDeletionService
         }
         catch (DbUpdateException)
         {
-            return Result.Failure("A database error occurred while trying to delete the session.");
+            return Result.Failure(ServiceErrorType.Failure, "A database error occurred while trying to delete the session.");
         }
     }
 }

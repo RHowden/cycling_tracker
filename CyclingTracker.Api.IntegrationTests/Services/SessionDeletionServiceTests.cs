@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 
 using CyclingTracker.Api.Models;
 using CyclingTracker.Api.Services;
+using CyclingTracker.Api.Enums;
 
 namespace CyclingTracker.Api.IntegrationTest.Services;
 
@@ -61,6 +62,7 @@ public class SessionDeletionServiceTests(PostgresFixture pg) : DbTestBase(pg)
 
         // Assert
         Assert.False(result.IsSuccess);
+        Assert.Equal(ServiceErrorType.AccessDenied, result.ServiceErrorType);
         Assert.NotNull(result.ErrorMessage);
         Assert.Contains("Unauthorized", result.ErrorMessage, StringComparison.OrdinalIgnoreCase);
     }
@@ -99,6 +101,7 @@ public class SessionDeletionServiceTests(PostgresFixture pg) : DbTestBase(pg)
 
         // Assert
         Assert.False(result.IsSuccess);
+        Assert.Equal(ServiceErrorType.ResourceNotFound, result.ServiceErrorType);
         Assert.NotNull(result.ErrorMessage);
         Assert.Contains("not found", result.ErrorMessage, StringComparison.OrdinalIgnoreCase);
     }
@@ -117,6 +120,7 @@ public class SessionDeletionServiceTests(PostgresFixture pg) : DbTestBase(pg)
 
         // Assert
         Assert.False(result.IsSuccess);
+        Assert.Equal(ServiceErrorType.ValidationError, result.ServiceErrorType);
         Assert.NotNull(result.ErrorMessage);
         Assert.Contains("Session ID cannot be empty", result.ErrorMessage, StringComparison.OrdinalIgnoreCase);
     }
@@ -135,6 +139,7 @@ public class SessionDeletionServiceTests(PostgresFixture pg) : DbTestBase(pg)
 
         // Assert
         Assert.False(result.IsSuccess);
+        Assert.Equal(ServiceErrorType.ValidationError, result.ServiceErrorType);
         Assert.NotNull(result.ErrorMessage);
         Assert.Contains("User ID cannot be empty", result.ErrorMessage, StringComparison.OrdinalIgnoreCase);
     }

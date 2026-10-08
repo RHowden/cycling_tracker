@@ -1,5 +1,6 @@
 using CyclingTracker.Api.Data;
 using CyclingTracker.Api.Dtos;
+using CyclingTracker.Api.Enums;
 using CyclingTracker.Api.Mappers;
 using CyclingTracker.Api.Shared;
 using FitFileParsing;
@@ -22,7 +23,8 @@ public class FitImportService(AppDbContext db, IFitFileParser parser) : IFitImpo
         }
         catch
         {
-            return Result<SessionDto>.Failure("The file could not be read as a FIT file.");
+            return Result<SessionDto>.Failure(ServiceErrorType.ValidationError,
+             "The file could not be read as a FIT file.");
         }
 
         var session = new ActivityMapper().ToEntity(activity, userId);
@@ -37,12 +39,13 @@ public class FitImportService(AppDbContext db, IFitFileParser parser) : IFitImpo
             if (pg.SqlState == PostgresErrorCodes.UniqueViolation
                 && pg.ConstraintName == "IX_Sessions_UserId_StartTimeUtc")
             {
-                return Result<SessionDto>.Failure("A session with this start time has already been imported.");
+                return Result<SessionDto>.Failure(ServiceErrorType.Conflict,
+                 "A session with this start time has already been imported.");
             }
 
             if (pg.SqlState == PostgresErrorCodes.ForeignKeyViolation)
             {
-                return Result<SessionDto>.Failure("Unknown user.");
+                return Result<SessionDto>.Failure(ServiceErrorType.ValidationError, "Unknown user.");
             }
 
             throw;

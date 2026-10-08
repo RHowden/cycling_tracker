@@ -1,4 +1,5 @@
 using CyclingTracker.Api.Dtos;
+using CyclingTracker.Api.Enums;
 using CyclingTracker.Api.Mappers;
 using CyclingTracker.Api.Models;
 using CyclingTracker.Api.Services;
@@ -61,7 +62,8 @@ public class FitImportServiceTests(PostgresFixture pg) : DbTestBase(pg)
         var second = await CreateSut(BuildActivity(StartTime)).ImportAsync(FakeFitFile(), userId);
 
         Assert.True(first.IsSuccess, first.ErrorMessage);
-        Assert.False(second.IsSuccess);
+        Assert.False(second.IsSuccess);        
+        Assert.Equal(ServiceErrorType.Conflict, second.ServiceErrorType);
         Assert.False(string.IsNullOrWhiteSpace(second.ErrorMessage));
 
         Assert.Equal(1, await CountSessionsAsync(userId));
@@ -121,6 +123,7 @@ public class FitImportServiceTests(PostgresFixture pg) : DbTestBase(pg)
             .ImportAsync(FakeFitFile(), unknownUserId);
 
         Assert.False(result.IsSuccess);
+        Assert.Equal(ServiceErrorType.ValidationError, result.ServiceErrorType);
         Assert.False(string.IsNullOrWhiteSpace(result.ErrorMessage));
         Assert.Equal(0, await CountSessionsAsync(unknownUserId));
     }
@@ -135,8 +138,10 @@ public class FitImportServiceTests(PostgresFixture pg) : DbTestBase(pg)
         var result = await sut.ImportAsync(FakeFitFile(), userId);
 
         Assert.False(result.IsSuccess);
+        Assert.Equal(ServiceErrorType.ValidationError, result.ServiceErrorType);
         Assert.Equal(0, await CountSessionsAsync(userId));
     }
+
 
        [Fact]
     public async Task ImportAsync_ValidFile_RoundTripsAllValues()
