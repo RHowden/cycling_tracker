@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { uploadFitFile, validateFitFile } from "../api/fitAPI";
-import type { Session } from  "../api/schemas"; 
+import type { SessionUploadResponse } from  "../api/schemas"; 
 
 export type UploadStatus = "uploading" | "done" | "error";
 
@@ -11,7 +11,7 @@ export interface UploadItem {
   error?: string;
 }
 
-export function useFitUpload(onUploaded?: (session: Session | null) => void) {
+export function useFitUpload(onUploaded?: (session: SessionUploadResponse | null) => void) {
   const [items, setItems] = useState<UploadItem[]>([]);
 
   const patch = (id: string, changes: Partial<UploadItem>) =>

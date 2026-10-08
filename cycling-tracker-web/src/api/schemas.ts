@@ -1,7 +1,7 @@
 // src/api/schemas.ts
 import { z } from "zod";
 
-export const UserInfoSchema = z.object ({
+export const UserInfoSchema = z.object({
   email: z.string(),
   isEmailConfirmed: z.boolean()
 });
@@ -21,6 +21,9 @@ export const SessionsResponseSchema = z.array(SessionSchema);
 
 export type SessionResponse = z.input<typeof SessionSchema>;
 export type Session = z.output<typeof SessionSchema>;
+
+export const SessionUploadResponseSchema = z.object({ id: z.string() });
+export type SessionUploadResponse = z.infer<typeof SessionUploadResponseSchema>;
 
 export const TrainingDaySchema = z.discriminatedUnion("hasSession", [
   z.object({
