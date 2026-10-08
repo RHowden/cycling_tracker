@@ -21,7 +21,7 @@ builder.Services
 builder.Services.AddScoped<IFitImportService, FitImportService>();
 builder.Services.AddScoped<IFitFileParser, FitFileParser>();
 builder.Services.AddScoped<ISessionQueryService, SessionQueryService>();
-
+builder.Services.AddScoped<ISessionDeletionService, SessionDeletionService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -66,6 +66,8 @@ builder.Services.Configure<CookieAuthenticationOptions>(IdentityConstants.TwoFac
     options.Cookie.SameSite = SameSiteMode.None;
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
 });
+
+builder.Services.AddProblemDetails(); 
 
 var app = builder.Build();
 

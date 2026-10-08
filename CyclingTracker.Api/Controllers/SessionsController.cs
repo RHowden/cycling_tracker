@@ -3,17 +3,19 @@ using Microsoft.AspNetCore.Mvc;
 using CyclingTracker.Api.Data;
 using CyclingTracker.Api.Extensions;
 using CyclingTracker.Api.Services;
+using CyclingTracker.Api.Enums;
 
 namespace CyclingTracker.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class SessionsController(ISessionQueryService sessionQueryService) : ControllerBase
+public class SessionsController(ISessionQueryService sessionQueryService,
+    ISessionDeletionService sessionDeletionService) : ControllerBase
 {
     [HttpGet]
     [Authorize]
     public async Task<IActionResult> GetSessions([FromQuery] DateTime? from, [FromQuery] DateTime? to)
-    {     
+    {
         if (!Guid.TryParse(User.GetUserId(), out var userId))
         {
             return BadRequest("Invalid or missing user identifier.");
@@ -41,5 +43,36 @@ public class SessionsController(ISessionQueryService sessionQueryService) : Cont
         }
 
         return Ok(session);
+    }
+
+    [HttpDelete("{sessionId}")]
+    [Authorize]
+    public async Task<IActionResult> DeleteSession(Guid sessionId)
+    {
+
+        string currentUserId = User.GetUserId();
+        if (!Guid.TryParse(currentUserId, out Guid userId))
+        {
+            // Returns a clean 401 if the string is empty or isn't a valid Guid format
+            return Unauthorized("User ID is missing or invalid in session cookie.");
+        }
+
+        var result = await sessionDeletionService.DeleteSessionAsync(sessionId, userId);
+
+        if (!result.IsSuccess)
+        {
+            // 1. Switch on the domain error type to return standard ProblemDetails
+            return result.ServiceErrorType switch
+            {
+                ServiceErrorType.ValidationError =>
+                    Problem(statusCode: 422, detail: result.ErrorMessage, title: "Unprocessable Entity"),
+                ServiceErrorType.ResourceNotFound or ServiceErrorType.AccessDenied =>
+                    Problem(statusCode: 404, detail: result.ErrorMessage, title: "Not Found"),
+                ServiceErrorType.Failure =>
+                    Problem(statusCode: 500, detail: result.ErrorMessage, title: "Internal Server Error"),
+                _ => Problem(statusCode: 500, detail: "An unexpected error occurred.")
+            };
+        }
+        return NoContent();
     }
 }

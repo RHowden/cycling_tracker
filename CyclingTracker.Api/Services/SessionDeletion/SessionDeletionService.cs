@@ -1,3 +1,4 @@
+using CyclingTracker.Api.Data;
 using CyclingTracker.Api.Enums;
 using CyclingTracker.Api.Models;
 using CyclingTracker.Api.Shared;
@@ -5,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CyclingTracker.Api.Services;
 
-public class SessionDeletionService(DbContext db) : ISessionDeletionService
+public class SessionDeletionService(AppDbContext  db) : ISessionDeletionService
 {
     public async Task<Result> DeleteSessionAsync(Guid sessionId, Guid userId)
     {

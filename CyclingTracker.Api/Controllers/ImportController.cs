@@ -7,15 +7,8 @@ namespace CyclingTracker.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ImportController : ControllerBase
+public class ImportController(IFitImportService fitImportsessionService) : ControllerBase
 {
-    private readonly IFitImportService _fitImportsessionService;
-
-    public ImportController(IFitImportService fitImportsessionService)
-    {
-        _fitImportsessionService = fitImportsessionService;
-    }
-
     [HttpPost("import")]
     [Authorize]
     [Consumes("multipart/form-data")]
@@ -33,7 +26,7 @@ public class ImportController : ControllerBase
             return Unauthorized("User ID is missing or invalid in session cookie.");
         }
 
-        var result = await _fitImportsessionService.ImportAsync(file, userId);
+        var result = await fitImportsessionService.ImportAsync(file, userId);
 
         if (!result.IsSuccess)
         {
