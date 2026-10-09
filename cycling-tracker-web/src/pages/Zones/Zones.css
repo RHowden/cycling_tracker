@@ -63,3 +63,53 @@
     color: #0f172a;
     font-variant-numeric: tabular-nums;
 }
+
+.zones-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.zones-saved {
+    margin: 0 0 1rem;
+    padding: 0.6rem 0.9rem;
+    border-radius: 8px;
+    background: #ecfdf5;
+    color: #065f46;
+}
+
+.zones-banner {
+    margin: 0 0 1rem;
+    padding: 0.75rem 1rem;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    background: #fef2f2;
+    color: #991b1b;
+}
+
+.zone-value {
+    text-align: right;
+}
+
+.zone-input {
+    width: 5rem;
+    padding: 0.3rem 0.5rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font: inherit;
+    text-align: right;
+}
+
+.zone-input[aria-invalid="true"] {
+    border-color: #dc2626;
+}
+
+.field-error {
+    margin: 0.25rem 0 0;
+    font-size: 0.85rem;
+    color: #dc2626;
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
