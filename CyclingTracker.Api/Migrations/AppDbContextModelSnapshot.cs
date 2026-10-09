@@ -257,6 +257,65 @@ namespace CyclingTracker.Api.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("CyclingTracker.Api.Models.Athlete", b =>
+                {
+                    b.OwnsOne("CyclingTracker.Api.Models.TrainingZones", "HeartRateZones", b1 =>
+                        {
+                            b1.Property<Guid>("AthleteId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<int>("Zone1Max")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("integer")
+                                .HasDefaultValue(130)
+                                .HasColumnName("HrZone1Max");
+
+                            b1.Property<int>("Zone2Max")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("integer")
+                                .HasDefaultValue(150)
+                                .HasColumnName("HrZone2Max");
+
+                            b1.HasKey("AthleteId");
+
+                            b1.ToTable("AspNetUsers");
+
+                            b1.WithOwner()
+                                .HasForeignKey("AthleteId");
+                        });
+
+                    b.OwnsOne("CyclingTracker.Api.Models.TrainingZones", "PowerZones", b1 =>
+                        {
+                            b1.Property<Guid>("AthleteId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<int>("Zone1Max")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("integer")
+                                .HasDefaultValue(150)
+                                .HasColumnName("PowerZone1Max");
+
+                            b1.Property<int>("Zone2Max")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("integer")
+                                .HasDefaultValue(200)
+                                .HasColumnName("PowerZone2Max");
+
+                            b1.HasKey("AthleteId");
+
+                            b1.ToTable("AspNetUsers");
+
+                            b1.WithOwner()
+                                .HasForeignKey("AthleteId");
+                        });
+
+                    b.Navigation("HeartRateZones")
+                        .IsRequired();
+
+                    b.Navigation("PowerZones")
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("CyclingTracker.Api.Models.Session", b =>
                 {
                     b.HasOne("CyclingTracker.Api.Models.Athlete", null)
