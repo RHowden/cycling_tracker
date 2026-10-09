@@ -3,8 +3,8 @@ using System.ComponentModel.DataAnnotations;
 namespace CyclingTracker.Api.Dtos;
 
 public record UpdateZoneRangeDto(
-    [property: Range(1, 2000)] int Zone1Max,
-    [property: Range(1, 2000)] int Zone2Max) : IValidatableObject
+    [Range(1, 2000)] int Zone1Max,
+    [Range(1, 2000)] int Zone2Max) : IValidatableObject
 {
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {
@@ -16,5 +16,5 @@ public record UpdateZoneRangeDto(
 }
 
 public record UpdateAthleteZonesDto(
-    [property: Required] UpdateZoneRangeDto HeartRate,
-    [property: Required] UpdateZoneRangeDto Power);
+    [Required] UpdateZoneRangeDto HeartRate,
+    [Required] UpdateZoneRangeDto Power);

@@ -1,6 +1,7 @@
 using CyclingTracker.Api.Data;
 using CyclingTracker.Api.Models;
 using CyclingTracker.Api.Services;
+using CyclingTracker.Api.Services.AthleteZones;
 using CyclingTracker.Api.Services.FileImport;
 using CyclingTracker.Api.Services.SessionDeletion;
 using CyclingTracker.Api.Services.SessionQuery;
@@ -25,6 +26,7 @@ builder.Services.AddScoped<IFitImportService, FitImportService>();
 builder.Services.AddScoped<IFitFileParser, FitFileParser>();
 builder.Services.AddScoped<ISessionQueryService, SessionQueryService>();
 builder.Services.AddScoped<ISessionDeletionService, SessionDeletionService>();
+builder.Services.AddScoped<IAthleteZonesService, AthleteZonesService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
