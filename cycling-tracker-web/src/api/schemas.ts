@@ -25,6 +25,24 @@ export type Session = z.output<typeof SessionSchema>;
 export const SessionUploadResponseSchema = z.object({ id: z.string() });
 export type SessionUploadResponse = z.infer<typeof SessionUploadResponseSchema>;
 
+const zoneSetSchema = z
+  .object({
+    zone1Max: z.number().int("Must be a whole number").positive("Must be greater than 0"),
+    zone2Max: z.number().int("Must be a whole number").positive("Must be greater than 0"),
+  })
+  .refine((zones) => zones.zone1Max < zones.zone2Max, {
+    message: "Zone 2 max must be higher than zone 1 max",
+    path: ["zone2Max"],
+  });
+
+export const athleteZonesSchema = z.object({
+  heartRate: zoneSetSchema,
+  power: zoneSetSchema,
+});
+
+export type ZoneSet = z.infer<typeof zoneSetSchema>;
+export type AthleteZones = z.infer<typeof athleteZonesSchema>;
+
 export const TrainingDaySchema = z.discriminatedUnion("hasSession", [
   z.object({
     date: z.string(),

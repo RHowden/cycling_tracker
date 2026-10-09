@@ -11,7 +11,8 @@ import { RegisterForm } from "./pages/RegisterForm/RegisterForm";
 import { AppLayout } from "./layouts/AppLayout/AppLayout";
 import { Dashboard } from "./pages/Dashboard/Dashboard";
 import { Session } from "./pages/Session/Session";
-import { FitUpload } from "./pages/FileUpload/FitUpload.tsx" 
+import { FitUpload } from "./pages/FileUpload/FitUpload.tsx";
+import { Zones } from "./pages/Zones/Zones.tsx";
 
 import { NotFound } from './pages/NotFound/NotFound.tsx';
 
@@ -52,7 +53,7 @@ export const router = createBrowserRouter([
           {
             path: "sessions/:id",
             element: <Session />,
-          },
+          }           
         ],
       },
       {
@@ -63,6 +64,17 @@ export const router = createBrowserRouter([
           {
             index: true,
             element: <FitUpload />,
+          },
+        ],
+      },
+      {
+        path: "/zones",
+        element: <AppLayout />,
+        errorElement: <ErrorElement />,
+        children: [
+          {
+            index: true,
+            element: <Zones />,
           },
         ],
       }

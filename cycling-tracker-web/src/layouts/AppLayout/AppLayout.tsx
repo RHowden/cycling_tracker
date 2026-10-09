@@ -36,9 +36,13 @@ export function AppLayout() {
           <Link to="/upload" className="sidebar-link">Upload</Link>
         </nav>
 
+        <nav className="sidebar-links">
+          <Link to="/zones" className="sidebar-link">Zones</Link>
+        </nav>
+
         <button onClick={handleSignOut} className="sign-out-button">
-            Sign Out
-          </button>
+          Sign Out
+        </button>
       </aside>
 
       {/* ─── RIGHT MAIN WRAPPER ─── */}

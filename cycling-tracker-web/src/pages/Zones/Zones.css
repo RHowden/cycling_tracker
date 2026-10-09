@@ -1,0 +1,65 @@
+.zones-detail-container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+}
+
+.zones-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+}
+
+.zones-header h1 {
+    margin: 0;
+    font-size: 1.75rem;
+    color: #1e293b;
+}
+
+.zone-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.25rem;
+}
+
+.zone-card {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+}
+
+.zone-card h2 {
+    margin: 0 0 1rem;
+    font-size: 1.15rem;
+    color: #1e293b;
+}
+
+.zone-list {
+    margin: 0;
+}
+
+.zone-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 0.6rem 0;
+    border-top: 1px solid #f1f5f9;
+}
+
+.zone-row:first-child {
+    border-top: none;
+}
+
+.zone-row dt {
+    font-weight: 600;
+    color: #475569;
+}
+
+.zone-row dd {
+    margin: 0;
+    color: #0f172a;
+    font-variant-numeric: tabular-nums;
+}
