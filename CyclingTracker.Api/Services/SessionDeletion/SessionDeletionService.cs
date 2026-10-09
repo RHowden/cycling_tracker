@@ -4,7 +4,7 @@ using CyclingTracker.Api.Models;
 using CyclingTracker.Api.Shared;
 using Microsoft.EntityFrameworkCore;
 
-namespace CyclingTracker.Api.Services;
+namespace CyclingTracker.Api.Services.SessionDeletion;
 
 public class SessionDeletionService(AppDbContext  db) : ISessionDeletionService
 {

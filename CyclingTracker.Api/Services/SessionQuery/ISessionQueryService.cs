@@ -1,6 +1,6 @@
 using CyclingTracker.Api.Dtos;
 
-namespace CyclingTracker.Api.Services;
+namespace CyclingTracker.Api.Services.SessionQuery;
 
 public interface ISessionQueryService
 {

@@ -12,6 +12,8 @@ using Microsoft.Extensions.Options;
 using CyclingTracker.Api.Shared;
 using CyclingTracker.Api.Enums;
 using Microsoft.AspNetCore.Mvc;
+using CyclingTracker.Api.Services.SessionQuery;
+using CyclingTracker.Api.Services.SessionDeletion;
 
 namespace CyclingTracker.Api.IntegrationTests.Features;
 

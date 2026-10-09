@@ -1,6 +1,6 @@
 using CyclingTracker.Api.Shared;
 
-namespace CyclingTracker.Api.Services;
+namespace CyclingTracker.Api.Services.SessionDeletion;
 
 public interface ISessionDeletionService
 {

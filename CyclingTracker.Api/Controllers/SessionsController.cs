@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using CyclingTracker.Api.Data;
 using CyclingTracker.Api.Extensions;
-using CyclingTracker.Api.Services;
 using CyclingTracker.Api.Enums;
+using CyclingTracker.Api.Services.SessionQuery;
+using CyclingTracker.Api.Services.SessionDeletion;
 
 namespace CyclingTracker.Api.Controllers;
 

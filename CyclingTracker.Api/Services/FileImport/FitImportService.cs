@@ -7,7 +7,7 @@ using FitFileParsing;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 
-namespace CyclingTracker.Api.Services;
+namespace CyclingTracker.Api.Services.FileImport;
 
 public class FitImportService(AppDbContext db, IFitFileParser parser) : IFitImportService
 {

@@ -1,5 +1,6 @@
 using CyclingTracker.Api.Models;
 using CyclingTracker.Api.Services;
+using CyclingTracker.Api.Services.SessionQuery;
 
 namespace CyclingTracker.Api.IntegrationTest.Services;
 

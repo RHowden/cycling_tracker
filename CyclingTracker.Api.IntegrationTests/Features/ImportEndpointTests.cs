@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Moq;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Mvc.Testing;
-using CyclingTracker.Api.Services;
+using CyclingTracker.Api.Services.FileImport;
 
 namespace CyclingTracker.Api.IntegrationTests.Features;
 

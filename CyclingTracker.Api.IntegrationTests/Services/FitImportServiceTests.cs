@@ -2,7 +2,7 @@ using CyclingTracker.Api.Dtos;
 using CyclingTracker.Api.Enums;
 using CyclingTracker.Api.Mappers;
 using CyclingTracker.Api.Models;
-using CyclingTracker.Api.Services;
+using CyclingTracker.Api.Services.FileImport;
 using CyclingTracker.Api.Shared;
 using FitFileParsing;
 using Microsoft.AspNetCore.Http;

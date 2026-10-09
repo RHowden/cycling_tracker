@@ -1,7 +1,7 @@
 ﻿using System.Security.Claims;
 using CyclingTracker.Api.Controllers;
 using CyclingTracker.Api.Dtos;
-using CyclingTracker.Api.Services;
+using CyclingTracker.Api.Services.FileImport;
 using CyclingTracker.Api.Shared;
 using CyclingTracker.Api.Enums;
 using Microsoft.AspNetCore.Http;

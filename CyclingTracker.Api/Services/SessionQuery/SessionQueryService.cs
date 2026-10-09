@@ -3,7 +3,7 @@ using CyclingTracker.Api.Dtos;
 using CyclingTracker.Api.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace CyclingTracker.Api.Services;
+namespace CyclingTracker.Api.Services.SessionQuery;
 
 public class SessionQueryService(AppDbContext db) : ISessionQueryService
 {

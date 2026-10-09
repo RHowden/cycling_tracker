@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using CyclingTracker.Api.Extensions;
-using CyclingTracker.Api.Services;
+using CyclingTracker.Api.Services.FileImport;
 
 namespace CyclingTracker.Api.Controllers;
 
