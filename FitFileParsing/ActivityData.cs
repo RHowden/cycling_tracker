@@ -5,4 +5,11 @@ public record ActivityData(DateTime StartTime,
     double Duration,
     int? AvgHr,
     int? AvgPower,
-    float Distance);
+    float Distance,
+    SampleData? Samples = null);
+
+public record SampleData(
+    int[] Time,
+    int?[] HeartRate,
+    int?[] Power,
+    double?[] Speed);

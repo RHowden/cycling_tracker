@@ -1,5 +1,4 @@
-﻿using System.Security.Cryptography.X509Certificates;
-using Dynastream.Fit;
+﻿using Dynastream.Fit;
 
 namespace FitFileParsing.Tests;
 
@@ -46,7 +45,6 @@ public class FitFileParserTests
             session.SetTotalElapsedTime((float)1800.0);
             session.SetAvgHeartRate((byte)155);
             session.SetAvgPower((ushort)250);
-            encoder.Write(session);
 
             // 3. Simple trackpoint to ensure full file processing
             var record = new RecordMesg();
@@ -59,7 +57,7 @@ public class FitFileParserTests
 
         // Assert
         var expected = new ActivityData(expectedStartTime, "Running", 1800.0, 155, 250, 10000f);
-        Assert.Equal(expected, result);
+        Assert.Equal(expected, result with { Samples = null });
     }
 
     [Fact]
