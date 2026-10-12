@@ -76,7 +76,8 @@ public class SessionEndpointTests : IClassFixture<IntegrationFactory>, IDisposab
         Guid expectedUserId = GetUserId();
 
         var targetSessionId = Guid.NewGuid();
-        var mockSession = new SessionIndexDto(targetSessionId, DateTime.UtcNow, "Cycling", 3600, 25000, 140, 200);
+        var mockSession = new SessionDto(targetSessionId, 
+            DateTime.UtcNow, "Cycling", 3600, 25000, 140, 200, null);
 
         // Strict mock setup matches the targeted session ID and the authenticated user ID
         _queryMock

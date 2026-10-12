@@ -14,6 +14,7 @@ public class ActivityMapper
         DistanceMetres = dto.Distance,
         AvgHeartRate = dto.AvgHr,
         AvgPowerWatts = dto.AvgPower,
+        Samples = ToSamples(dto.Samples),
         CreatedAtUtc = DateTime.UtcNow
     };
 
@@ -33,4 +34,15 @@ public class ActivityMapper
         DateTimeKind.Local => value.ToUniversalTime(),
         _ => DateTime.SpecifyKind(value, DateTimeKind.Utc) // Unspecified: assume UTC
     };
+
+     private static SampleData? ToSamples(FitFileParsing.SampleData? samples) =>
+        samples is null
+            ? null
+            : new SampleData
+            {
+                Time = samples.Time,
+                HeartRate = samples.HeartRate,
+                Power = samples.Power,
+                Speed = samples.Speed
+            };
 }

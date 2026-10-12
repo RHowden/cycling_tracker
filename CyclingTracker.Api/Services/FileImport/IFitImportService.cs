@@ -5,5 +5,5 @@ namespace CyclingTracker.Api.Services.FileImport;
 
 public interface  IFitImportService
 {
-    Task<Result<SessionDto>> ImportAsync(IFormFile fitFile, Guid userId);
+    Task<Result<Guid>> ImportAsync(IFormFile fitFile, Guid userId);
 }

@@ -11,7 +11,7 @@ namespace CyclingTracker.Api.Services.FileImport;
 
 public class FitImportService(AppDbContext db, IFitFileParser parser) : IFitImportService
 {
-    public async Task<Result<SessionDto>> ImportAsync(IFormFile fitFile, Guid userId)
+    public async Task<Result<Guid>> ImportAsync(IFormFile fitFile, Guid userId)
     {
         await using var stream = fitFile.OpenReadStream();
 
@@ -23,7 +23,7 @@ public class FitImportService(AppDbContext db, IFitFileParser parser) : IFitImpo
         }
         catch
         {
-            return Result<SessionDto>.Failure(ServiceErrorType.ValidationError,
+            return Result<Guid>.Failure(ServiceErrorType.ValidationError,
              "The file could not be read as a FIT file.");
         }
 
@@ -39,17 +39,17 @@ public class FitImportService(AppDbContext db, IFitFileParser parser) : IFitImpo
             if (pg.SqlState == PostgresErrorCodes.UniqueViolation
                 && pg.ConstraintName == "IX_Sessions_UserId_StartTimeUtc")
             {
-                return Result<SessionDto>.Failure(ServiceErrorType.Conflict,
+                return Result<Guid>.Failure(ServiceErrorType.Conflict,
                  "A session with this start time has already been imported.");
             }
 
             if (pg.SqlState == PostgresErrorCodes.ForeignKeyViolation)
             {
-                return Result<SessionDto>.Failure(ServiceErrorType.ValidationError, "Unknown user.");
+                return Result<Guid>.Failure(ServiceErrorType.ValidationError, "Unknown user.");
             }
 
             throw;
         }
-        return Result<SessionDto>.Success(new SessionDto(session.Id));
+        return Result<Guid>.Success(session.Id);
     }
 }

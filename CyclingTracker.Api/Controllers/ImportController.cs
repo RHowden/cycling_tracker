@@ -36,7 +36,7 @@ public class ImportController(IFitImportService fitImportsessionService) : Contr
         return CreatedAtAction(
             nameof(SessionsController.GetSession),
             nameof(SessionsController).Replace("Controller", ""), 
-            new { id = result.Value!.Id }, 
+            new { id = result.Value }, 
             result.Value);
     }
 }

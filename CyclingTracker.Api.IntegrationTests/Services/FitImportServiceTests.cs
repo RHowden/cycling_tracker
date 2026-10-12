@@ -29,7 +29,7 @@ public class FitImportServiceTests(PostgresFixture pg) : DbTestBase(pg)
     private static readonly DateTime StartTime =
         new(2026, 9, 1, 7, 30, 0, DateTimeKind.Utc);
 
-    
+
     [Fact]
     public async Task FitImport_ValidFile_PersistsSessionAndReturnsSuccess()
     {
@@ -38,11 +38,10 @@ public class FitImportServiceTests(PostgresFixture pg) : DbTestBase(pg)
         var sut = CreateSut(BuildActivity(StartTime));
 
         // Act
-        Result<SessionDto> result = await sut.ImportAsync(FakeFitFile(), userId);
+        Result<Guid> result = await sut.ImportAsync(FakeFitFile(), userId);
 
         // Assert: result
         Assert.True(result.IsSuccess, result.ErrorMessage);
-        Assert.NotNull(result.Value);
 
         // Assert: row actually exists in Postgres (fresh context, not the service's)
         await using var db = pg.CreateDb();
@@ -50,7 +49,7 @@ public class FitImportServiceTests(PostgresFixture pg) : DbTestBase(pg)
 
         Assert.Equal(StartTime, saved.StartTimeUtc);
         Assert.Equal(SportType.Cycling, saved.Sport);
-        Assert.Equal(result.Value!.Id, saved.Id);
+        Assert.Equal(result.Value, saved.Id);
     }
 
     [Fact]
@@ -62,13 +61,13 @@ public class FitImportServiceTests(PostgresFixture pg) : DbTestBase(pg)
         var second = await CreateSut(BuildActivity(StartTime)).ImportAsync(FakeFitFile(), userId);
 
         Assert.True(first.IsSuccess, first.ErrorMessage);
-        Assert.False(second.IsSuccess);        
+        Assert.False(second.IsSuccess);
         Assert.Equal(ServiceErrorType.Conflict, second.ServiceErrorType);
         Assert.False(string.IsNullOrWhiteSpace(second.ErrorMessage));
 
         Assert.Equal(1, await CountSessionsAsync(userId));
     }
-  
+
     [Fact]
     public async Task ImportAsync_SameStartTimeDifferentUsers_BothSucceed()
     {
@@ -143,7 +142,7 @@ public class FitImportServiceTests(PostgresFixture pg) : DbTestBase(pg)
     }
 
 
-       [Fact]
+    [Fact]
     public async Task ImportAsync_ValidFile_RoundTripsAllValues()
     {
         var userId = await SeedAthleteAsync();
@@ -186,6 +185,76 @@ public class FitImportServiceTests(PostgresFixture pg) : DbTestBase(pg)
         Assert.Null(saved.AvgPowerWatts);
     }
 
+[Fact]
+public async Task ImportAsync_WithSamples_RoundTripsAllColumns()
+{
+    var userId = await SeedAthleteAsync();
+    var samples = new FitFileParsing.SampleData(
+        Time: [0, 1, 2, 300],
+        HeartRate: [130, 131, null, 140],
+        Power: [200, null, 210, 250],
+        Speed: [8.5, 8.75, null, 9.0]);
+
+    var result = await CreateSut(BuildActivity(StartTime, samples: samples))
+        .ImportAsync(FakeFitFile(), userId);
+    Assert.True(result.IsSuccess, result.ErrorMessage);
+
+    await using var db = pg.CreateDb();
+    var saved = await db.Set<Session>().SingleAsync(s => s.UserId == userId);
+
+    Assert.NotNull(saved.Samples);
+    Assert.Equal(samples.Time, saved.Samples!.Time);
+    Assert.Equal(samples.HeartRate, saved.Samples.HeartRate);
+    Assert.Equal(samples.Power, saved.Samples.Power);
+    Assert.Equal(samples.Speed, saved.Samples.Speed);
+}
+
+[Fact]
+public async Task ImportAsync_NullEntriesInSamples_StayNullNotZero()
+{
+    var userId = await SeedAthleteAsync();
+    var samples = new FitFileParsing.SampleData([0, 1, 2], [null, null, null], [200, null, 210], [null, null, null]);
+
+    await CreateSut(BuildActivity(StartTime, samples: samples)).ImportAsync(FakeFitFile(), userId);
+
+    await using var db = pg.CreateDb();
+    var saved = await db.Set<Session>().SingleAsync(s => s.UserId == userId);
+
+    Assert.All(saved.Samples!.HeartRate, v => Assert.Null(v));
+    Assert.Null(saved.Samples.Power[1]);
+    Assert.All(saved.Samples.Speed, v => Assert.Null(v));
+}
+
+[Fact]
+public async Task ImportAsync_NoSamples_StoresNullSamples()
+{
+    var userId = await SeedAthleteAsync();
+
+    var result = await CreateSut(BuildActivity(StartTime, samples: null))
+        .ImportAsync(FakeFitFile(), userId);
+    Assert.True(result.IsSuccess, result.ErrorMessage);
+
+    await using var db = pg.CreateDb();
+    var saved = await db.Set<Session>().SingleAsync(s => s.UserId == userId);
+
+    Assert.Null(saved.Samples);
+}
+
+[Fact]
+public async Task ImportAsync_WithSamples_StoresThemAsJsonb()
+{
+    var userId = await SeedAthleteAsync();
+    var samples = new FitFileParsing.SampleData([0, 1], [130, 131], [200, 210], [8.5, 8.75]);
+
+    await CreateSut(BuildActivity(StartTime, samples: samples)).ImportAsync(FakeFitFile(), userId);
+
+    await using var db = pg.CreateDb();
+    var columnType = await db.Database
+        .SqlQuery<string>($"""SELECT pg_typeof("Samples")::text AS "Value" FROM "Sessions" WHERE "UserId" = {userId}""")
+        .SingleAsync();
+
+    Assert.Equal("jsonb", columnType);
+}
     // ----- helpers -----
 
     private async Task<int> CountSessionsAsync(Guid userId)
@@ -213,9 +282,9 @@ public class FitImportServiceTests(PostgresFixture pg) : DbTestBase(pg)
         return new FormFile(stream, 0, stream.Length, "file", "ride.fit");
     }
 
-    private static ActivityData BuildActivity(DateTime? start = null, string type = "Cycling", 
-        int? avgHR = 155, int? avgPower = 250)
+    private static ActivityData BuildActivity(DateTime? start = null, string type = "Cycling",
+    int? avgHR = 155, int? avgPower = 250, FitFileParsing.SampleData? samples = null)
     {
-        return new ActivityData(start ?? StartTime, type, 1800.0, avgHR, avgPower, 10000f);
+        return new ActivityData(start ?? StartTime, type, 1800.0, avgHR, avgPower, 10000f, samples);
     }
 }

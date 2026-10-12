@@ -1,5 +1,4 @@
 using CyclingTracker.Api.Models;
-using CyclingTracker.Api.Services;
 using CyclingTracker.Api.Services.SessionQuery;
 
 namespace CyclingTracker.Api.IntegrationTest.Services;
@@ -91,6 +90,62 @@ public class SessionQueryServiceTests(PostgresFixture pg) : DbTestBase(pg)
         Assert.Null(result);
     }
 
+    [Fact]
+    public async Task GetSessionById_SessionWithSamples_ReturnsSampleColumns()
+    {
+        var userId = await SeedAthleteAsync();
+        var sessionId = Guid.NewGuid();
+        var samples = new SampleData
+        {
+            Time = [0, 1, 2, 300],
+            HeartRate = [130, 131, null, 140],
+            Power = [200, null, 210, 250],
+            Speed = [8.5, 8.75, null, 9.0]
+        };
+        await SeedSessionAsync(userId, new DateTime(2026, 9, 1, 8, 0, 0, DateTimeKind.Utc), sessionId, samples);
+
+        var sut = new SessionQueryService(pg.CreateDb());
+
+        var result = await sut.GetSessionByIdAsync(sessionId, userId);
+
+        Assert.NotNull(result);
+        Assert.NotNull(result.Samples);
+        Assert.Equal(samples.Time, result.Samples.Time);
+        Assert.Equal(samples.HeartRate, result.Samples.HeartRate);
+        Assert.Equal(samples.Power, result.Samples.Power);
+        Assert.Equal(samples.Speed, result.Samples.Speed);
+    }
+
+    [Fact]
+    public async Task GetSessionById_SessionWithoutSamples_ReturnsNullSamples()
+    {
+        var userId = await SeedAthleteAsync();
+        var sessionId = Guid.NewGuid();
+        await SeedSessionAsync(userId, new DateTime(2026, 9, 1, 8, 0, 0, DateTimeKind.Utc), sessionId);
+
+        var sut = new SessionQueryService(pg.CreateDb());
+
+        var result = await sut.GetSessionByIdAsync(sessionId, userId);
+
+        Assert.NotNull(result);
+        Assert.Null(result.Samples);
+    }
+
+    [Fact]
+    public async Task GetSessionById_SamplesBelongToDifferentUser_ReturnsNullAndLeaksNothing()
+    {
+        var userA = await SeedAthleteAsync();
+        var userB = await SeedAthleteAsync();
+        var sessionId = Guid.NewGuid();
+        var samples = new SampleData { Time = [0], HeartRate = [130], Power = [200], Speed = [8.5] };
+        await SeedSessionAsync(userA, new DateTime(2026, 9, 1, 8, 0, 0, DateTimeKind.Utc), sessionId, samples);
+
+        var sut = new SessionQueryService(pg.CreateDb());
+
+        var result = await sut.GetSessionByIdAsync(sessionId, userB);
+
+        Assert.Null(result);
+    }
     private async Task<Guid> SeedAthleteAsync()
     {
         await using var db = pg.CreateDb();
@@ -100,22 +155,24 @@ public class SessionQueryServiceTests(PostgresFixture pg) : DbTestBase(pg)
         return athlete.Id;
     }
 
-    private async Task SeedSessionAsync(Guid userId, DateTime startTime, Guid? sessionId = null)
+    private async Task SeedSessionAsync(Guid userId, DateTime startTime, Guid? sessionId = null,
+    SampleData? samples = null)
+{
+    await using var db = pg.CreateDb();
+    var session = new Session
     {
-        await using var db = pg.CreateDb();
-        var session = new Session
-        {
-            Id = sessionId ?? Guid.NewGuid(),
-            UserId = userId,
-            StartTimeUtc = startTime,
-            Sport = SportType.Cycling,
-            Duration = TimeSpan.FromHours(1),
-            DistanceMetres = 30000.0,
-            AvgHeartRate = 150,
-            AvgPowerWatts = 230,
-            CreatedAtUtc = DateTime.UtcNow
-        };
-        db.Add(session);
-        await db.SaveChangesAsync();
-    }
+        Id = sessionId ?? Guid.NewGuid(),
+        UserId = userId,
+        StartTimeUtc = startTime,
+        Sport = SportType.Cycling,
+        Duration = TimeSpan.FromHours(1),
+        DistanceMetres = 30000.0,
+        AvgHeartRate = 150,
+        AvgPowerWatts = 230,
+        Samples = samples,
+        CreatedAtUtc = DateTime.UtcNow
+    };
+    db.Add(session);
+    await db.SaveChangesAsync();
+}
 }

@@ -49,7 +49,7 @@ public class ImportControllerTests
         var expectedSessionID = Guid.NewGuid();
         _importService
             .Setup(s => s.ImportAsync(It.IsAny<IFormFile>(), It.IsAny<Guid>()))
-            .ReturnsAsync(Result<SessionDto>.Success(new SessionDto(expectedSessionID)));
+            .ReturnsAsync(Result<Guid>.Success(expectedSessionID));
 
         var controller = CreateController();
         var file = CreateFormFile(new byte[] { 1, 2, 3 });
@@ -63,8 +63,8 @@ public class ImportControllerTests
         Assert.Equal(StatusCodes.Status201Created, createdResult.StatusCode);
 
         // 2. Cast the correct ID is returned
-        var returnedDto = Assert.IsAssignableFrom<SessionDto>(createdResult.Value);
-        Assert.Equal(expectedSessionID, returnedDto.Id);
+        var returnedId = Assert.IsAssignableFrom<Guid>(createdResult.Value);
+        Assert.Equal(expectedSessionID, returnedId);
     }
 
     [Fact]
@@ -127,7 +127,7 @@ public class ImportControllerTests
         var error = "error occured";
         _importService
           .Setup(s => s.ImportAsync(It.IsAny<IFormFile>(), It.IsAny<Guid>()))
-          .ReturnsAsync(Result<SessionDto>.Failure(ServiceErrorType.Failure, error));
+          .ReturnsAsync(Result<Guid>.Failure(ServiceErrorType.Failure, error));
 
         var controller = CreateController();
         var file = CreateFormFile(new byte[] { 1, 2, 3 });
@@ -149,7 +149,7 @@ public class ImportControllerTests
         // Tell our mock service to return a happy success result wrapper
         _importService
             .Setup(s => s.ImportAsync(It.IsAny<IFormFile>(), expectedUserId))
-            .ReturnsAsync(Result<SessionDto>.Success(new SessionDto(new Guid())));
+            .ReturnsAsync(Result<Guid>.Success(new Guid()));
 
         var controller = CreateController(expectedUserId);
         var file = CreateFormFile(new byte[] { 1, 2, 3 });
