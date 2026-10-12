@@ -49,7 +49,7 @@ export function Dashboard() {
               </tr>
             ) : (
               activeSessionsOnly.map((day) => (
-                <tr key={day.id} onClick={() => navigate(`sessions/${day.id}`)} // 👈 3. Make row clickable
+                <tr key={day.id} onClick={() => navigate(`sessions/${day.id}`)} 
                   className="clickable-row">                  
                   {/* Format the UTC string to a readable UK date format */}
                   <td>{new Date(day.date).toLocaleDateString('en-GB')}</td>

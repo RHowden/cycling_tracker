@@ -54,7 +54,6 @@ builder.Services.ConfigureApplicationCookie(options =>
         return Task.CompletedTask;
     };
 
-    // 👈 CRITICAL: Allows the cookie to be sent across different ports (localhost:3000 -> 5206)
     options.Cookie.SameSite = SameSiteMode.None; 
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // SameSite=None requires Secure
 });

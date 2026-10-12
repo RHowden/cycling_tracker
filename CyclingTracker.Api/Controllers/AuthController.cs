@@ -8,7 +8,7 @@ using CyclingTracker.Api.Models;
 namespace CyclingTracker.Api.Controllers
 {
     [ApiController]
-    [Route("api/auth")] // 👈 Matches the routing group you mapped in React
+    [Route("api/auth")]
     public class AuthController : ControllerBase
     {
         private readonly SignInManager<Athlete> _signInManager;
@@ -20,7 +20,7 @@ namespace CyclingTracker.Api.Controllers
         }
 
         [HttpPost("logout")]
-        [Authorize] // 👈 Replaces .RequireAuthorization() to lock the route down
+        [Authorize] 
         public async Task<IActionResult> Logout()
         {
             // Invalidates the current user cookie session on the server
