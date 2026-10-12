@@ -1,5 +1,4 @@
-import { SessionUploadResponse, SessionUploadResponseSchema } from "../api/schemas"
-import { apiRequest } from "./client";
+import { apiRequestVoid } from "./client";
 const MAX_SIZE_MB = 20;
 
 export function validateFitFile(file: File): string | null {
@@ -8,10 +7,10 @@ export function validateFitFile(file: File): string | null {
     return null;
 }
 
-export async function uploadFitFile(file: File): Promise<SessionUploadResponse> {
+export async function uploadFitFile(file: File) {
     const form = new FormData();
     form.append("file", file);
 
-    return apiRequest("/import/import", SessionUploadResponseSchema, { method: "POST", body: form });
+    return apiRequestVoid("/import/import", { method: "POST", body: form });
 }
 

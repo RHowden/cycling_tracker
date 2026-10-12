@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { uploadFitFile, validateFitFile } from "../api/fitAPI";
-import type { SessionUploadResponse } from  "../api/schemas"; 
 
 export type UploadStatus = "uploading" | "done" | "error";
 
@@ -11,7 +10,7 @@ export interface UploadItem {
   error?: string;
 }
 
-export function useFitUpload(onUploaded?: (session: SessionUploadResponse | null) => void) {
+export function useFitUpload(onUploaded?: () => void) {
   const [items, setItems] = useState<UploadItem[]>([]);
 
   const patch = (id: string, changes: Partial<UploadItem>) =>
@@ -31,9 +30,9 @@ export function useFitUpload(onUploaded?: (session: SessionUploadResponse | null
       if (error) continue;
 
       try {
-        const result = await uploadFitFile(file);
+        await uploadFitFile(file);
         patch(id, { status: "done" });
-        onUploaded?.(result);
+        onUploaded?.();
       } catch (err) {
         patch(id, { status: "error", error: err instanceof Error ? err.message : "Upload failed" });
       }

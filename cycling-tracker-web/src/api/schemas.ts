@@ -22,9 +22,6 @@ export const SessionsResponseSchema = z.array(SessionSchema);
 export type SessionResponse = z.input<typeof SessionSchema>;
 export type Session = z.output<typeof SessionSchema>;
 
-export const SessionUploadResponseSchema = z.object({ id: z.string() });
-export type SessionUploadResponse = z.infer<typeof SessionUploadResponseSchema>;
-
 const zoneSetSchema = z
   .object({
     zone1Max: z.number().int("Must be a whole number").positive("Must be greater than 0"),
