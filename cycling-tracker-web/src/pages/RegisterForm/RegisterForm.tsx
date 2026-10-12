@@ -7,29 +7,31 @@ import "./RegisterForm.css";
 export function RegisterForm() {
   const navigate = useNavigate();
 
-    async function handleLoginAction(_: any, formData: FormData) {
-      const email = formData.get("email") as string;
-      const password = formData.get("password") as string;
-  
-      try {
-        await register({ email, password });
-        navigate("/dashboard");
-  
-        return { success: true, error: null };
-      } catch (err: any) {
-        const apiError = err as ApiError;
-      
-        return { success: false, error: apiError.messages || "Failed to register" };
-      }
+  async function handleLoginAction(_: any, formData: FormData) {
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
+
+    try {
+      await register({ email, password });
+      navigate("/dashboard");
+
+      return { success: true, error: null };
+    } catch (err: any) {
+      if (!(err instanceof ApiError)) console.error("Unexpected login error", err);
+      return {
+        success: false,
+        error: err instanceof ApiError ? err.messages : ["Failed to register"],
+      };
     }
-  
-    // 2. Pass the action to useActionState
-    // It gives you: [the current state returned by the action, the trigger function, a built-in loading boolean]
-    const [state, formAction, isPending] = useActionState(handleLoginAction, {
-      success: false,
-      error: null,
-    });  
-  
+  }
+
+  // 2. Pass the action to useActionState
+  // It gives you: [the current state returned by the action, the trigger function, a built-in loading boolean]
+  const [state, formAction, isPending] = useActionState(handleLoginAction, {
+    success: false,
+    error: null,
+  });
+
 
   return (
     <form className="register-card" action={formAction}>

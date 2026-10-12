@@ -1,7 +1,6 @@
 import { useActionState } from "react";
 import { useNavigate } from "react-router";
 
-import { login } from "../../api/auth";
 import { ApiError } from "../../api/apiErrors";
 import { useAuth } from "../../components/AuthContext";
 
@@ -9,7 +8,7 @@ import "./LoginForm.css";
 
 export function LoginForm() {
   const navigate = useNavigate();
-  const { refresh } = useAuth();
+  const { login } = useAuth();
 
   async function handleLoginAction(_: any, formData: FormData) {
     const email = formData.get("email") as string;
@@ -17,14 +16,15 @@ export function LoginForm() {
 
     try {
       await login(email, password);
-      await refresh();
       navigate('/dashboard');
 
       return { success: true, error: null };
     } catch (err: any) {
-      const apiError = err as ApiError;
-
-      return { success: false, error: apiError.messages || "Failed to log in" };
+      if (!(err instanceof ApiError)) console.error("Unexpected login error", err);
+      return {
+        success: false,
+        error: err instanceof ApiError ? err.messages : ["Failed to log in"],
+      };
     }
   }
 
@@ -61,6 +61,7 @@ export function LoginForm() {
 
       {state.error && (
         <ul className="login-error">
+
           {state.error.map((msg) => (
             <li key={msg}>{msg}</li>
           ))}

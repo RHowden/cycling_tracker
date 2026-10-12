@@ -1,33 +1,59 @@
-import { createContext, useContext, useEffect, useState } from "react";
-import { apiRequest } from "../api/client";
-import { UserInfo, UserInfoSchema } from "../api/schemas"
+import { createContext, useCallback, useEffect, useState, useContext } from "react";
+import { apiRequest, apiRequestVoid, setUnauthorizedHandler } from "../api/client";
+import { UserInfoSchema } from "../api/schemas";
+import { login as loginRequest } from "../api/auth";
 
 type AuthState = "loading" | "authenticated" | "unauthenticated";
 
-const AuthContext = createContext<{ status: AuthState; refresh: () => void }>({
-    status: "loading",
-    refresh: () => { },
-});
+const AuthContext = createContext<{
+    status: AuthState;
+    refresh: () => Promise<void>;
+    logout: () => Promise<void>;
+    login: (email: string, password: string) => Promise<void>;
+}>({ status: "loading", refresh: async () => { }, logout: async () => { },
+    login: async () => {} });
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [status, setStatus] = useState<AuthState>("loading");
-    const [_, setUser] = useState<UserInfo | null>(null);
 
-    const checkAuth = async () => {
+    const refresh = useCallback(async () => {
         try {
-            const info = await apiRequest("/auth/manage/info", UserInfoSchema);
-            setUser(info);
+            await apiRequest("/auth/manage/info", UserInfoSchema);
             setStatus("authenticated");
         } catch {
-            setUser(null);
             setStatus("unauthenticated");
         }
-    };
+    }, []);
 
-    useEffect(() => { checkAuth(); }, []);
+    const logout = useCallback(async () => {
+        try {
+            await apiRequestVoid("/auth/logout", { method: "POST" });
+        } finally {
+            setStatus("unauthenticated"); // even if the call fails, stop trusting the UI state
+        }
+    }, []);
+
+    const login = useCallback(async (email: string, password: string) => {
+        await loginRequest(email, password);
+        setStatus("authenticated");
+    }, []);
+
+    useEffect(() => {
+        refresh();
+        setUnauthorizedHandler(() => setStatus("unauthenticated"));
+
+        // Back/forward cache: the page is restored with stale state and no remount
+        const onPageShow = (e: PageTransitionEvent) => { if (e.persisted) refresh(); };
+        window.addEventListener("pageshow", onPageShow);
+
+        return () => {
+            setUnauthorizedHandler(null);
+            window.removeEventListener("pageshow", onPageShow);
+        };
+    }, [refresh]);
 
     return (
-        <AuthContext.Provider value={{ status, refresh: checkAuth }}>
+        <AuthContext.Provider value={{ status, refresh, logout, login }}>
             {children}
         </AuthContext.Provider>
     );

@@ -2,18 +2,18 @@ import { Outlet, Link, useNavigate } from "react-router";
 
 import "./AppLayout.css";
 import { apiRequestVoid } from "../../api/client";
-import { useState } from "react";
-import { UserInfo } from "../../api/schemas";
+import { useAuth } from "../../components/AuthContext";
 
 export function AppLayout() {
   const navigate = useNavigate();
-  const [_, setUser] = useState<UserInfo | null>(null);
-
+  const { logout } = useAuth();
+  
   const handleSignOut = async () => {
     try {
       await apiRequestVoid('/auth/logout', { method: 'Post' });
 
-      setUser(null); // Clear your local React state
+      await logout();
+
       navigate("/login");
     } catch (error) {
       console.error('Network error during logout:', error);

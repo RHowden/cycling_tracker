@@ -66,8 +66,15 @@ async function performRequest(
   }
 
   if (!res.ok) {
+    if (res.status === 401) onUnauthorized?.();
     throw new ApiError(res.status, await parseErrorMessages(res));
   }
 
   return res;
 }
+
+let onUnauthorized: (() => void) | null = null;
+export const setUnauthorizedHandler = (fn: (() => void) | null) => {
+  onUnauthorized = fn;
+};
+
