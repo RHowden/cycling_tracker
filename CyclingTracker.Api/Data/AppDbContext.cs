@@ -23,6 +23,9 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
                 .HasConversion<string>()
                 .HasMaxLength(50);
 
+            modelBuilder.Entity<Session>()
+                .OwnsOne(s => s.Samples, b => b.ToJson());
+
             e.HasIndex(x => new { x.UserId, x.StartTimeUtc }).IsUnique();
 
             e.HasOne<Athlete>().WithMany().HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade);

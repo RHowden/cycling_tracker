@@ -11,4 +11,6 @@ public class Session
     public int? AvgHeartRate { get; set; }
     public int? AvgPowerWatts { get; set; }
     public DateTime CreatedAtUtc { get; set; }
+
+     public SampleData? Samples { get; set; }
 }

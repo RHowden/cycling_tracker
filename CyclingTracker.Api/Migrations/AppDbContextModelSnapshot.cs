@@ -323,6 +323,36 @@ namespace CyclingTracker.Api.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.OwnsOne("SampleData", "Samples", b1 =>
+                        {
+                            b1.Property<Guid>("SessionId");
+
+                            b1.PrimitiveCollection<string>("HeartRate")
+                                .IsRequired();
+
+                            b1.PrimitiveCollection<string>("Power")
+                                .IsRequired();
+
+                            b1.PrimitiveCollection<string>("Speed")
+                                .IsRequired();
+
+                            b1.PrimitiveCollection<string>("Time")
+                                .IsRequired();
+
+                            b1.HasKey("SessionId");
+
+                            b1.ToTable("Sessions");
+
+                            b1
+                                .ToJson("Samples")
+                                .HasColumnType("jsonb");
+
+                            b1.WithOwner()
+                                .HasForeignKey("SessionId");
+                        });
+
+                    b.Navigation("Samples");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
