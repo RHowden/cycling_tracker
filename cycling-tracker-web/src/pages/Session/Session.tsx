@@ -4,6 +4,7 @@ import './Session.css';
 import { apiRequestVoid } from '../../api/client';
 import { useState } from 'react';
 import { ApiError } from '../../api/apiErrors';
+import { SessionChart } from '../../components/SessionChart/SessionChart';
 
 // Helper function to format duration (seconds -> MM:SS or HH:MM:SS)
 function formatDuration(seconds: number): string {
@@ -147,6 +148,8 @@ export function Session() {
                         <span className="stat-value">{session.avgPowerWatts ? `${session.avgPowerWatts} W` : '--'}</span>
                     </div>
                 </div>
+
+                {session.samples && <SessionChart samples={session.samples} />}
             </main>
         </div>
     );

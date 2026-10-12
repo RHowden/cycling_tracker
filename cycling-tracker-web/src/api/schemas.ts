@@ -7,7 +7,7 @@ export const UserInfoSchema = z.object({
 });
 export type UserInfo = z.infer<typeof UserInfoSchema>;
 
-export const SessionSchema = z.object({
+export const SessionIndexSchema = z.object({
   id: z.string(),
   startTimeUtc: z.iso.datetime({ offset: true }).transform((s) => new Date(s)),
   sport: z.string(),
@@ -17,10 +17,24 @@ export const SessionSchema = z.object({
   avgPowerWatts: z.number().nullable(),
 });
 
-export const SessionsResponseSchema = z.array(SessionSchema);
+export const SessionSamplesSchema = z.object({
+  time: z.array(z.number()),
+  heartRate: z.array(z.number().nullable()),
+  power: z.array(z.number().nullable()),
+  speed: z.array(z.number().nullable()),
+});
 
+export const SessionSchema = SessionIndexSchema.extend({
+  samples: SessionSamplesSchema.nullish(),
+});
+
+export const SessionsResponseSchema = z.array(SessionIndexSchema);
+
+export type SessionIndexResponse = z.input<typeof SessionIndexSchema>;
+export type SessionIndex = z.output<typeof SessionIndexSchema>;
 export type SessionResponse = z.input<typeof SessionSchema>;
 export type Session = z.output<typeof SessionSchema>;
+export type SessionSamples = z.output<typeof SessionSamplesSchema>;
 
 const zoneSetSchema = z
   .object({
