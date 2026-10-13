@@ -21,12 +21,12 @@ export function Dashboard() {
     );
   }
 
-  const activeSessionsOnly = sessions.filter(day => day.hasSession).reverse();
+  const displaySessions = sessions.reverse();
 
   return (
     <div className="dashboard-card">
       <h1 className="dashboard-title">Dashboard</h1>
-      <SummaryChart data={sessions} />
+      <SummaryChart sessions={sessions} />
 
       {/* 2. Top-Level Summary Table */}
       <div className="table-container">
@@ -43,16 +43,16 @@ export function Dashboard() {
             </tr>
           </thead>
           <tbody>
-            {activeSessionsOnly.length === 0 ? (
+            {displaySessions.length === 0 ? (
               <tr>
                 <td colSpan={6} className="empty-row">No riding activities logged in this window.</td>
               </tr>
             ) : (
-              activeSessionsOnly.map((day) => (
+              displaySessions.map((day) => (
                 <tr key={day.id} onClick={() => navigate(`sessions/${day.id}`)} 
                   className="clickable-row">                  
                   {/* Format the UTC string to a readable UK date format */}
-                  <td>{new Date(day.date).toLocaleDateString('en-GB')}</td>
+                  <td>{new Date(day.startTimeUtc).toLocaleDateString('en-GB')}</td>
                   <td className="sport-tag">{day.sport}</td>
                   <td>{((day.distanceMetres || 0) / 1000).toFixed(1)} km</td>
                   <td>{Math.floor((day.durationSeconds || 0) / 60)} mins</td>

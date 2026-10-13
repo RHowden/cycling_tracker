@@ -1,15 +1,13 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 
 import { apiRequest } from "../api/client";
 import { SessionSchema, SessionsResponseSchema } from  "../api/schemas";
-import { fillDateGaps } from "../utils/fillDataGaps";
 import { ApiError } from "../api/apiErrors";
 import z from "zod";
 
 export function useTrainingData() {
-  const { data, loading, error } = useApiResource("/sessions", SessionsResponseSchema);
-  const sessions = useMemo(() => (data && data.length ? fillDateGaps(data) : []), [data]);
-  return { sessions, loading, error };
+  const { data , loading, error } = useApiResource("/sessions", SessionsResponseSchema);
+  return { sessions: data ?? [], loading, error };
 }
 
 export function useTrainingSession(id: string | undefined) {

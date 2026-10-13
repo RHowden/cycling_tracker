@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import {
     BarChart,
     Bar,
@@ -8,33 +9,26 @@ import {
     ResponsiveContainer
 } from 'recharts';
 
-import { TrainingDay } from '../../api/schemas';
+import type { SessionIndex } from '../../api/schemas';
+import { toDailyDurations } from '../../utils/toDailyDurations';
 
 import './SummaryChart.css'
-import { useNavigate } from 'react-router';
 
 interface SummaryChartProps {
-    data: TrainingDay[] | undefined;
+    sessions: SessionIndex[];
 }
 
-export function SummaryChart({ data }: SummaryChartProps) {
-    if (!data || data.length === 0) {
+export function SummaryChart({ sessions }: SummaryChartProps) {
+    // Hooks must run before any early return
+    const days = useMemo(() => toDailyDurations(sessions), [sessions]);
+
+    if (sessions.length === 0) {
         return (
             <div className="summary-chart__status">
                 No sessions in this period yet.
             </div>
         );
     }
-
-    const navigate = useNavigate();
-
-    // Recharts passes the clicked item data into the handler callback
-    const handleBarClick = (data: any) => {
-        if (data && data.id) {
-            // Navigates directly to /dashboard/sessions/123
-            navigate(`sessions/${data.id}`);
-        }
-    };
 
     return (
         <div className="training-chart">
@@ -53,7 +47,7 @@ export function SummaryChart({ data }: SummaryChartProps) {
                 </div>
                 <div className="training-chart-wrapper-top">
                     <ResponsiveContainer>
-                        <BarChart data={data} syncId="trainingTimeline" margin={{ top: 5, right: 5, left: -20, bottom: 5 }}>
+                        <BarChart data={days} syncId="trainingTimeline" margin={{ top: 5, right: 5, left: -20, bottom: 5 }}>
                             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f3f4f6" />
                             <XAxis dataKey="date" hide />
                             <YAxis
@@ -71,13 +65,11 @@ export function SummaryChart({ data }: SummaryChartProps) {
                                 fill="#9ca3af"
                                 radius={[4, 4, 0, 0]}
                                 barSize={16}
-                                onClick={handleBarClick}
-                                style={{ cursor: "pointer" }} />
+                            />
                         </BarChart>
                     </ResponsiveContainer>
                 </div>
-            </div>  
+            </div>
         </div>
     );
 }
-
