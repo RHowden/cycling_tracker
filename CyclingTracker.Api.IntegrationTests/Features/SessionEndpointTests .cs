@@ -134,25 +134,6 @@ public class SessionEndpointTests : IClassFixture<IntegrationFactory>, IDisposab
     }
 
     [Fact]
-    public async Task DeleteSession_SessionNotOwnedByUser_Returns404NotFound()
-    {
-        // Arrange
-        Guid expectedUserId = GetUserId();
-
-        var sessionId = Guid.NewGuid();
-
-        _deleteMock
-            .Setup(s => s.DeleteSessionAsync(sessionId, expectedUserId))
-             .ReturnsAsync(Result.Failure(ServiceErrorType.AccessDenied, "_"));
-
-        // Act
-        var response = await _client.DeleteAsync($"/api/sessions/{sessionId}?userId={expectedUserId}");
-
-        // Assert
-        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
-    }
-
-    [Fact]
     public async Task DeleteSession_Error_Returns500_WithErrorDetails()
     {
         // Arrange

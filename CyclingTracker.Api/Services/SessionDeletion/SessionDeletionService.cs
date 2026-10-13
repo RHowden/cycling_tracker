@@ -1,3 +1,4 @@
+using System.Data.Common;
 using CyclingTracker.Api.Data;
 using CyclingTracker.Api.Enums;
 using CyclingTracker.Api.Models;
@@ -6,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CyclingTracker.Api.Services.SessionDeletion;
 
-public class SessionDeletionService(AppDbContext  db) : ISessionDeletionService
+public class SessionDeletionService(AppDbContext db) : ISessionDeletionService
 {
     public async Task<Result> DeleteSessionAsync(Guid sessionId, Guid userId)
     {
@@ -22,25 +23,15 @@ public class SessionDeletionService(AppDbContext  db) : ISessionDeletionService
 
         try
         {
-            var session = await db.Set<Session>()
-                .SingleOrDefaultAsync(s => s.Id == sessionId);
+            var deleted = await db.Set<Session>()
+                .Where(s => s.Id == sessionId && s.UserId == userId)
+                .ExecuteDeleteAsync();
 
-            if (session is null)
-            {
-                return Result.Failure(ServiceErrorType.ResourceNotFound, "Session not found.");
-            }
-
-            if (session.UserId != userId)
-            {
-                return Result.Failure(ServiceErrorType.AccessDenied, "Unauthorized: Invalid combination of session and user Id.");
-            }
-
-            db.Set<Session>().Remove(session);
-            await db.SaveChangesAsync();
-
-            return Result.Success();
+            return deleted == 0
+                ? Result.Failure(ServiceErrorType.ResourceNotFound, "Session not found.")
+                : Result.Success();
         }
-        catch (DbUpdateException)
+        catch (DbException)
         {
             return Result.Failure(ServiceErrorType.Failure, "A database error occurred while trying to delete the session.");
         }

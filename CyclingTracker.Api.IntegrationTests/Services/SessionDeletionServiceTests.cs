@@ -27,7 +27,7 @@ public class SessionDeletionServiceTests(PostgresFixture pg) : DbTestBase(pg)
         // Assert
         Assert.True(result.IsSuccess);
     }
-   
+
     [Fact]
     public async Task DeleteSessionAsync_WithValidSessionIdAndMatchingUserId_DeletesRecordFromDatabase()
     {
@@ -63,9 +63,9 @@ public class SessionDeletionServiceTests(PostgresFixture pg) : DbTestBase(pg)
 
         // Assert
         Assert.False(result.IsSuccess);
-        Assert.Equal(ServiceErrorType.AccessDenied, result.ServiceErrorType);
+        Assert.Equal(ServiceErrorType.ResourceNotFound, result.ServiceErrorType);
         Assert.NotNull(result.ErrorMessage);
-        Assert.Contains("Unauthorized", result.ErrorMessage, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("not found", result.ErrorMessage, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]

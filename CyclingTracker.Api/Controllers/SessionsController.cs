@@ -66,7 +66,7 @@ public class SessionsController(ISessionQueryService sessionQueryService,
             {
                 ServiceErrorType.ValidationError =>
                     Problem(statusCode: 422, detail: result.ErrorMessage, title: "Unprocessable Entity"),
-                ServiceErrorType.ResourceNotFound or ServiceErrorType.AccessDenied =>
+                ServiceErrorType.ResourceNotFound =>
                     Problem(statusCode: 404, detail: result.ErrorMessage, title: "Not Found"),
                 ServiceErrorType.Failure =>
                     Problem(statusCode: 500, detail: result.ErrorMessage, title: "Internal Server Error"),
