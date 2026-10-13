@@ -53,28 +53,3 @@ export const athleteZonesSchema = z.object({
 
 export type ZoneSet = z.infer<typeof zoneSetSchema>;
 export type AthleteZones = z.infer<typeof athleteZonesSchema>;
-
-export const TrainingDaySchema = z.discriminatedUnion("hasSession", [
-  z.object({
-    date: z.string(),
-    hasSession: z.literal(true),
-    id: z.string(),
-    sport: z.string(),
-    durationSeconds: z.number(),
-    avgHeartRate: z.number().nullable(),
-    avgPowerWatts: z.number().nullable(),
-    distanceMetres: z.number().nullable(),
-  }),
-  z.object({
-    date: z.string(),
-    hasSession: z.literal(false),
-    id: z.null(),
-    sport: z.null(),
-    durationSeconds: z.null(),
-    avgHeartRate: z.null(),
-    avgPowerWatts: z.null(),
-    distanceMetres: z.null(),
-  }),
-]);
-
-export type TrainingDay = z.infer<typeof TrainingDaySchema>;
