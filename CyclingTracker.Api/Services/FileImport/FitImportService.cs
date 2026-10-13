@@ -39,7 +39,7 @@ public class FitImportService(AppDbContext db, IFitFileParser parser) : IFitImpo
             if (pg.SqlState == PostgresErrorCodes.UniqueViolation
                 && pg.ConstraintName == "IX_Sessions_UserId_StartTimeUtc")
             {
-                return Result<Guid>.Failure(ServiceErrorType.Conflict,
+                return Result<Guid>.Failure(ServiceErrorType.InvalidFile,
                  "A session with this start time has already been imported.");
             }
 

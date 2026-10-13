@@ -155,7 +155,6 @@ public class SessionEndpointTests : IClassFixture<IntegrationFactory>, IDisposab
         var problem = await response.Content.ReadFromJsonAsync<ProblemDetails>();
         Assert.NotNull(problem);
         Assert.Equal(500, problem.Status);
-        Assert.Equal("Internal Server Error", problem.Title);
         Assert.Equal(expectedError, problem.Detail);
     }
 

@@ -30,7 +30,7 @@ public class ImportController(IFitImportService fitImportsessionService) : Contr
 
         if (!result.IsSuccess)
         {
-            return UnprocessableEntity(new { error = result.ErrorMessage });
+            return result.ToActionResult(this);
         }
 
         return CreatedAtAction(

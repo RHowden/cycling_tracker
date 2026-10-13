@@ -120,14 +120,14 @@ public class ImportControllerTests
             Times.Never);
     }
 
-       [Fact]
+    [Fact]
     public async Task Upload_WithServiceError_ReturnsMessage()
     {
         // Arrange
         var error = "error occured";
         _importService
           .Setup(s => s.ImportAsync(It.IsAny<IFormFile>(), It.IsAny<Guid>()))
-          .ReturnsAsync(Result<Guid>.Failure(ServiceErrorType.Failure, error));
+          .ReturnsAsync(Result<Guid>.Failure(ServiceErrorType.ValidationError, error));
 
         var controller = CreateController();
         var file = CreateFormFile(new byte[] { 1, 2, 3 });
@@ -136,8 +136,8 @@ public class ImportControllerTests
         var result = await controller.Import(file);
 
         // Assert
-        var createdResult = Assert.IsAssignableFrom<UnprocessableEntityObjectResult>(result);
-        Assert.Equal(StatusCodes.Status422UnprocessableEntity, createdResult.StatusCode);
+        var createdResult = Assert.IsAssignableFrom<ObjectResult>(result);
+        Assert.Equal(StatusCodes.Status400BadRequest, createdResult.StatusCode);
     }
 
     [Fact]

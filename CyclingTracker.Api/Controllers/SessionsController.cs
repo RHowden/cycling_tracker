@@ -61,17 +61,7 @@ public class SessionsController(ISessionQueryService sessionQueryService,
 
         if (!result.IsSuccess)
         {
-            // 1. Switch on the domain error type to return standard ProblemDetails
-            return result.ServiceErrorType switch
-            {
-                ServiceErrorType.ValidationError =>
-                    Problem(statusCode: 422, detail: result.ErrorMessage, title: "Unprocessable Entity"),
-                ServiceErrorType.ResourceNotFound =>
-                    Problem(statusCode: 404, detail: result.ErrorMessage, title: "Not Found"),
-                ServiceErrorType.Failure =>
-                    Problem(statusCode: 500, detail: result.ErrorMessage, title: "Internal Server Error"),
-                _ => Problem(statusCode: 500, detail: "An unexpected error occurred.")
-            };
+            return result.ToActionResult(this);
         }
         return NoContent();
     }
