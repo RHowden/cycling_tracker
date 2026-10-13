@@ -1,99 +1,35 @@
-using CyclingTracker.Api.Data;
-using CyclingTracker.Api.Models;
-using CyclingTracker.Api.Services;
-using CyclingTracker.Api.Services.AthleteZones;
-using CyclingTracker.Api.Services.FileImport;
-using CyclingTracker.Api.Services.SessionDeletion;
-using CyclingTracker.Api.Services.SessionQuery;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Scalar.AspNetCore;
+using CyclingTracker.Api.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
-    ?? throw new InvalidOperationException("Connection string 'DefaultConnection' was not found.");
-
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(connectionString));
-
 builder.Services
-    .AddIdentityApiEndpoints<Athlete>()
-    .AddEntityFrameworkStores<AppDbContext>();
-
-builder.Services.AddScoped<IFitImportService, FitImportService>();
-builder.Services.AddScoped<IFitFileParser, FitFileParser>();
-builder.Services.AddScoped<ISessionQueryService, SessionQueryService>();
-builder.Services.AddScoped<ISessionDeletionService, SessionDeletionService>();
-builder.Services.AddScoped<IAthleteZonesService, AthleteZonesService>();
+    .AddPersistence(builder.Configuration)
+    .AddAuth()
+    .AddApplicationServices()
+    .AddFrontendCors()
+    .AddApiDocs()
+    .AddErrorHandling();
 
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
-
-// 2. Add CORS services and register your React port
-const string AllowReactAppPolicy = "_allowReactApp";
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy(name: AllowReactAppPolicy, policy =>
-    {
-        policy.WithOrigins("http://localhost:5173", "http://127.0.0.1:5173") // <-- Match your exact active React port
-              .AllowAnyHeader()
-              .AllowAnyMethod()
-              .AllowCredentials(); // Required if you use cookies or identity sessions
-    });
-});
-
-builder.Services.ConfigureApplicationCookie(options =>
-{
-    // Prevent the 404 redirect loop. Force a clean 401 instead so you can see if auth fails.
-    options.Events.OnRedirectToLogin = context =>
-    {
-        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-        return Task.CompletedTask;
-    };
-
-    options.Cookie.SameSite = SameSiteMode.None; 
-    options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // SameSite=None requires Secure
-});
-
-builder.Services.Configure<CookieAuthenticationOptions>(IdentityConstants.ExternalScheme, options =>
-{
-    options.Cookie.SameSite = SameSiteMode.None;
-    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-});
-
-// 🟢 ADD THIS: Configure the Two-Factor cookie to allow cross-origin deletion
-builder.Services.Configure<CookieAuthenticationOptions>(IdentityConstants.TwoFactorUserIdScheme, options =>
-{
-    options.Cookie.SameSite = SameSiteMode.None;
-    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-});
-
-builder.Services.AddProblemDetails(); 
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
-    app.MapScalarApiReference();
+    app.MapApiDocs();
 }
 else
 {
-   app.UseHttpsRedirection(); 
+    app.UseHttpsRedirection();
 }
 
-//
-
-app.UseCors(AllowReactAppPolicy);
+app.UseCors(CorsExtensions.FrontendPolicy);
 
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapGroup("/api/auth").MapIdentityApi<Athlete>();
+app.MapAuthEndpoints();
 app.MapControllers();
 
 app.Run();
