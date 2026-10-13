@@ -6,7 +6,6 @@ public static class ApiDocsExtensions
 {
     public static IServiceCollection AddApiDocs(this IServiceCollection services)
     {
-        // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         services.AddOpenApi();
         return services;
     }

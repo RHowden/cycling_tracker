@@ -1,6 +1,7 @@
 using CyclingTracker.Api.Data;
 using CyclingTracker.Api.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 
 namespace CyclingTracker.Api.Extensions;
@@ -13,31 +14,28 @@ public static class AuthExtensions
             .AddIdentityApiEndpoints<Athlete>()
             .AddEntityFrameworkStores<AppDbContext>();
 
+        // Re-check the user and security stamp on every request, so deleted or
+        // password-changed accounts lose access immediately (default: every 30 minutes).
+        services.Configure<SecurityStampValidatorOptions>(options =>
+            options.ValidationInterval = TimeSpan.Zero);
+
         services.ConfigureApplicationCookie(options =>
         {
-            // Prevent the 404 redirect loop. Force a clean 401 instead so you can see if auth fails.
+            // API clients get a 401, not a redirect to a login page.
             options.Events.OnRedirectToLogin = context =>
             {
                 context.Response.StatusCode = StatusCodes.Status401Unauthorized;
                 return Task.CompletedTask;
             };
 
-            options.Cookie.SameSite = SameSiteMode.None;
-            options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // SameSite=None requires Secure
+            UseCrossSiteCookie(options.Cookie);
         });
 
-        services.Configure<CookieAuthenticationOptions>(IdentityConstants.ExternalScheme, options =>
+        foreach (var scheme in new[] { IdentityConstants.ExternalScheme, IdentityConstants.TwoFactorUserIdScheme })
         {
-            options.Cookie.SameSite = SameSiteMode.None;
-            options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-        });
-
-        // 🟢 ADD THIS: Configure the Two-Factor cookie to allow cross-origin deletion
-        services.Configure<CookieAuthenticationOptions>(IdentityConstants.TwoFactorUserIdScheme, options =>
-        {
-            options.Cookie.SameSite = SameSiteMode.None;
-            options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-        });
+            services.Configure<CookieAuthenticationOptions>(scheme, options =>
+                UseCrossSiteCookie(options.Cookie));
+        }
 
         return services;
     }
@@ -46,5 +44,13 @@ public static class AuthExtensions
     {
         endpoints.MapGroup("/api/auth").MapIdentityApi<Athlete>();
         return endpoints;
+    }
+
+    // Needed while the front end and API are on different origins.
+    // Revisit when moving to a single origin (see the CSRF item in the review).
+    private static void UseCrossSiteCookie(CookieBuilder cookie)
+    {
+        cookie.SameSite = SameSiteMode.None;
+        cookie.SecurePolicy = CookieSecurePolicy.Always; // SameSite=None requires Secure
     }
 }

@@ -10,13 +10,13 @@ public static class CorsExtensions
         {
             options.AddPolicy(name: FrontendPolicy, policy =>
             {
-                policy.WithOrigins("http://localhost:5173", "http://127.0.0.1:5173") // <-- Match your exact active React port
-                      .AllowAnyHeader()
+                policy.WithOrigins("http://localhost:5173", "http://127.0.0.1:5173")
                       .AllowAnyMethod()
-                      .AllowCredentials(); // Required if you use cookies or identity sessions
+                      .AllowCredentials(); // cookie auth needs credentials
             });
         });
 
         return services;
     }
 }
+
