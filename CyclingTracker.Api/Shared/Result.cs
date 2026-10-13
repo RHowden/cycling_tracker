@@ -1,12 +1,16 @@
+using System.Diagnostics.CodeAnalysis;
 using CyclingTracker.Api.Enums;
 
 namespace CyclingTracker.Api.Shared;
 
 public class Result
 {
-    public bool IsSuccess { get; }
+    [MemberNotNullWhen(false, nameof(ServiceErrorType))]
+    public virtual bool IsSuccess { get; }
 
-    public ServiceErrorType? ServiceErrorType { get; 
+    public ServiceErrorType? ServiceErrorType
+    {
+        get;
     }
     public string? ErrorMessage { get; }
 
@@ -25,6 +29,10 @@ public class Result
 
 public class Result<T> : Result
 {
+    [MemberNotNullWhen(true, nameof(Value))]
+    [MemberNotNullWhen(false, nameof(ServiceErrorType))]
+    public override bool IsSuccess => base.IsSuccess;
+
     public T? Value { get; }
 
     private Result(bool isSuccess, T? value, ServiceErrorType? serviceErrorType, string? errorMessage)
