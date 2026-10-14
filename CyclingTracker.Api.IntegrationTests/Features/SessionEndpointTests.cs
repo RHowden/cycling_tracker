@@ -96,7 +96,7 @@ public class SessionEndpointTests : IClassFixture<IntegrationFactory>, IDisposab
     }
 
     [Fact]
-    public async Task DeleteSession_ValidUserAndSession_Returns202NoContent()
+    public async Task DeleteSession_ValidUserAndSession_Returns204NoContent()
     {
         // Arrange
         Guid expectedUserId = GetUserId();
