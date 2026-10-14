@@ -7,12 +7,12 @@ using CyclingTracker.Api.Services.SessionDeletion;
 namespace CyclingTracker.Api.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("api/[controller]")]
 public class SessionsController(ISessionQueryService sessionQueryService,
     ISessionDeletionService sessionDeletionService) : ControllerBase
 {
     [HttpGet]
-    [Authorize]
     public async Task<IActionResult> GetSessions([FromQuery] DateTime? from, [FromQuery] DateTime? to)
     {
         if (!Guid.TryParse(User.GetUserId(), out var userId))
@@ -26,7 +26,6 @@ public class SessionsController(ISessionQueryService sessionQueryService,
     }
 
     [HttpGet("{id}")]
-    [Authorize]
     public async Task<IActionResult> GetSession(Guid id)
     {
         if (!Guid.TryParse(User.GetUserId(), out var userId))
@@ -39,7 +38,6 @@ public class SessionsController(ISessionQueryService sessionQueryService,
     }
 
     [HttpDelete("{sessionId}")]
-    [Authorize]
     public async Task<IActionResult> DeleteSession(Guid sessionId)
     {
 

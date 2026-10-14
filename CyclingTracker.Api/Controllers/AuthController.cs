@@ -8,6 +8,7 @@ using CyclingTracker.Api.Models;
 namespace CyclingTracker.Api.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("api/auth")]
     public class AuthController : ControllerBase
     {
@@ -20,7 +21,6 @@ namespace CyclingTracker.Api.Controllers
         }
 
         [HttpPost("logout")]
-        [Authorize] 
         public async Task<IActionResult> Logout()
         {
             // Invalidates the current user cookie session on the server

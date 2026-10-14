@@ -6,11 +6,11 @@ using CyclingTracker.Api.Services.FileImport;
 namespace CyclingTracker.Api.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("api/[controller]")]
 public class ImportController(IFitImportService fitImportsessionService) : ControllerBase
 {
     [HttpPost("import")]
-    [Authorize]
     [Consumes("multipart/form-data")]
     [RequestSizeLimit(20 * 1024 * 1024)]
     public async Task<IActionResult> Import(IFormFile file)

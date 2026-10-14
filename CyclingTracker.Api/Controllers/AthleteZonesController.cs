@@ -7,11 +7,11 @@ using CyclingTracker.Api.Services.AthleteZones;
 namespace CyclingTracker.Api.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("api/athlete/zones")]
 public class AthleteZonesController(IAthleteZonesService athleteZonesService) : ControllerBase
 {
-    [HttpGet]
-    [Authorize]
+    [HttpGet]   
     public async Task<IActionResult> GetZones()
     {
         if (!Guid.TryParse(User.GetUserId(), out var userId))
@@ -25,8 +25,7 @@ public class AthleteZonesController(IAthleteZonesService athleteZonesService) : 
     }
 
     [HttpPut]
-    [Authorize]
-    public async Task<IActionResult> UpdateZones([FromBody] UpdateAthleteZonesDto dto)
+      public async Task<IActionResult> UpdateZones([FromBody] UpdateAthleteZonesDto dto)
     {
         if (!Guid.TryParse(User.GetUserId(), out var userId))
         {
