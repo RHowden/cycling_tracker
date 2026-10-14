@@ -1,20 +1,28 @@
-# Full-stack mode: API + Postgres both containerized.
-# Used less often day-to-day — mainly to confirm the Dockerfile builds,
-# to test the whole stack together before pushing, or as what a deploy
-# target/CI would actually run.
-#
-# Usage: docker compose -f docker-compose.full.yml up
+# Full stack: browse to http://localhost:8080
+# Run: docker compose -f docker-compose.full.yml up --build
 services:
-  api:
-    build: .
-    ports: ["5000:8080"]
-    depends_on: [db]
   db:
     image: postgres:17
     environment:
       POSTGRES_PASSWORD: devpassword
-    ports: ["5432:5432"]
+      POSTGRES_DB: cycling_tracker
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d cycling_tracker"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - pgdata_full:/var/lib/postgresql/data   # separate from the dev compose volume
+
+  api:
+    build: .
+    ports: ["8080:8080"]
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      ConnectionStrings__DefaultConnection: "Host=db;Port=5432;Database=cycling_tracker;Username=postgres;Password=devpassword"
+      RunMigrations: "true"
+
 volumes:
-  pgdata:
+  pgdata_full:
