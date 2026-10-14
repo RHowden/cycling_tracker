@@ -61,22 +61,18 @@ public class FitFileParserTests
     }
 
     [Fact]
-    public void Sandbox_ParseRealFile_ForInspection()
+    public void WithRealFile_ParseRealFile_DoesNotError()
     {
-        // 1. Path to your actual downloaded .fit file
-        // (Use an absolute path to make it easy)
-        string filePath = @"C:\Users\rhowd\Downloads\2020-05-22-152940-ELEMNT BOLT E9E6-170-47.fit";
+        string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, 
+            "SampleFitFile.fit");
 
         var subject = new FitFileParser();
 
         // 2. Stream the real file into your production code [index]
-        using (var stream = System.IO.File.OpenRead(filePath))
-        {
-            var result = subject.Parse(stream);
+        using var stream = System.IO.File.OpenRead(filePath);
+        var result = subject.Parse(stream);
 
-            // 3. WHACK A BREAKPOINT ON THIS LINE BELOW! 🛑
-            var inspectionTarget = result;
-        }
+        Assert.NotNull(result);
     }
 
     private Stream CreateTestFitFile(Action<Encode, SessionMesg>? injectTestData = null)
