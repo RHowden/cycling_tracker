@@ -33,7 +33,10 @@ if (app.Environment.IsDevelopment())
 }
 else
 {
-    app.UseHttpsRedirection();
+    if (Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") != "true")
+    {
+        app.UseHttpsRedirection();
+    }
 }
 
 app.UseAuthentication();
