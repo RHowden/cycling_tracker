@@ -1,7 +1,6 @@
 import { Outlet, Link, useNavigate } from "react-router";
 
 import "./AppLayout.css";
-import { apiRequestVoid } from "../../api/client";
 import { useAuth } from "../../components/AuthContext";
 
 export function AppLayout() {
@@ -10,8 +9,6 @@ export function AppLayout() {
   
   const handleSignOut = async () => {
     try {
-      await apiRequestVoid('/auth/logout', { method: 'Post' });
-
       await logout();
 
       navigate("/login");
