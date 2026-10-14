@@ -11,7 +11,7 @@ public record UpdateZoneRangeDto(
         if (Zone2Max <= Zone1Max)
             yield return new ValidationResult(
                 "Zone 2 max must be greater than Zone 1 max.",
-                new[] { nameof(Zone2Max) });
+                [nameof(Zone2Max)]);
     }
 }
 
