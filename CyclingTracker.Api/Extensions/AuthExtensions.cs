@@ -46,11 +46,9 @@ public static class AuthExtensions
         return endpoints;
     }
 
-    // Needed while the front end and API are on different origins.
-    // Revisit when moving to a single origin (see the CSRF item in the review).
     private static void UseCrossSiteCookie(CookieBuilder cookie)
     {
-        cookie.SameSite = SameSiteMode.None;
-        cookie.SecurePolicy = CookieSecurePolicy.Always; // SameSite=None requires Secure
+        cookie.SameSite = SameSiteMode.Lax;
+        cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
     }
 }

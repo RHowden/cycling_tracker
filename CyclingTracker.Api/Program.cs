@@ -6,7 +6,6 @@ builder.Services
     .AddPersistence(builder.Configuration)
     .AddAuth()
     .AddApplicationServices()
-    .AddFrontendCors()
     .AddApiDocs()
     .AddErrorHandling();
 
@@ -26,7 +25,7 @@ else
     app.UseHttpsRedirection();
 }
 
-app.UseCors(CorsExtensions.FrontendPolicy);
+//app.UseCors(CorsExtensions.FrontendPolicy);
 
 app.UseAuthentication();
 app.UseAuthorization();
