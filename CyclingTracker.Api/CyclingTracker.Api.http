@@ -1,6 +1,0 @@
-@CyclingTracker.Api_HostAddress = http://localhost:5206
-
-GET {{CyclingTracker.Api_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
