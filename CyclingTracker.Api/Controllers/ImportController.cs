@@ -19,14 +19,7 @@ public class ImportController(IFitImportService fitImportsessionService) : Contr
         if (!file.FileName.EndsWith(".fit", StringComparison.OrdinalIgnoreCase))
             return BadRequest("Only .fit files are supported");
 
-        string currentUserId = User.GetUserId();
-        if (!Guid.TryParse(currentUserId, out Guid userId))
-        {
-            // Returns a clean 401 if the string is empty or isn't a valid Guid format
-            return Unauthorized("User ID is missing or invalid in session cookie.");
-        }
-
-        var result = await fitImportsessionService.ImportAsync(file, userId);
+        var result = await fitImportsessionService.ImportAsync(file, User.GetUserId());
 
         if (!result.IsSuccess)
         {

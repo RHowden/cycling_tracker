@@ -14,12 +14,7 @@ public class AthleteZonesController(IAthleteZonesService athleteZonesService) : 
     [HttpGet]   
     public async Task<IActionResult> GetZones()
     {
-        if (!Guid.TryParse(User.GetUserId(), out var userId))
-        {
-            return BadRequest("Invalid or missing user identifier.");
-        }
-
-        var result = await athleteZonesService.GetZonesAsync(userId);
+        var result = await athleteZonesService.GetZonesAsync(User.GetUserId());
 
         return result.ToActionResult(this);
     }
@@ -27,12 +22,7 @@ public class AthleteZonesController(IAthleteZonesService athleteZonesService) : 
     [HttpPut]
       public async Task<IActionResult> UpdateZones([FromBody] UpdateAthleteZonesDto dto)
     {
-        if (!Guid.TryParse(User.GetUserId(), out var userId))
-        {
-            return BadRequest("Invalid or missing user identifier.");
-        }
-
-         var result =  await athleteZonesService.UpdateZonesAsync(userId, dto);
+         var result =  await athleteZonesService.UpdateZonesAsync(User.GetUserId(), dto);
 
         return result.ToActionResult(this);
     }

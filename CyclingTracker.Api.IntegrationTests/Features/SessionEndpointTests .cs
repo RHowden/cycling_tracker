@@ -30,6 +30,7 @@ public class SessionEndpointTests : IClassFixture<IntegrationFactory>, IDisposab
             builder.ConfigureTestServices(services =>
             {
                 services.RemoveAll<ISessionQueryService>();
+                services.RemoveAll<ISessionDeletionService>();
                 services.AddScoped(_ => _queryMock.Object);
                 services.AddScoped(_ => _deleteMock.Object);
             }));
