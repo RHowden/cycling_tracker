@@ -26,7 +26,7 @@ namespace CyclingTracker.Api.Controllers
             // Invalidates the current user cookie session on the server
             await _signInManager.SignOutAsync();
             
-            return Ok(); // Returns a clean 200 HTTP response
+            return NoContent();
         }
     }
 }
