@@ -21,7 +21,7 @@ services:
       db:
         condition: service_healthy
     environment:
-      ConnectionStrings__DefaultConnection: "Host=db;Port=5432;Database=cycling_tracker;Username=postgres;Password=devpassword"
+      ConnectionStrings__DefaultConnection: "Host=db;Port=5432;Database=cycling_tracker;Username=postgres;Password=${POSTGRES_PASSWORD}"
       RunMigrations: "true"
 
 volumes:
