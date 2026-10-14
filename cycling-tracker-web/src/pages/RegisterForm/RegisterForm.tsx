@@ -13,7 +13,7 @@ export function RegisterForm() {
 
     try {
       await register({ email, password });
-      navigate("/dashboard");
+      navigate("/login");
 
       return { success: true, error: null };
     } catch (err: any) {
