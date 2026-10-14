@@ -59,7 +59,7 @@ public class SessionEndpointTests : IClassFixture<IntegrationFactory>, IDisposab
             .ReturnsAsync(Result<IReadOnlyList<SessionIndexDto>>.Success(sessions));
 
         // Act
-        var response = await _client.GetAsync($"/api/sessions?userId={expectedUserId}");
+        var response = await _client.GetAsync($"/api/sessions");
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -108,7 +108,7 @@ public class SessionEndpointTests : IClassFixture<IntegrationFactory>, IDisposab
              .ReturnsAsync(Result.Success());
 
         // Act
-        var response = await _client.DeleteAsync($"/api/sessions/{sessionId}?userId={expectedUserId}");
+        var response = await _client.DeleteAsync($"/api/sessions/{sessionId}");
 
         // Assert
         Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
@@ -127,7 +127,7 @@ public class SessionEndpointTests : IClassFixture<IntegrationFactory>, IDisposab
              .ReturnsAsync(Result.Failure(ServiceErrorType.ResourceNotFound, "_"));
 
         // Act
-        var response = await _client.DeleteAsync($"/api/sessions/{sessionId}?userId={expectedUserId}");
+        var response = await _client.DeleteAsync($"/api/sessions/{sessionId}");
 
         // Assert
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
@@ -148,7 +148,7 @@ public class SessionEndpointTests : IClassFixture<IntegrationFactory>, IDisposab
              .ReturnsAsync(Result.Failure(ServiceErrorType.Failure, expectedError));
 
         // Act
-        var response = await _client.DeleteAsync($"/api/sessions/{sessionId}?userId={expectedUserId}");
+        var response = await _client.DeleteAsync($"/api/sessions/{sessionId}");
 
         // Assert
         Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);

@@ -59,11 +59,11 @@ public class ImportControllerTests
 
         // Assert
         // 1. Check that the result is specifically a 201 CreatedActionResult
-        var createdResult = Assert.IsAssignableFrom<CreatedAtActionResult>(result);
+        var createdResult = Assert.IsType<CreatedAtActionResult>(result, exactMatch: false);
         Assert.Equal(StatusCodes.Status201Created, createdResult.StatusCode);
 
         // 2. Cast the correct ID is returned
-        var returnedId = Assert.IsAssignableFrom<Guid>(createdResult.Value);
+        var returnedId = Assert.IsType<Guid>(createdResult.Value, exactMatch: false);
         Assert.Equal(expectedSessionID, returnedId);
     }
 
@@ -77,7 +77,7 @@ public class ImportControllerTests
         var result = await controller.Import(null!);
 
         // Assert
-        var createdResult = Assert.IsAssignableFrom<BadRequestObjectResult>(result);
+        var createdResult = Assert.IsType<ObjectResult>(result, exactMatch: false);
         Assert.Equal(StatusCodes.Status400BadRequest, createdResult.StatusCode);
 
         _importService.Verify(s => s.ImportAsync(It.IsAny<IFormFile>(), It.IsAny<Guid>()),
@@ -95,7 +95,7 @@ public class ImportControllerTests
         var result = await controller.Import(file);
 
         // Assert
-        var createdResult = Assert.IsAssignableFrom<BadRequestObjectResult>(result);
+        var createdResult = Assert.IsType<ObjectResult>(result, exactMatch: false);
         Assert.Equal(StatusCodes.Status400BadRequest, createdResult.StatusCode);
 
         _importService.Verify(s => s.ImportAsync(It.IsAny<IFormFile>(), It.IsAny<Guid>()),
@@ -113,7 +113,7 @@ public class ImportControllerTests
         var result = await controller.Import(file);
 
         // Assert
-        var createdResult = Assert.IsAssignableFrom<BadRequestObjectResult>(result);
+        var createdResult = Assert.IsType<ObjectResult>(result, exactMatch: false);
         Assert.Equal(StatusCodes.Status400BadRequest, createdResult.StatusCode);
 
         _importService.Verify(s => s.ImportAsync(It.IsAny<IFormFile>(), It.IsAny<Guid>()),
@@ -136,7 +136,7 @@ public class ImportControllerTests
         var result = await controller.Import(file);
 
         // Assert
-        var createdResult = Assert.IsAssignableFrom<ObjectResult>(result);
+        var createdResult = Assert.IsType<ObjectResult>(result, exactMatch: false);
         Assert.Equal(StatusCodes.Status400BadRequest, createdResult.StatusCode);
     }
 
