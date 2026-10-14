@@ -17,6 +17,7 @@ public class AthleteZonesService(AppDbContext db) : IAthleteZonesService
                 new ZoneRangeDto(a.HeartRateZones.Zone1Max, a.HeartRateZones.Zone2Max),
                 new ZoneRangeDto(a.PowerZones.Zone1Max, a.PowerZones.Zone2Max)))
             .SingleOrDefaultAsync();
+            
             return (data is not null) ? 
                 Result<AthleteZonesDto>.Success(data) 
                 : Result<AthleteZonesDto>

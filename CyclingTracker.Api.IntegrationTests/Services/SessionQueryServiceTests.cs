@@ -27,11 +27,11 @@ public class SessionQueryServiceTests(PostgresFixture pg) : DbTestBase(pg)
         var result = await sut.GetUserSessionsAsync(targetUser);
 
         // Assert
-        Assert.NotNull(result);
-        Assert.Equal(3, result.Count);
+        Assert.True(result.IsSuccess);
+        Assert.Equal(3, result.Value.Count);
 
         // Confirm reverse-chronological ordering works flawlessly
-        Assert.Collection(result,
+        Assert.Collection(result.Value,
             first => Assert.Equal(new DateTime(2026, 9, 3, 8, 0, 0, DateTimeKind.Utc), first.StartTimeUtc),
             second => Assert.Equal(new DateTime(2026, 9, 2, 8, 0, 0, DateTimeKind.Utc), second.StartTimeUtc),
             third => Assert.Equal(new DateTime(2026, 9, 1, 8, 0, 0, DateTimeKind.Utc), third.StartTimeUtc)
@@ -49,8 +49,8 @@ public class SessionQueryServiceTests(PostgresFixture pg) : DbTestBase(pg)
         var result = await sut.GetUserSessionsAsync(emptyUser);
 
         // Assert
-        Assert.NotNull(result);
-        Assert.Empty(result);
+        Assert.True(result.IsSuccess);
+        Assert.Empty(result.Value);
     }
 
 
@@ -68,8 +68,8 @@ public class SessionQueryServiceTests(PostgresFixture pg) : DbTestBase(pg)
         var result = await sut.GetSessionByIdAsync(sessionId, userId);
 
         // Assert
-        Assert.NotNull(result);
-        Assert.Equal(sessionId, result.Id);
+        Assert.True(result.IsSuccess);
+        Assert.Equal(sessionId, result.Value.Id);
     }
 
     [Fact]
@@ -87,7 +87,7 @@ public class SessionQueryServiceTests(PostgresFixture pg) : DbTestBase(pg)
         var result = await sut.GetSessionByIdAsync(sessionId, userB);
 
         // Assert
-        Assert.Null(result);
+        Assert.False(result.IsSuccess);
     }
 
     [Fact]
@@ -108,12 +108,13 @@ public class SessionQueryServiceTests(PostgresFixture pg) : DbTestBase(pg)
 
         var result = await sut.GetSessionByIdAsync(sessionId, userId);
 
-        Assert.NotNull(result);
-        Assert.NotNull(result.Samples);
-        Assert.Equal(samples.Time, result.Samples.Time);
-        Assert.Equal(samples.HeartRate, result.Samples.HeartRate);
-        Assert.Equal(samples.Power, result.Samples.Power);
-        Assert.Equal(samples.Speed, result.Samples.Speed);
+        Assert.True(result.IsSuccess);
+        var sessionSamples = result.Value.Samples;
+        Assert.NotNull(sessionSamples);
+        Assert.Equal(samples.Time, sessionSamples.Time);
+        Assert.Equal(samples.HeartRate, sessionSamples.HeartRate);
+        Assert.Equal(samples.Power, sessionSamples.Power);
+        Assert.Equal(samples.Speed, sessionSamples.Speed);
     }
 
     [Fact]
@@ -127,8 +128,8 @@ public class SessionQueryServiceTests(PostgresFixture pg) : DbTestBase(pg)
 
         var result = await sut.GetSessionByIdAsync(sessionId, userId);
 
-        Assert.NotNull(result);
-        Assert.Null(result.Samples);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Value.Samples);
     }
 
     [Fact]
@@ -144,7 +145,7 @@ public class SessionQueryServiceTests(PostgresFixture pg) : DbTestBase(pg)
 
         var result = await sut.GetSessionByIdAsync(sessionId, userB);
 
-        Assert.Null(result);
+        Assert.False(result.IsSuccess);
     }
     private async Task<Guid> SeedAthleteAsync()
     {

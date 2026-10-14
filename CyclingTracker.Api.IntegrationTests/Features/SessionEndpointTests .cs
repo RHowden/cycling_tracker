@@ -48,15 +48,14 @@ public class SessionEndpointTests : IClassFixture<IntegrationFactory>, IDisposab
     {
         // Arrange
         Guid expectedUserId = GetUserId();
-        var mockResult = new List<SessionIndexDto>
-        {
-            new(Guid.NewGuid(), DateTime.UtcNow, "Cycling", 3600, 25000, 140, 200)
-        };
-
+        IReadOnlyList<SessionIndexDto> sessions = new List<SessionIndexDto>
+    {
+        new(Guid.NewGuid(), DateTime.UtcNow, "Cycling", 3600, 25000, 140, 200)
+    };
 
         _queryMock
             .Setup(s => s.GetUserSessionsAsync(expectedUserId))
-            .ReturnsAsync(mockResult);
+            .ReturnsAsync(Result<IReadOnlyList<SessionIndexDto>>.Success(sessions));
 
         // Act
         var response = await _client.GetAsync($"/api/sessions?userId={expectedUserId}");
@@ -64,7 +63,7 @@ public class SessionEndpointTests : IClassFixture<IntegrationFactory>, IDisposab
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-        var content = await response.Content.ReadFromJsonAsync<List<SessionIndexDto>>();
+        var content = await response.Content.ReadFromJsonAsync<IReadOnlyList<SessionIndexDto>>();
         Assert.NotNull(content);
         Assert.Single(content);
     }
@@ -76,8 +75,8 @@ public class SessionEndpointTests : IClassFixture<IntegrationFactory>, IDisposab
         Guid expectedUserId = GetUserId();
 
         var targetSessionId = Guid.NewGuid();
-        var mockSession = new SessionDto(targetSessionId, 
-            DateTime.UtcNow, "Cycling", 3600, 25000, 140, 200, null);
+        var mockSession = Result<SessionDto>.Success(new SessionDto(targetSessionId,
+            DateTime.UtcNow, "Cycling", 3600, 25000, 140, 200, null));
 
         // Strict mock setup matches the targeted session ID and the authenticated user ID
         _queryMock
