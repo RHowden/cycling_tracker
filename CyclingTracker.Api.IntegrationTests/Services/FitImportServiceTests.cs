@@ -62,7 +62,7 @@ public class FitImportServiceTests(PostgresFixture pg) : DbTestBase(pg)
 
         Assert.True(first.IsSuccess, first.ErrorMessage);
         Assert.False(second.IsSuccess);
-        Assert.Equal(ServiceErrorType.Conflict, second.ServiceErrorType);
+        Assert.Equal(ServiceErrorType.InvalidFile, second.ServiceErrorType);
         Assert.False(string.IsNullOrWhiteSpace(second.ErrorMessage));
 
         Assert.Equal(1, await CountSessionsAsync(userId));

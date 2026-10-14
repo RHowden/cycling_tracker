@@ -30,7 +30,6 @@ public class Result
 public class Result<T> : Result
 {
     [MemberNotNullWhen(true, nameof(Value))]
-    [MemberNotNullWhen(false, nameof(ServiceErrorType))]
     public override bool IsSuccess => base.IsSuccess;
 
     public T? Value { get; }

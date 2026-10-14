@@ -23,8 +23,8 @@ public class AthleteZonesServiceTests(PostgresFixture pg) : DbTestBase(pg)
 
         // Assert
         Assert.NotNull(result);
-        Assert.Equal(new ZoneRangeDto(120, 145), result.HeartRate);
-        Assert.Equal(new ZoneRangeDto(180, 240), result.Power);
+        Assert.Equal(new ZoneRangeDto(120, 145), result.Value!.HeartRate);
+        Assert.Equal(new ZoneRangeDto(180, 240), result.Value!.Power);
     }
 
     [Fact]
@@ -39,8 +39,8 @@ public class AthleteZonesServiceTests(PostgresFixture pg) : DbTestBase(pg)
 
         // Assert
         Assert.NotNull(result);
-        Assert.Equal(new ZoneRangeDto(130, 150), result.HeartRate);
-        Assert.Equal(new ZoneRangeDto(150, 200), result.Power);
+        Assert.Equal(new ZoneRangeDto(130, 150), result.Value!.HeartRate);
+        Assert.Equal(new ZoneRangeDto(150, 200), result.Value!.Power);
     }
 
     [Fact]
@@ -53,7 +53,7 @@ public class AthleteZonesServiceTests(PostgresFixture pg) : DbTestBase(pg)
         var result = await sut.GetZonesAsync(Guid.NewGuid());
 
         // Assert
-        Assert.Null(result);
+        Assert.Null(result.Value);
     }
 
     [Fact]
@@ -70,7 +70,7 @@ public class AthleteZonesServiceTests(PostgresFixture pg) : DbTestBase(pg)
 
         // Assert
         Assert.NotNull(result);
-        Assert.Equal(new ZoneRangeDto(110, 140), result.HeartRate);
+        Assert.Equal(new ZoneRangeDto(110, 140), result.Value!.HeartRate);
     }
 
     [Fact]
@@ -88,8 +88,8 @@ public class AthleteZonesServiceTests(PostgresFixture pg) : DbTestBase(pg)
 
         // Assert: returned DTO
         Assert.NotNull(result);
-        Assert.Equal(new ZoneRangeDto(125, 155), result.HeartRate);
-        Assert.Equal(new ZoneRangeDto(190, 260), result.Power);
+        Assert.Equal(new ZoneRangeDto(125, 155), result.Value!.HeartRate);
+        Assert.Equal(new ZoneRangeDto(190, 260), result.Value!.Power);
 
         // Assert: actually persisted (read back through a fresh context)
         var persisted = await LoadAthleteAsync(userId);
@@ -112,7 +112,7 @@ public class AthleteZonesServiceTests(PostgresFixture pg) : DbTestBase(pg)
         var result = await sut.UpdateZonesAsync(Guid.NewGuid(), request);
 
         // Assert
-        Assert.Null(result);
+        Assert.Null(result.Value);
     }
 
     [Fact]

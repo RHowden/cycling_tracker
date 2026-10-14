@@ -19,14 +19,9 @@ public class AthleteZonesController(IAthleteZonesService athleteZonesService) : 
             return BadRequest("Invalid or missing user identifier.");
         }
 
-        var zones = await athleteZonesService.GetZonesAsync(userId);
+        var result = await athleteZonesService.GetZonesAsync(userId);
 
-        if (zones == null)
-        {
-            return NotFound();
-        }
-
-        return Ok(zones);
+        return result.ToActionResult(this);
     }
 
     [HttpPut]
@@ -38,13 +33,8 @@ public class AthleteZonesController(IAthleteZonesService athleteZonesService) : 
             return BadRequest("Invalid or missing user identifier.");
         }
 
-        var zones = await athleteZonesService.UpdateZonesAsync(userId, dto);
+         var result =  await athleteZonesService.UpdateZonesAsync(userId, dto);
 
-        if (zones == null)
-        {
-            return NotFound();
-        }
-
-        return Ok(zones);
+        return result.ToActionResult(this);
     }
 }

@@ -9,6 +9,7 @@ using CyclingTracker.Api.Dtos;
 using CyclingTracker.Api.IntegrationTests.Infrastructure;
 using Microsoft.Extensions.Options;
 using CyclingTracker.Api.Services.AthleteZones;
+using CyclingTracker.Api.Shared;
 
 namespace CyclingTracker.Api.IntegrationTests.Features;
 
@@ -41,9 +42,9 @@ public class AthleteZonesEndpointTests : IClassFixture<IntegrationFactory>, IDis
     {
         // Arrange
         Guid expectedUserId = GetUserId();
-        var mockZones = new AthleteZonesDto(
+        var mockZones = Result<AthleteZonesDto>.Success(new AthleteZonesDto(
             new ZoneRangeDto(130, 150),
-            new ZoneRangeDto(150, 200));
+            new ZoneRangeDto(150, 200)));
 
         _zoneMock
             .Setup(s => s.GetZonesAsync(expectedUserId))
@@ -57,7 +58,7 @@ public class AthleteZonesEndpointTests : IClassFixture<IntegrationFactory>, IDis
 
         var content = await response.Content.ReadFromJsonAsync<AthleteZonesDto>();
         Assert.NotNull(content);
-        Assert.Equal(mockZones, content);
+        Assert.Equal(mockZones.Value, content);
     }
 
     [Fact]
@@ -66,9 +67,11 @@ public class AthleteZonesEndpointTests : IClassFixture<IntegrationFactory>, IDis
         // Arrange
         Guid expectedUserId = GetUserId();
 
+        var value = Result<AthleteZonesDto>.Failure(Enums.ServiceErrorType.ResourceNotFound, "_");
+
         _zoneMock
             .Setup(s => s.GetZonesAsync(expectedUserId))
-            .ReturnsAsync((AthleteZonesDto?)null);
+            .ReturnsAsync(value);
 
         // Act
         var response = await _client.GetAsync("/api/athlete/zones");
@@ -85,9 +88,9 @@ public class AthleteZonesEndpointTests : IClassFixture<IntegrationFactory>, IDis
         var request = new UpdateAthleteZonesDto(
             new UpdateZoneRangeDto(125, 155),
             new UpdateZoneRangeDto(190, 260));
-        var saved = new AthleteZonesDto(
+        var saved = Result<AthleteZonesDto>.Success(new AthleteZonesDto(
             new ZoneRangeDto(125, 155),
-            new ZoneRangeDto(190, 260));
+            new ZoneRangeDto(190, 260)));
 
         // Records compare by value, so the deserialised request matches this setup
         _zoneMock
@@ -102,7 +105,7 @@ public class AthleteZonesEndpointTests : IClassFixture<IntegrationFactory>, IDis
 
         var content = await response.Content.ReadFromJsonAsync<AthleteZonesDto>();
         Assert.NotNull(content);
-        Assert.Equal(saved, content);
+        Assert.Equal(saved.Value, content);
     }
 
     [Fact]
@@ -114,9 +117,11 @@ public class AthleteZonesEndpointTests : IClassFixture<IntegrationFactory>, IDis
             new UpdateZoneRangeDto(125, 155),
             new UpdateZoneRangeDto(190, 260));
 
+        var value = Result<AthleteZonesDto>.Failure(Enums.ServiceErrorType.ResourceNotFound, "_");
+
         _zoneMock
             .Setup(s => s.UpdateZonesAsync(expectedUserId, request))
-            .ReturnsAsync((AthleteZonesDto?)null);
+            .ReturnsAsync(value);
 
         // Act
         var response = await _client.PutAsJsonAsync("/api/athlete/zones", request);
