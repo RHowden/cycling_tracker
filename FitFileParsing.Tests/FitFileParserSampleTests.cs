@@ -3,15 +3,12 @@ using Dynastream.Fit;
 namespace FitFileParsing.Tests;
 
 /// <summary>
-/// Step 1 of the "HR, power and speed chart" plan: the parser should collect Record
-/// messages into column arrays (ActivityData.Samples).
-///
-/// Assumed API (adjust names to taste):
-///   ActivityData.Samples : SampleData?   (null when the file has no records)
-///   SampleData.Time      : int[]         elapsed seconds from the first record
-///   SampleData.HeartRate : int?[]
-///   SampleData.Power     : int?[]
-///   SampleData.Speed     : double?[]     m/s, EnhancedSpeed ?? Speed
+/// The parser collects Record messages into column arrays (ActivityData.Samples).
+///   Samples.Time      : int[]      elapsed seconds from the first record
+///   Samples.HeartRate : int?[]
+///   Samples.Power     : int?[]
+///   Samples.Speed     : double?[]  m/s, EnhancedSpeed ?? Speed
+/// Samples is null when the file has no timestamped records.
 /// </summary>
 public class FitFileParserSampleTests
 {
@@ -26,11 +23,11 @@ public class FitFileParserSampleTests
                 encoder.Write(Record(i, power: 100 + i * 50));
         });
 
-        var result = new FitFileParser().Parse(stream);
+        var samples = ParseOk(stream).Samples;
 
-        Assert.NotNull(result.Samples);
-        Assert.Equal(new[] { 0, 1, 2, 3, 4 }, result.Samples!.Time);
-        Assert.Equal(new int?[] { 100, 150, 200, 250, 300 }, result.Samples.Power);
+        Assert.NotNull(samples);
+        Assert.Equal(new[] { 0, 1, 2, 3, 4 }, samples.Time);
+        Assert.Equal(new int?[] { 100, 150, 200, 250, 300 }, samples.Power);
     }
 
     [Fact]
@@ -44,9 +41,9 @@ public class FitFileParserSampleTests
             encoder.Write(Record(62, heartRate: 122));
         });
 
-        var result = new FitFileParser().Parse(stream);
+        var samples = ParseOk(stream).Samples;
 
-        Assert.Equal(new[] { 0, 1, 2 }, result.Samples!.Time);
+        Assert.Equal(new[] { 0, 1, 2 }, samples!.Time);
     }
 
     [Fact]
@@ -58,11 +55,11 @@ public class FitFileParserSampleTests
                 encoder.Write(Record(i, heartRate: 140 + i));
         });
 
-        var result = new FitFileParser().Parse(stream);
+        var samples = ParseOk(stream).Samples!;
 
-        Assert.Equal(new int?[] { 140, 141, 142 }, result.Samples!.HeartRate);
-        Assert.All(result.Samples.Power, p => Assert.Null(p));
-        Assert.All(result.Samples.Speed, s => Assert.Null(s));
+        Assert.Equal(new int?[] { 140, 141, 142 }, samples.HeartRate);
+        Assert.All(samples.Power, p => Assert.Null(p));
+        Assert.All(samples.Speed, s => Assert.Null(s));
     }
 
     [Fact]
@@ -71,14 +68,14 @@ public class FitFileParserSampleTests
         using var stream = BuildFitFile(encoder =>
         {
             encoder.Write(Record(0, power: 200, heartRate: 130));
-            encoder.Write(Record(1, power: null,heartRate: 131)); 
+            encoder.Write(Record(1, power: null, heartRate: 131));
             encoder.Write(Record(2, power: 210, heartRate: 132));
         });
 
-        var result = new FitFileParser().Parse(stream);
+        var samples = ParseOk(stream).Samples!;
 
-        Assert.Equal(new int?[] { 200, null, 210 }, result.Samples!.Power);
-        Assert.Equal(new int?[] { 130, 131, 132 }, result.Samples.HeartRate);
+        Assert.Equal(new int?[] { 200, null, 210 }, samples.Power);
+        Assert.Equal(new int?[] { 130, 131, 132 }, samples.HeartRate);
     }
 
     [Fact]
@@ -92,9 +89,9 @@ public class FitFileParserSampleTests
             encoder.Write(Record(301, power: 200));
         });
 
-        var result = new FitFileParser().Parse(stream);
+        var samples = ParseOk(stream).Samples!;
 
-        Assert.Equal(new[] { 0, 1, 300, 301 }, result.Samples!.Time);
+        Assert.Equal(new[] { 0, 1, 300, 301 }, samples.Time);
     }
 
     [Fact]
@@ -106,11 +103,11 @@ public class FitFileParserSampleTests
             encoder.Write(Record(1, speed: 4.0f));
         });
 
-        var result = new FitFileParser().Parse(stream);
+        var samples = ParseOk(stream).Samples!;
 
-        Assert.Equal(2, result.Samples!.Speed.Length);
-        Assert.Equal(3.5, result.Samples.Speed[0]!.Value, precision: 2);
-        Assert.Equal(4.0, result.Samples.Speed[1]!.Value, precision: 2);
+        Assert.Equal(2, samples.Speed.Length);
+        Assert.Equal(3.5, samples.Speed[0]!.Value, precision: 2);
+        Assert.Equal(4.0, samples.Speed[1]!.Value, precision: 2);
     }
 
     [Fact]
@@ -121,9 +118,9 @@ public class FitFileParserSampleTests
             encoder.Write(Record(0, speed: 3.0f, enhancedSpeed: 3.456f));
         });
 
-        var result = new FitFileParser().Parse(stream);
+        var samples = ParseOk(stream).Samples!;
 
-        Assert.Equal(3.456, result.Samples!.Speed[0]!.Value, precision: 2);
+        Assert.Equal(3.456, samples.Speed[0]!.Value, precision: 2);
     }
 
     [Fact]
@@ -134,9 +131,9 @@ public class FitFileParserSampleTests
             encoder.Write(Record(0, speed: 2.5f));
         });
 
-        var result = new FitFileParser().Parse(stream);
+        var samples = ParseOk(stream).Samples!;
 
-        Assert.Equal(2.5, result.Samples!.Speed[0]!.Value, precision: 2);
+        Assert.Equal(2.5, samples.Speed[0]!.Value, precision: 2);
     }
 
     [Fact]
@@ -144,9 +141,9 @@ public class FitFileParserSampleTests
     {
         using var stream = BuildFitFile(_ => { });
 
-        var result = new FitFileParser().Parse(stream);
+        var activity = ParseOk(stream);
 
-        Assert.Null(result.Samples);
+        Assert.Null(activity.Samples);
     }
 
     [Fact]
@@ -159,7 +156,7 @@ public class FitFileParserSampleTests
             encoder.Write(Record(2, power: 210));
         });
 
-        var samples = new FitFileParser().Parse(stream).Samples!;
+        var samples = ParseOk(stream).Samples!;
 
         Assert.Equal(3, samples.Time.Length);
         Assert.Equal(3, samples.HeartRate.Length);
@@ -168,6 +165,13 @@ public class FitFileParserSampleTests
     }
 
     // ---- helpers ----
+
+    private static ActivityData ParseOk(Stream stream)
+    {
+        var result = new FitFileParser().Parse(stream);
+        Assert.True(result.Succeeded, $"Expected parse to succeed but got {result.Error}");
+        return result.ActivityData;
+    }
 
     private static RecordMesg Record(
         int secondsFromStart,
@@ -188,7 +192,7 @@ public class FitFileParserSampleTests
     /// <summary>
     /// Writes FileId, then the records supplied by the caller, then a single Session.
     /// </summary>
-    private static Stream BuildFitFile(Action<Encode> writeRecords)
+    private static MemoryStream BuildFitFile(Action<Encode> writeRecords)
     {
         var stream = new MemoryStream();
         var encoder = new Encode(ProtocolVersion.V20);

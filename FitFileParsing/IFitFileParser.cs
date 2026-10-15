@@ -2,5 +2,5 @@ namespace FitFileParsing;
 
 public interface IFitFileParser
 {
-    ActivityData Parse(Stream stream);
+    FitParseResult Parse(Stream stream);
 }

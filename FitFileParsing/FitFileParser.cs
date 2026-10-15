@@ -4,39 +4,49 @@ namespace FitFileParsing;
 
 public class FitFileParser : IFitFileParser
 {
-    public ActivityData Parse(Stream stream)
+    public FitParseResult Parse(Stream stream)
     {
-        ArgumentNullException.ThrowIfNull(stream);
+        ArgumentNullException.ThrowIfNull(stream); // programmer error, still throws
+
         if (stream.Length == 0)
         {
-            throw new FormatException("The provided stream is empty and is not a valid FIT file format.");
+            return FitParseResult.Failure(FitParseError.NotAFitFile);
         }
 
-        Decode decodeDemo = new();
-
-        // Use a FitListener to capture all decoded messages in a FitMessages object
+        Decode decode = new();
         FitListener fitListener = new();
-        decodeDemo.MesgEvent += fitListener.OnMesg;
+        decode.MesgEvent += fitListener.OnMesg;
 
-        //reset to start of stream
         if (stream.CanSeek)
         {
             stream.Position = 0;
         }
 
-        if (decodeDemo.Read(stream) is not true)
+        try
         {
-            throw new FormatException("The provided stream is not a valid FIT file format.");
+            if (!decode.Read(stream))
+            {
+                return FitParseResult.Failure(FitParseError.NotAFitFile);
+            }
+        }
+        catch (FitException)
+        {
+            return FitParseResult.Failure(FitParseError.NotAFitFile);
         }
 
-        FitMessages fitMessages = fitListener.FitMessages;
+        var sessions = fitListener.FitMessages.SessionMesgs;
 
-        var session = fitMessages.SessionMesgs.FirstOrDefault();
-
-        if (session == null)
+        if (sessions.Count == 0)
         {
-            throw new FormatException("FIT file is missing a valid summary Session message.");
+            return FitParseResult.Failure(FitParseError.NoSession);
         }
+
+        if (sessions.Count > 1)
+        {
+            return FitParseResult.Failure(FitParseError.MultipleSessions);
+        }
+
+        var session = sessions[0];
 
         var startTime = session.GetStartTime().GetDateTime();
         Sport sport = session.GetSport() ?? Sport.Generic;
@@ -45,9 +55,10 @@ public class FitFileParser : IFitFileParser
         int? avgPower = session.GetAvgPower();
         float distance = session.GetTotalDistance() ?? 0f;
 
-        var samples = BuildSamples(fitMessages.RecordMesgs);
+        var samples = BuildSamples(fitListener.FitMessages.RecordMesgs);
 
-        return new ActivityData(startTime, sport.ToString(), duration, avgHr, avgPower, distance, samples);
+        return FitParseResult.Success(
+            new ActivityData(startTime, sport.ToString(), duration, avgHr, avgPower, distance, samples));
     }
 
     private static Samples? BuildSamples(IReadOnlyList<RecordMesg> records)

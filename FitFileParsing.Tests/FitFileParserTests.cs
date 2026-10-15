@@ -4,85 +4,113 @@ namespace FitFileParsing.Tests;
 
 public class FitFileParserTests
 {
-    static readonly System.DateTime expectedStartTime = new System.DateTime(2024, 1, 15, 8, 30, 0, DateTimeKind.Utc);
-
+    static readonly System.DateTime expectedStartTime = new(2024, 1, 15, 8, 30, 0, DateTimeKind.Utc);
 
     [Fact]
-    public void Parse_SessionWithNullStrem_ThrowsException()
+    public void Parse_NullStream_ThrowsArgumentNullException()
     {
         var subject = new FitFileParser();
         Stream? nullStream = null;
 
-        var exception = Assert.Throws<ArgumentNullException>(() => subject.Parse(nullStream!));
+        Assert.Throws<ArgumentNullException>(() => subject.Parse(nullStream!));
     }
 
+    [Fact]
+    public void Parse_EmptyStream_ReturnsNotAFitFile()
+    {
+        using var stream = new MemoryStream();
+
+        var result = new FitFileParser().Parse(stream);
+
+        Assert.False(result.Succeeded);
+        Assert.Equal(FitParseError.NotAFitFile, result.Error);
+    }
 
     [Fact]
-    public void Parse_SessionWithInvalidStream_ThrowsException()
+    public void Parse_GarbageBytes_ReturnsNotAFitFile()
     {
-        var subject = new FitFileParser();
-        using var invalidStream = new MemoryStream();
+        using var stream = new MemoryStream(
+            System.Text.Encoding.UTF8.GetBytes("this is definitely not a fit file, just text"));
 
-        Assert.Throws<FormatException>(() => subject.Parse(invalidStream));
+        var result = new FitFileParser().Parse(stream);
+
+        Assert.False(result.Succeeded);
+        Assert.Equal(FitParseError.NotAFitFile, result.Error);
+    }
+
+    [Fact]
+    public void Parse_NoSession_ReturnsNoSession()
+    {
+        using var stream = BuildFileWithSessions(0);
+
+        var result = new FitFileParser().Parse(stream);
+
+        Assert.False(result.Succeeded);
+        Assert.Equal(FitParseError.NoSession, result.Error);
+    }
+
+    [Fact]
+    public void Parse_MultipleSessions_ReturnsMultipleSessions()
+    {
+        using var stream = BuildFileWithSessions(2);
+
+        var result = new FitFileParser().Parse(stream);
+
+        Assert.False(result.Succeeded);
+        Assert.Equal(FitParseError.MultipleSessions, result.Error);
     }
 
     [Fact]
     public void Parse_WithValidSession_PopulatesBasicSummaryMetrics()
     {
-        // Arrange
         var subject = new FitFileParser();
 
         using var stream = CreateTestFitFile((encoder, session) =>
         {
-            // 1. Set the Activity/Sport Type to "Run"
             var activity = new ActivityMesg();
             encoder.Write(activity);
 
-            // 2. Set the summary fields inside the Session Message
             session.SetStartTime(new Dynastream.Fit.DateTime(expectedStartTime));
             session.SetSport(Sport.Running);
-            session.SetTotalDistance((float)10000.0);
-            session.SetTotalElapsedTime((float)1800.0);
+            session.SetTotalDistance(10000.0f);
+            session.SetTotalElapsedTime(1800.0f);
             session.SetAvgHeartRate((byte)155);
             session.SetAvgPower((ushort)250);
 
-            // 3. Simple trackpoint to ensure full file processing
+            // Simple trackpoint to ensure full file processing
             var record = new RecordMesg();
             record.SetTimestamp(new Dynastream.Fit.DateTime(expectedStartTime));
             encoder.Write(record);
         });
 
-        // Act
         var result = subject.Parse(stream);
 
-        // Assert
+        Assert.True(result.Succeeded);
         var expected = new ActivityData(expectedStartTime, "Running", 1800.0, 155, 250, 10000f);
-        Assert.Equal(expected, result with { Samples = null });
+        Assert.Equal(expected, result.ActivityData with { Samples = null });
     }
 
     [Fact]
-    public void WithRealFile_ParseRealFile_DoesNotError()
+    public void WithRealFile_ParseRealFile_Succeeds()
     {
-        string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, 
-            "SampleFitFile.fit");
+        string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SampleFitFile.fit");
 
         var subject = new FitFileParser();
 
-        // 2. Stream the real file into your production code [index]
         using var stream = System.IO.File.OpenRead(filePath);
         var result = subject.Parse(stream);
 
-        Assert.NotNull(result);
+        Assert.True(result.Succeeded);
     }
 
-    private Stream CreateTestFitFile(Action<Encode, SessionMesg>? injectTestData = null)
+    private static MemoryStream CreateTestFitFile(Action<Encode, SessionMesg>? injectTestData = null)
     {
         var memoryStream = new MemoryStream();
 
         var encoder = new Encode(ProtocolVersion.V20);
         encoder.Open(memoryStream);
 
-        // 1. Write the mandatory baseline data every test file needs
+        // Mandatory baseline data every test file needs
         var fileId = new FileIdMesg();
         fileId.SetType(Dynastream.Fit.File.Activity);
         fileId.SetTimeCreated(new Dynastream.Fit.DateTime(expectedStartTime));
@@ -93,9 +121,33 @@ public class FitFileParserTests
         injectTestData?.Invoke(encoder, session);
         encoder.Write(session);
 
-        // 3. Close and package the byte array
         encoder.Close();
+        memoryStream.Position = 0;
         return memoryStream;
+    }
 
+    private static MemoryStream BuildFileWithSessions(int sessionCount)
+    {
+        var stream = new MemoryStream();
+
+        var encoder = new Encode(ProtocolVersion.V20);
+        encoder.Open(stream);
+
+        var fileId = new FileIdMesg();
+        fileId.SetType(Dynastream.Fit.File.Activity);
+        fileId.SetTimeCreated(new Dynastream.Fit.DateTime(expectedStartTime));
+        encoder.Write(fileId);
+
+        for (int i = 0; i < sessionCount; i++)
+        {
+            var session = new SessionMesg();
+            session.SetStartTime(new Dynastream.Fit.DateTime(expectedStartTime.AddHours(i)));
+            session.SetSport(Sport.Cycling);
+            encoder.Write(session);
+        }
+
+        encoder.Close();
+        stream.Position = 0;
+        return stream;
     }
 }
