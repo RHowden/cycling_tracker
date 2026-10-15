@@ -1,12 +1,97 @@
 name: CI
-on: [push, pull_request]
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Cancel superseded runs on the same branch / PR
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
 jobs:
-  build:
+  backend:
+    name: .NET build and tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '10.0.x'
-      - run: dotnet restore CyclingTracker.Api/CyclingTracker.Api.csproj
-      - run: dotnet build CyclingTracker.Api/CyclingTracker.Api.csproj --no-restore
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj') }}
+          restore-keys: nuget-${{ runner.os }}-
+
+      # Whole solution, so the test projects are built too (not just the API)
+      - name: Restore
+        run: dotnet restore cycling-tracker.slnx
+
+      - name: Build
+        run: dotnet build cycling-tracker.slnx --no-restore -c Release
+
+      - name: Unit tests
+        run: >
+          dotnet test CyclingTracker.Api.UnitTests --no-build -c Release
+          --logger "trx;LogFileName=unit.trx" --results-directory TestResults
+
+      # The FIT parser tests live in their own project
+      - name: FIT parser tests
+        run: >
+          dotnet test FitFileParsing.Tests --no-build -c Release
+          --logger "trx;LogFileName=fitparser.trx" --results-directory TestResults
+
+      # Testcontainers starts Postgres in Docker; ubuntu-latest has Docker preinstalled
+      - name: Integration tests
+        run: >
+          dotnet test CyclingTracker.Api.IntegrationTests --no-build -c Release
+          --logger "trx;LogFileName=integration.trx" --results-directory TestResults
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dotnet-test-results
+          path: TestResults
+          if-no-files-found: ignore
+
+  frontend:
+    name: React build and tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: cycling-tracker-web
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22        # matches the Dockerfile
+          cache: npm
+          cache-dependency-path: cycling-tracker-web/package-lock.json
+
+      - run: npm ci
+
+      # "build" runs tsc -b first, so this is also the type check
+      - name: Type check and build
+        run: npm run build
+
+      - name: Tests
+        run: npm test
+
+  docker:
+    name: Docker image builds
+    runs-on: ubuntu-latest
+    needs: [backend, frontend]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build image (no push)
+        run: docker build -t cycling-tracker:ci .
