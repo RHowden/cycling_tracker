@@ -10,7 +10,7 @@ namespace CyclingTracker.Api.Controllers;
 [ApiController]
 [Authorize]
 [Route("api/[controller]")]
-public class ImportController(IFitImportService fitImportSessionService) : ControllerBase
+public class ImportController(IFitImportService fitImportService) : ControllerBase
 {
     [HttpPost("import")]
     [Consumes("multipart/form-data")]
@@ -29,7 +29,7 @@ public class ImportController(IFitImportService fitImportSessionService) : Contr
                 .ToActionResult(this);
         }
 
-        var result = await fitImportSessionService.ImportAsync(file, User.GetUserId());
+        var result = await fitImportService.ImportAsync(file, User.GetUserId());
 
         return result.ToActionResult(this, id => CreatedAtAction(
             nameof(SessionsController.GetSession),
