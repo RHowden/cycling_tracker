@@ -6,9 +6,9 @@ public record ActivityData(DateTime StartTime,
     int? AvgHr,
     int? AvgPower,
     float Distance,
-    SampleData? Samples = null);
+    Samples? Samples = null);
 
-public record SampleData(
+public record Samples(
     int[] Time,
     int?[] HeartRate,
     int?[] Power,

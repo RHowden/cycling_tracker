@@ -1,6 +1,4 @@
-using FitFileParsing;
-
-namespace CyclingTracker.Api.Services.FileImport;
+namespace FitFileParsing;
 
 public interface IFitFileParser
 {

@@ -1,4 +1,3 @@
-using CyclingTracker.Api.Dtos;
 using CyclingTracker.Api.Enums;
 using CyclingTracker.Api.Mappers;
 using CyclingTracker.Api.Models;
@@ -189,7 +188,7 @@ public class FitImportServiceTests(PostgresFixture pg) : DbTestBase(pg)
 public async Task ImportAsync_WithSamples_RoundTripsAllColumns()
 {
     var userId = await SeedAthleteAsync();
-    var samples = new FitFileParsing.SampleData(
+    var samples = new Samples(
         Time: [0, 1, 2, 300],
         HeartRate: [130, 131, null, 140],
         Power: [200, null, 210, 250],
@@ -213,7 +212,7 @@ public async Task ImportAsync_WithSamples_RoundTripsAllColumns()
 public async Task ImportAsync_NullEntriesInSamples_StayNullNotZero()
 {
     var userId = await SeedAthleteAsync();
-    var samples = new FitFileParsing.SampleData([0, 1, 2], [null, null, null], [200, null, 210], [null, null, null]);
+    var samples = new Samples([0, 1, 2], [null, null, null], [200, null, 210], [null, null, null]);
 
     await CreateSut(BuildActivity(StartTime, samples: samples)).ImportAsync(FakeFitFile(), userId);
 
@@ -244,7 +243,7 @@ public async Task ImportAsync_NoSamples_StoresNullSamples()
 public async Task ImportAsync_WithSamples_StoresThemAsJsonb()
 {
     var userId = await SeedAthleteAsync();
-    var samples = new FitFileParsing.SampleData([0, 1], [130, 131], [200, 210], [8.5, 8.75]);
+    var samples = new Samples([0, 1], [130, 131], [200, 210], [8.5, 8.75]);
 
     await CreateSut(BuildActivity(StartTime, samples: samples)).ImportAsync(FakeFitFile(), userId);
 
@@ -283,7 +282,7 @@ public async Task ImportAsync_WithSamples_StoresThemAsJsonb()
     }
 
     private static ActivityData BuildActivity(DateTime? start = null, string type = "Cycling",
-    int? avgHR = 155, int? avgPower = 250, FitFileParsing.SampleData? samples = null)
+    int? avgHR = 155, int? avgPower = 250, Samples? samples = null)
     {
         return new ActivityData(start ?? StartTime, type, 1800.0, avgHR, avgPower, 10000f, samples);
     }

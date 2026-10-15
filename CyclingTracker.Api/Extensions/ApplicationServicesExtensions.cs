@@ -1,8 +1,8 @@
-using CyclingTracker.Api.Services;
 using CyclingTracker.Api.Services.AthleteZones;
 using CyclingTracker.Api.Services.FileImport;
 using CyclingTracker.Api.Services.SessionDeletion;
 using CyclingTracker.Api.Services.SessionQuery;
+using FitFileParsing;
 
 namespace CyclingTracker.Api.Extensions;
 

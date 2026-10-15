@@ -1,3 +1,5 @@
+namespace CyclingTracker.Api.Models;
+
 public class SampleData
 {
     public int[] Time { get; set; } = [];

@@ -2,7 +2,7 @@
 
 namespace FitFileParsing;
 
-public class FitFileParser
+public class FitFileParser : IFitFileParser
 {
     public ActivityData Parse(Stream stream)
     {
@@ -50,7 +50,7 @@ public class FitFileParser
         return new ActivityData(startTime, sport.ToString(), duration, avgHr, avgPower, distance, samples);
     }
 
-    private static SampleData? BuildSamples(IReadOnlyList<RecordMesg> records)
+    private static Samples? BuildSamples(IReadOnlyList<RecordMesg> records)
     {
         // Records without a timestamp can't be placed on the time axis, so skip them.
         var timed = records
@@ -81,7 +81,7 @@ public class FitFileParser
 
 
 
-        return new SampleData(time, heartRate, power, speed);
+        return new Samples(time, heartRate, power, speed);
     }
 
     // FIT marks "no value" with the max value of the field's base type

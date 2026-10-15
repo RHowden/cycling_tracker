@@ -1,3 +1,5 @@
+namespace CyclingTracker.Api.Models;
+
 public enum SportType
 {
     Other = 0,

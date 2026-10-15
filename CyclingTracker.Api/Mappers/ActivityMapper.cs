@@ -35,7 +35,7 @@ public class ActivityMapper
         _ => DateTime.SpecifyKind(value, DateTimeKind.Utc) // Unspecified: assume UTC
     };
 
-     private static SampleData? ToSamples(FitFileParsing.SampleData? samples) =>
+     private static SampleData? ToSamples(Samples? samples) =>
         samples is null
             ? null
             : new SampleData
