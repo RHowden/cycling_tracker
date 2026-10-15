@@ -28,13 +28,13 @@ public static class AuthExtensions
                 return Task.CompletedTask;
             };
 
-            UseCrossSiteCookie(options.Cookie);
+            ConfigureCookie(options.Cookie);
         });
 
         foreach (var scheme in new[] { IdentityConstants.ExternalScheme, IdentityConstants.TwoFactorUserIdScheme })
         {
             services.Configure<CookieAuthenticationOptions>(scheme, options =>
-                UseCrossSiteCookie(options.Cookie));
+                ConfigureCookie(options.Cookie));
         }
 
         return services;
@@ -46,7 +46,7 @@ public static class AuthExtensions
         return endpoints;
     }
 
-    private static void UseCrossSiteCookie(CookieBuilder cookie)
+    private static void ConfigureCookie(CookieBuilder cookie)
     {
         cookie.SameSite = SameSiteMode.Lax;
         cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
