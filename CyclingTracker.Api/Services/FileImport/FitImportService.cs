@@ -15,19 +15,25 @@ public class FitImportService(AppDbContext db, IFitFileParser parser) : IFitImpo
     {
         await using var stream = fitFile.OpenReadStream();
 
-        ActivityData activity;
-        
-        try
+        // Expected failures come back as a FitParseResult. Anything the parser
+        // throws is a genuine bug and propagates, so it returns a 500.
+        var parse = parser.Parse(stream);
+
+        if (!parse.Succeeded)
         {
-            activity = parser.Parse(stream);
-        }
-        catch
-        {
-            return Result<Guid>.Failure(ServiceErrorType.ValidationError,
-             "The file could not be read as a FIT file.");
+            return parse.Error switch
+            {
+                FitParseError.NotAFitFile => Result<Guid>.Failure(
+                    ServiceErrorType.InvalidFile, "The file could not be read as a FIT file."),
+                FitParseError.NoSession => Result<Guid>.Failure(
+                    ServiceErrorType.InvalidFile, "The FIT file contains no session."),
+                FitParseError.MultipleSessions => Result<Guid>.Failure(
+                    ServiceErrorType.InvalidFile, "Multi-session FIT files aren't supported."),
+                _ => throw new InvalidOperationException($"Unhandled parse error {parse.Error}"),
+            };
         }
 
-        var session = new ActivityMapper().ToEntity(activity, userId);
+        var session = new ActivityMapper().ToEntity(parse.ActivityData, userId);
 
         db.Add(session);
         try
@@ -40,7 +46,7 @@ public class FitImportService(AppDbContext db, IFitFileParser parser) : IFitImpo
                 && pg.ConstraintName == "IX_Sessions_UserId_StartTimeUtc")
             {
                 return Result<Guid>.Failure(ServiceErrorType.Conflict,
-                 "A session with this start time has already been imported.");
+                    "A session with this start time has already been imported.");
             }
 
             if (pg.SqlState == PostgresErrorCodes.ForeignKeyViolation)
@@ -50,6 +56,7 @@ public class FitImportService(AppDbContext db, IFitFileParser parser) : IFitImpo
 
             throw;
         }
+
         return Result<Guid>.Success(session.Id);
     }
 }
