@@ -51,6 +51,8 @@ jobs:
 
       # Testcontainers starts Postgres in Docker; ubuntu-latest has Docker preinstalled
       - name: Integration tests
+        env:
+          ConnectionStrings__DefaultConnection: "Host=localhost;Database=ci;Username=postgres;Password=ci"
         run: >
           dotnet test CyclingTracker.Api.IntegrationTests --no-build -c Release
           --logger "trx;LogFileName=integration.trx" --results-directory TestResults
