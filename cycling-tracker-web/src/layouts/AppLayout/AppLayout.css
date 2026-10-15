@@ -1,4 +1,3 @@
-/* Layout Wrapper Grid */
 .app-layout-container {
   display: flex;
   height: 100vh;
@@ -6,15 +5,14 @@
   overflow: hidden;
 }
 
-/* Sidebar Styling */
 .app-sidebar {
   width: 260px;
-  background-color: #1e293b; /* Dark slate */
-  color: #f8fafc;
+  background-color: var(--dark-surface);
+  border-right: 1px solid var(--dark-border);
+  color: var(--dark-text);
   display: flex;
   flex-direction: column;
   padding: 1.5rem;
-  box-sizing: border-box;
 }
 
 .sidebar-logo {
@@ -29,33 +27,32 @@
 }
 
 .sidebar-link {
-  color: #cbd5e1;
+  color: var(--dark-text-muted);
   text-decoration: none;
   padding: 0.75rem 1rem;
   border-radius: var(--radius-md);
-  transition: background 0.2s;
+  transition: background 0.2s, color 0.2s;
 }
 
 .sidebar-link:hover {
-  background-color: #334155;
-  color: #ffffff;
+  background-color: var(--dark-surface-inset);
+  color: var(--accent);
 }
 
 .sign-out-button {
   margin-top: auto;
 }
 
-/* Main Content Area Styling */
 .app-main-wrapper {
   flex: 1;
   display: flex;
   flex-direction: column;
-  background-color: #f1f5f9; /* Light grey background */
+  background-color: var(--dark-bg);
   overflow: hidden;
 }
 
 .app-content-slot {
   flex: 1;
   padding: 2rem;
-  overflow-y: auto; /* Adds a scrollbar only to your page content if it overflows */
+  overflow-y: auto;
 }

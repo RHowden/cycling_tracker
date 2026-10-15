@@ -14,6 +14,17 @@ import { toDailyDurations } from '../../utils/toDailyDurations';
 
 import './SummaryChart.css'
 
+// Chart colours (Recharts takes these as props, so they can't come from CSS)
+const GRID = '#262c33';
+const AXIS_TEXT = '#7d8994';
+const BAR = '#9fe870';
+const TOOLTIP_STYLE = {
+    background: '#14181d',
+    border: '1px solid #262c33',
+    borderRadius: 6,
+    color: '#e7ebee',
+};
+
 interface SummaryChartProps {
     sessions: SessionIndex[];
 }
@@ -48,21 +59,22 @@ export function SummaryChart({ sessions }: SummaryChartProps) {
                 <div className="training-chart-wrapper-top">
                     <ResponsiveContainer>
                         <BarChart data={days} syncId="trainingTimeline" margin={{ top: 5, right: 5, left: -20, bottom: 5 }}>
-                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f3f4f6" />
+                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={GRID} />
                             <XAxis dataKey="date" hide />
                             <YAxis
-                                tick={{ fill: '#9ca3af', fontSize: 11 }}
+                                tick={{ fill: AXIS_TEXT, fontSize: 11 }}
                                 axisLine={false}
                                 tickLine={false}
                                 tickFormatter={(val) => `${Math.round(val / 60)}m`}
                             />
                             <Tooltip
-                                cursor={{ fill: '#f3f4f6', opacity: 0.6 }}
+                                cursor={{ fill: BAR, opacity: 0.08 }}
+                                contentStyle={TOOLTIP_STYLE}
                                 formatter={(value: any) => [`${(value / 60).toFixed(1)} Min`, 'Duration']}
                             />
                             <Bar
                                 dataKey="durationSeconds"
-                                fill="#9ca3af"
+                                fill={BAR}
                                 radius={[4, 4, 0, 0]}
                                 barSize={16}
                             />

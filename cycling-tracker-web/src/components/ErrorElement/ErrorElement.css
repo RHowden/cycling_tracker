@@ -2,13 +2,13 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 400px; /* adapts cleanly if nested */
+  min-height: 400px;
   padding: 2rem;
 }
 
 .error-boundary-card {
   max-width: 500px;
-  border: 1px solid var(--alert-error-border);
+  border-color: var(--alert-error-border);
   text-align: center;
 }
 
@@ -19,20 +19,20 @@
 }
 
 .prod-error-msg {
-  color: var(--slate-500);
+  color: var(--dark-text-muted);
 }
 
 .error-stack-trace {
-  background-color: var(--slate-50);
-  color: var(--red-500);
+  background-color: var(--dark-surface-inset);
+  color: var(--alert-error-text);
   padding: 1rem;
   border-radius: var(--radius-md);
-  font-family: monospace;
+  font-family: var(--font-mono);
   font-size: 0.85rem;
   text-align: left;
   overflow-x: auto;
   margin: 1.5rem 0;
-  border: 1px solid var(--slate-300);
+  border: 1px solid var(--dark-border-strong);
 }
 
 .error-actions {

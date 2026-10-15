@@ -12,6 +12,19 @@ import {
 import type { SessionSamples } from '../../api/schemas'; // adjust path
 import './SessionChart.css';
 
+// Chart colours (Recharts takes these as props, so they can't come from CSS)
+const GRID = '#262c33';
+const AXIS = '#7d8994';
+const POWER = '#9fe870';
+const HEART_RATE = '#ff8787';
+const TOOLTIP_STYLE = {
+    background: '#14181d',
+    border: '1px solid #262c33',
+    borderRadius: 6,
+    color: '#e7ebee',
+};
+const AXIS_TICK = { fill: AXIS, fontSize: 12 };
+
 function formatElapsed(seconds: number): string {
     const hrs = Math.floor(seconds / 3600);
     const mins = Math.floor((seconds % 3600) / 60);
@@ -46,12 +59,14 @@ export function SessionChart({ samples }: { samples: SessionSamples }) {
             <h2>Power &amp; Heart Rate</h2>
             <ResponsiveContainer width="100%" height={320}>
                 <LineChart data={data} margin={{ top: 8, right: 16, left: 0, bottom: 0 }}>
-                    <CartesianGrid strokeDasharray="3 3" />
+                    <CartesianGrid strokeDasharray="3 3" stroke={GRID} />
                     <XAxis
                         dataKey="time"
                         type="number"
                         domain={['dataMin', 'dataMax']}
                         tickFormatter={formatElapsed}
+                        stroke={AXIS}
+                        tick={AXIS_TICK}
                     />
                     {hasPower && (
                         <YAxis
@@ -59,6 +74,8 @@ export function SessionChart({ samples }: { samples: SessionSamples }) {
                             orientation="left"
                             unit=" W"
                             width={60}
+                            stroke={AXIS}
+                            tick={AXIS_TICK}
                         />
                     )}
                     {hasHeartRate && (
@@ -68,9 +85,14 @@ export function SessionChart({ samples }: { samples: SessionSamples }) {
                             unit=" bpm"
                             width={70}
                             domain={['dataMin - 5', 'dataMax + 5']}
+                            stroke={AXIS}
+                            tick={AXIS_TICK}
                         />
                     )}
-                    <Tooltip labelFormatter={(t) => formatElapsed(Number(t))} />
+                    <Tooltip
+                        contentStyle={TOOLTIP_STYLE}
+                        labelFormatter={(t) => formatElapsed(Number(t))}
+                    />
                     <Legend />
                     {hasPower && (
                         <Line
@@ -78,7 +100,7 @@ export function SessionChart({ samples }: { samples: SessionSamples }) {
                             type="monotone"
                             dataKey="power"
                             name="Power"
-                            stroke="#2563eb"
+                            stroke={POWER}
                             dot={false}
                             connectNulls={false}
                             isAnimationActive={false}
@@ -90,7 +112,7 @@ export function SessionChart({ samples }: { samples: SessionSamples }) {
                             type="monotone"
                             dataKey="heartRate"
                             name="Heart rate"
-                            stroke="#dc2626"
+                            stroke={HEART_RATE}
                             dot={false}
                             connectNulls={false}
                             isAnimationActive={false}

@@ -13,7 +13,6 @@
 .summary-table {
   width: 100%;
   border-collapse: collapse;
-  text-align: left;
   font-size: 0.9rem;
 }
 
@@ -21,14 +20,18 @@
   background-color: var(--dark-surface-inset);
   color: var(--dark-text-muted);
   font-weight: 600;
+  text-align: left;
   padding: 12px 16px;
   border-bottom: 2px solid var(--dark-border-strong);
+  white-space: nowrap;
 }
 
 .summary-table td {
   padding: 12px 16px;
+  text-align: left;
   border-bottom: 1px solid var(--dark-border);
   color: var(--dark-text);
+  white-space: nowrap;
 }
 
 .summary-table tbody tr:hover {
@@ -47,5 +50,5 @@
 
 .sport-tag {
   font-weight: 500;
-  color: #8884d8; /* matches the chart accent colour */
+  color: var(--accent);
 }

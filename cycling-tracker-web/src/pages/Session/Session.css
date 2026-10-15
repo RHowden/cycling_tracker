@@ -12,7 +12,7 @@
 
 .session-header h1 {
   font-size: 1.5rem;
-  color: var(--slate-800);
+  color: var(--dark-text);
   margin: 0;
 }
 
@@ -20,7 +20,6 @@
   margin-left: auto;
 }
 
-/* ─── Stats grid ─── */
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -29,10 +28,10 @@
 }
 
 .stat-box {
-  background-color: var(--slate-50);
+  background-color: var(--dark-surface-inset);
   padding: 1.25rem;
   border-radius: var(--radius-lg);
-  border: 1px solid var(--slate-200);
+  border: 1px solid var(--dark-border);
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -40,7 +39,7 @@
 
 .stat-label {
   font-size: 0.85rem;
-  color: var(--slate-500);
+  color: var(--dark-text-muted);
   text-transform: uppercase;
   font-weight: 600;
   letter-spacing: 0.05em;
@@ -48,6 +47,6 @@
 
 .stat-value {
   font-size: 1.25rem;
-  color: var(--slate-900);
+  color: var(--dark-text);
   font-weight: 700;
 }

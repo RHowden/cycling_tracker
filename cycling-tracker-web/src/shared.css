@@ -1,6 +1,6 @@
 /* Shared building blocks used by more than one page/component. */
 
-/* ─── Buttons (light app) ─── */
+/* ─── Buttons ─── */
 .btn {
   padding: 0.75rem 1.5rem;
   border: 1px solid transparent;
@@ -8,38 +8,39 @@
   font-weight: 600;
   font-size: 0.95rem;
   cursor: pointer;
-  transition: background-color 0.2s, color 0.2s;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
 }
 
 .btn-primary {
-  background-color: var(--blue-500);
-  color: #fff;
+  background-color: var(--accent);
+  color: var(--accent-contrast);
 }
 .btn-primary:hover:not(:disabled) {
-  background-color: var(--blue-600);
+  background-color: var(--accent-hover);
 }
 
 .btn-secondary {
-  background-color: #fff;
-  color: var(--slate-600);
-  border-color: var(--slate-300);
+  background-color: transparent;
+  color: var(--dark-text);
+  border-color: var(--dark-border-strong);
 }
 .btn-secondary:hover:not(:disabled) {
-  background-color: var(--slate-50);
-  color: var(--slate-800);
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 .btn-danger {
-  background-color: var(--red-500);
+  background-color: var(--danger);
   color: #fff;
 }
 .btn-danger:hover:not(:disabled) {
-  background-color: var(--red-600);
+  background-color: var(--danger-hover);
 }
 
-/* ─── Cards (light app) ─── */
+/* ─── Cards ─── */
 .card {
-  background-color: #fff;
+  background-color: var(--dark-surface);
+  border: 1px solid var(--dark-border);
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-card);
 }
@@ -47,7 +48,7 @@
   padding: 2.5rem;
 }
 
-/* ─── Alerts (light app): errors / success banners ─── */
+/* ─── Alerts: errors / success banners ─── */
 .alert {
   margin: 0 0 1rem;
   padding: 0.75rem 1rem;
@@ -61,6 +62,7 @@
 }
 .alert--success {
   background: var(--alert-success-bg);
+  border-color: var(--accent-soft);
   color: var(--alert-success-text);
 }
 .alert__title {
@@ -76,7 +78,7 @@
 .status-message {
   padding: 2rem;
   text-align: center;
-  color: var(--slate-500);
+  color: var(--dark-text-muted);
 }
 
 /* ─── Dark card + form controls (login, register, dashboard) ─── */

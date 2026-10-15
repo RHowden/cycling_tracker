@@ -1,28 +1,25 @@
-/* Core Layout Setup */
 .auth-layout-wrapper {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   width: 100vw;
-  background-color: #f8fafc; /* Light Slate background */
-  box-sizing: border-box;
+  background-color: var(--dark-bg);
 }
 
-/* ─── Horizontal Navbar Styles ─── */
 .auth-top-navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #ffffff;
+  background-color: var(--dark-surface);
   padding: 1rem 3rem;
-  border-bottom: 1px solid #e2e8f0;
-  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.05);
+  border-bottom: 1px solid var(--dark-border);
 }
 
 .auth-nav-logo {
+  font-family: var(--font-mono);
   font-weight: 700;
   font-size: 1.2rem;
-  color: #1e293b;
+  color: var(--accent);
 }
 
 .auth-nav-links {
@@ -32,34 +29,32 @@
 
 .auth-nav-link {
   text-decoration: none;
-  color: #64748b;
+  color: var(--dark-text-muted);
   font-weight: 600;
   font-size: 0.95rem;
   padding: 0.5rem 1rem;
   border-radius: var(--radius-md);
-  transition: all 0.2s ease;
+  transition: color 0.2s, background-color 0.2s;
 }
 
 .auth-nav-link:hover {
-  color: #1e293b;
-  background-color: #f1f5f9;
+  color: var(--accent);
+  background-color: var(--dark-surface-inset);
 }
 
-/* Custom Magic class provided automatically by React Router's <NavLink> */
 .auth-nav-link.active {
-  color: #ffffff;
-  background-color: #3b82f6; /* Beautiful Blue Highlight for the active tab */
+  color: var(--accent-contrast);
+  background-color: var(--accent);
 }
 
-/* ─── Page Content Frame Styles ─── */
+.auth-nav-link.hidden {
+  display: none;
+}
+
 .auth-page-body {
   flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 2rem;
-}
-
-.auth-nav-link.hidden {
-  display: none;
 }
