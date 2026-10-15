@@ -1,0 +1,157 @@
+/* Shared building blocks used by more than one page/component. */
+
+/* ─── Buttons (light app) ─── */
+.btn {
+  padding: 0.75rem 1.5rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.btn-primary {
+  background-color: var(--blue-500);
+  color: #fff;
+}
+.btn-primary:hover:not(:disabled) {
+  background-color: var(--blue-600);
+}
+
+.btn-secondary {
+  background-color: #fff;
+  color: var(--slate-600);
+  border-color: var(--slate-300);
+}
+.btn-secondary:hover:not(:disabled) {
+  background-color: var(--slate-50);
+  color: var(--slate-800);
+}
+
+.btn-danger {
+  background-color: var(--red-500);
+  color: #fff;
+}
+.btn-danger:hover:not(:disabled) {
+  background-color: var(--red-600);
+}
+
+/* ─── Cards (light app) ─── */
+.card {
+  background-color: #fff;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-card);
+}
+.card--padded {
+  padding: 2.5rem;
+}
+
+/* ─── Alerts (light app): errors / success banners ─── */
+.alert {
+  margin: 0 0 1rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius-lg);
+}
+.alert--error {
+  background: var(--alert-error-bg);
+  border-color: var(--alert-error-border);
+  color: var(--alert-error-text);
+}
+.alert--success {
+  background: var(--alert-success-bg);
+  color: var(--alert-success-text);
+}
+.alert__title {
+  margin: 0 0 0.25rem;
+  font-weight: 600;
+}
+.alert__list {
+  margin: 0 0 0.75rem;
+  padding-left: 1.25rem;
+}
+
+/* ─── Neutral loading / status text ─── */
+.status-message {
+  padding: 2rem;
+  text-align: center;
+  color: var(--slate-500);
+}
+
+/* ─── Dark card + form controls (login, register, dashboard) ─── */
+.dark-card {
+  margin: 0 auto;
+  padding: 32px 28px;
+  background: var(--dark-surface);
+  border: 1px solid var(--dark-border);
+  border-radius: var(--radius-md);
+  color: var(--dark-text);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.dark-card--narrow {
+  width: 320px;
+}
+
+.dark-card__title {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 15px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--dark-text-muted);
+}
+.form-field input {
+  background: var(--dark-surface-inset);
+  border: 1px solid var(--dark-border-strong);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  font-size: 14px;
+  color: var(--dark-text);
+  outline: none;
+}
+.form-field input:focus {
+  border-color: var(--accent);
+}
+
+.form-error {
+  margin: 0;
+  padding: 10px 12px 10px 28px;
+  background: var(--form-error-bg);
+  border: 1px solid var(--form-error-border);
+  border-radius: var(--radius-sm);
+  color: var(--form-error-text);
+  font-size: 13px;
+  line-height: 1.5;
+}
+.form-error li {
+  margin: 0;
+}
+
+.form-success {
+  margin: 0;
+  color: var(--accent);
+  font-size: 14px;
+}
+
+.btn-accent {
+  margin-top: 4px;
+  padding: 11px;
+  background: var(--accent);
+  color: var(--accent-contrast);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+}

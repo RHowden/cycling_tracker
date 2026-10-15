@@ -186,7 +186,7 @@ export function Zones() {
 
     if (loading) {
         return (
-            <div className="session-loading" role="status" aria-live="polite">
+            <div className="status-message" role="status" aria-live="polite">
                 <p>Loading zones…</p>
             </div>
         );
@@ -194,14 +194,14 @@ export function Zones() {
 
     if (error) {
         return (
-            <div className="session-error-container" role="alert">
-                <p className="error-title">Error loading zones:</p>
-                <ul className="error-list">
+            <div className="alert alert--error" role="alert">
+                <p className="alert__title">Error loading zones:</p>
+                <ul className="alert__list">
                     {error.map((msg, i) => (
                         <li key={i}>{msg}</li>
                     ))}
                 </ul>
-                <button className="btn-secondary" onClick={() => navigate('/dashboard')}>
+                <button className="btn btn-secondary" onClick={() => navigate('/dashboard')}>
                     Return to Dashboard
                 </button>
             </div>
@@ -210,9 +210,9 @@ export function Zones() {
 
     if (!data) {
         return (
-            <div className="session-error-container">
+            <div className="alert alert--error">
                 <p>No zones found.</p>
-                <button className="btn-secondary" onClick={() => navigate('/dashboard')}>
+                <button className="btn btn-secondary" onClick={() => navigate('/dashboard')}>
                     Return to Dashboard
                 </button>
             </div>
@@ -253,30 +253,30 @@ export function Zones() {
 
                 {editing ? (
                     <div className="zones-actions">
-                        <button key="cancel" type="button" className="btn-secondary" onClick={cancelEdit} disabled={saving}>
+                        <button key="cancel" type="button" className="btn btn-secondary" onClick={cancelEdit} disabled={saving}>
                             Cancel
                         </button>
-                        <button key="save" type="submit" className="btn-primary" disabled={!canSave}>
+                        <button key="save" type="submit" className="btn btn-primary" disabled={!canSave}>
                             {saving ? 'Saving…' : 'Save'}
                         </button>
                     </div>
                 ) : (
-                    <button key="edit" type="button" className="btn-primary" onClick={startEdit}>
+                    <button key="edit" type="button" className="btn btn-primary" onClick={startEdit}>
                         Edit
                     </button>
                 )}
             </header>
 
             {justSaved && !editing && (
-                <p className="zones-saved" role="status">
+                <p className="alert alert--success" role="status">
                     Zones saved.
                 </p>
             )}
 
             {saveError && (
-                <div className="zones-banner" role="alert">
-                    <p className="error-title">Couldn't save zones:</p>
-                    <ul className="error-list">
+                <div className="alert alert--error" role="alert">
+                    <p className="alert__title">Couldn't save zones:</p>
+                    <ul className="alert__list">
                         {saveError.map((msg, i) => (
                             <li key={i}>{msg}</li>
                         ))}

@@ -10,6 +10,7 @@ import {
     YAxis,
 } from 'recharts';
 import type { SessionSamples } from '../../api/schemas'; // adjust path
+import './SessionChart.css';
 
 function formatElapsed(seconds: number): string {
     const hrs = Math.floor(seconds / 3600);
@@ -41,7 +42,7 @@ export function SessionChart({ samples }: { samples: SessionSamples }) {
     }
 
     return (
-        <section className="session-card session-chart">
+        <section className="card card--padded session-chart">
             <h2>Power &amp; Heart Rate</h2>
             <ResponsiveContainer width="100%" height={320}>
                 <LineChart data={data} margin={{ top: 8, right: 16, left: 0, bottom: 0 }}>

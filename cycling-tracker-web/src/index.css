@@ -1,17 +1,62 @@
+/* Design tokens + base styles. Imported once from main.tsx. */
+:root {
+  /* Light app palette (slate) */
+  --slate-50: #f8fafc;
+  --slate-100: #f1f5f9;
+  --slate-200: #e2e8f0;
+  --slate-300: #cbd5e1;
+  --slate-500: #64748b;
+  --slate-600: #475569;
+  --slate-800: #1e293b;
+  --slate-900: #0f172a;
+  --blue-500: #3b82f6;
+  --blue-600: #2563eb;
+  --red-500: #ef4444;
+  --red-600: #dc2626;
+
+  /* Dark surfaces (login, register, dashboard) */
+  --dark-surface: #14181d;
+  --dark-surface-inset: #0e1114;
+  --dark-border: #262c33;
+  --dark-border-strong: #2b323a;
+  --dark-text: #e7ebee;
+  --dark-text-muted: #a7b0ba;
+  --dark-text-faint: #7d8994;
+  --accent: #9fe870;
+  --accent-contrast: #10140f;
+
+  /* Alerts */
+  --alert-error-bg: #fef2f2;
+  --alert-error-border: #fecaca;
+  --alert-error-text: #991b1b;
+  --alert-success-bg: #ecfdf5;
+  --alert-success-text: #065f46;
+  --form-error-bg: #241416;
+  --form-error-border: #4a2226;
+  --form-error-text: #ff8787;
+
+  /* Shape */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --shadow-card: 0 4px 6px -1px rgb(0 0 0 / 0.05);
+
+  /* Type */
+  --font-sans: system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
 * {
   box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  background: #0b0d0f;
-  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-family: var(--font-sans);
 }
 
-.page {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }

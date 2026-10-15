@@ -2,7 +2,6 @@ import { useActionState } from "react";
 import { register } from "../../api/auth";
 import { ApiError } from "../../api/apiErrors";
 import { useNavigate } from "react-router";
-import "./RegisterForm.css";
 
 export function RegisterForm() {
   const navigate = useNavigate();
@@ -34,10 +33,10 @@ export function RegisterForm() {
 
 
   return (
-    <form className="register-card" action={formAction}>
-      <h1 className="register-title">Create your account</h1>
+    <form className="dark-card dark-card--narrow" action={formAction}>
+      <h1 className="dark-card__title">Create your account</h1>
 
-      <label className="register-field">
+      <label className="form-field">
         <span>Email</span>
         <input
           type="email"
@@ -47,7 +46,7 @@ export function RegisterForm() {
         />
       </label>
 
-      <label className="register-field">
+      <label className="form-field">
         <span>Password</span>
         <input
           type="password"
@@ -59,14 +58,14 @@ export function RegisterForm() {
       </label>
 
       {state.error && (
-        <ul className="register-error">
+        <ul className="form-error">
           {state.error.map((msg) => (
             <li key={msg}>{msg}</li>
           ))}
         </ul>
       )}
 
-      <button type="submit" disabled={isPending}>
+      <button type="submit" className="btn-accent" disabled={isPending}>
         {isPending ? "Creating account…" : "Register"}
       </button>
     </form>

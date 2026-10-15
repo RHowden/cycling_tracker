@@ -37,7 +37,7 @@ export function AppLayout() {
           <Link to="/zones" className="sidebar-link">Zones</Link>
         </nav>
 
-        <button onClick={handleSignOut} className="sign-out-button">
+        <button onClick={handleSignOut} className="btn btn-danger sign-out-button">
           Sign Out
         </button>
       </aside>

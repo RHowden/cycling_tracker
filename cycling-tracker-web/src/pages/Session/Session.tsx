@@ -28,7 +28,7 @@ export function Session() {
 
     if (loading) {
         return (
-            <div className="session-loading" role="status" aria-live="polite">
+            <div className="status-message" role="status" aria-live="polite">
                 <p>Loading session details…</p>
             </div>
         );
@@ -36,14 +36,14 @@ export function Session() {
 
     if (error) {
         return (
-            <div className="session-error-container" role="alert">
-                <p className="error-title">Error loading session:</p>
-                <ul className="error-list">
+            <div className="alert alert--error" role="alert">
+                <p className="alert__title">Error loading session:</p>
+                <ul className="alert__list">
                     {error.map((msg, i) => (
                         <li key={i}>{msg}</li>
                     ))}
                 </ul>
-                <button className="btn-secondary" onClick={() => navigate('/dashboard')}>
+                <button className="btn btn-secondary" onClick={() => navigate('/dashboard')}>
                     Return to Dashboard
                 </button>
             </div>
@@ -52,9 +52,9 @@ export function Session() {
 
     if (!session) {
         return (
-            <div className="session-error-container">
+            <div className="alert alert--error">
                 <p>No session data found.</p>
-                <button className="btn-secondary" onClick={() => navigate('/dashboard')}>
+                <button className="btn btn-secondary" onClick={() => navigate('/dashboard')}>
                     Return to Dashboard
                 </button>
             </div>
@@ -102,19 +102,19 @@ export function Session() {
     return (
         <div className="session-detail-container">
             <header className="session-header">
-                {deleteError && <p className="error-text" style={{ color: 'red' }}>{deleteError}</p>}
+                {deleteError && <p className="alert alert--error" role="alert">{deleteError}</p>}
 
                 <h1>Session Details</h1>
                 <button
                     onClick={handleDelete}
                     disabled={isDeleting}
-                    className="delete-session-button"
+                    className="btn btn-danger"
                 >
                     {isDeleting ? 'Deleting...' : 'Delete Session'}
                 </button>
             </header>
 
-            <main className="session-card view-stats">
+            <main className="card card--padded">
                 <div className="stats-grid">
                     <div className="stat-box">
                         <span className="stat-label">Date & Time</span>

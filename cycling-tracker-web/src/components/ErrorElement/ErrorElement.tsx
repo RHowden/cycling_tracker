@@ -14,7 +14,7 @@ export function ErrorElement() {
 
   return (
     <div className="error-boundary-container">
-      <div className="error-boundary-card">
+      <div className="card card--padded error-boundary-card">
         <span className="error-icon">🛠️</span>
         <h1>System Derailment</h1>
         <p>Something went wrong while loading this page template.</p>
@@ -32,10 +32,10 @@ export function ErrorElement() {
         )}
 
         <div className="error-actions">
-          <button className="btn-secondary" onClick={() => navigate(-1)}>
+          <button className="btn btn-secondary" onClick={() => navigate(-1)}>
             ← Go Back
           </button>
-          <button className="btn-primary" onClick={() => window.location.reload()}>
+          <button className="btn btn-primary" onClick={() => window.location.reload()}>
             Retry Page
           </button>
         </div>

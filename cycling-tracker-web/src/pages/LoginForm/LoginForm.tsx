@@ -4,7 +4,6 @@ import { useLocation, useNavigate } from "react-router";
 import { ApiError } from "../../api/apiErrors";
 import { useAuth } from "../../components/AuthContext";
 
-import "./LoginForm.css";
 
 export function LoginForm() {
   const navigate = useNavigate();
@@ -37,14 +36,13 @@ export function LoginForm() {
 
   const location = useLocation();
   const justRegistered = location.state?.registered === true;
-  debugger
   return (
-    <form className="login-card" action={formAction}>
-      <h1 className="login-title">Log in</h1>
+    <form className="dark-card dark-card--narrow" action={formAction}>
+      <h1 className="dark-card__title">Log in</h1>
 
-      {justRegistered && <p className="login-title" role="status">Account created. Please log in.</p>}
+      {justRegistered && <p className="form-success" role="status">Account created. Please log in.</p>}
 
-      <label className="login-field">
+      <label className="form-field">
         <span>Email</span>
         <input
           type="email"
@@ -54,7 +52,7 @@ export function LoginForm() {
         />
       </label>
 
-      <label className="login-field">
+      <label className="form-field">
         <span>Password</span>
         <input
           type="password"
@@ -65,7 +63,7 @@ export function LoginForm() {
       </label>
 
       {state.error && (
-        <ul className="login-error">
+        <ul className="form-error">
 
           {state.error.map((msg) => (
             <li key={msg}>{msg}</li>
@@ -73,7 +71,7 @@ export function LoginForm() {
         </ul>
       )}
 
-      <button type="submit" disabled={isPending}>
+      <button type="submit" className="btn-accent" disabled={isPending}>
         {isPending ? "Logging in…" : "Log in"}
       </button>
     </form>
