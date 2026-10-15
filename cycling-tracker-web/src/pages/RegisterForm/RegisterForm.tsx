@@ -7,13 +7,13 @@ import "./RegisterForm.css";
 export function RegisterForm() {
   const navigate = useNavigate();
 
-  async function handleLoginAction(_: any, formData: FormData) {
+  async function handleRegisterAction(_: any, formData: FormData) {
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
 
     try {
       await register({ email, password });
-      navigate("/login");
+      navigate("/login", { state: { registered: true } });
 
       return { success: true, error: null };
     } catch (err: any) {
@@ -27,7 +27,7 @@ export function RegisterForm() {
 
   // 2. Pass the action to useActionState
   // It gives you: [the current state returned by the action, the trigger function, a built-in loading boolean]
-  const [state, formAction, isPending] = useActionState(handleLoginAction, {
+  const [state, formAction, isPending] = useActionState(handleRegisterAction, {
     success: false,
     error: null,
   });

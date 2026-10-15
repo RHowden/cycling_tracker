@@ -1,5 +1,5 @@
 import { useActionState } from "react";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 
 import { ApiError } from "../../api/apiErrors";
 import { useAuth } from "../../components/AuthContext";
@@ -35,9 +35,14 @@ export function LoginForm() {
     error: null,
   });
 
+  const location = useLocation();
+  const justRegistered = location.state?.registered === true;
+  debugger
   return (
     <form className="login-card" action={formAction}>
       <h1 className="login-title">Log in</h1>
+
+      {justRegistered && <p className="login-title" role="status">Account created. Please log in.</p>}
 
       <label className="login-field">
         <span>Email</span>
