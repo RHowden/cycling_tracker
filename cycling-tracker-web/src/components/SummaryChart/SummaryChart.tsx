@@ -25,6 +25,21 @@ const TOOLTIP_STYLE = {
     color: '#e7ebee',
 };
 
+// "2026-10-13" -> "13 Oct" (noon avoids any timezone/DST day shift)
+const formatDay = (iso: string) =>
+    new Date(`${iso}T12:00:00`).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+
+// 5400 -> "1.5h"
+const formatHours = (seconds: number) => `${Number((seconds / 3600).toFixed(1))}h`;
+
+// 5400 -> "1h 30m", 2700 -> "45m"
+const formatDuration = (seconds: number) => {
+    const totalMinutes = Math.round(seconds / 60);
+    const h = Math.floor(totalMinutes / 60);
+    const m = totalMinutes % 60;
+    return h > 0 ? `${h}h ${m}m` : `${m}m`;
+};
+
 interface SummaryChartProps {
     sessions: SessionIndex[];
 }
@@ -43,34 +58,34 @@ export function SummaryChart({ sessions }: SummaryChartProps) {
 
     return (
         <div className="training-chart">
-            {/* Header and Toggle Controls */}
-            <div className="training-chart-header">
-                <div>
-                    <h3 className="training-chart-title">Training Events Log</h3>
-                </div>
-            </div>
-
             {/* --- GRAPH 1: ANCHOR TIME DATA (STAYS FIXED) --- */}
             <div className="training-chart-graph-section">
                 <div className="training-chart-graph-header">
-                    <span className="training-chart-label-duration">Workout Duration</span>
-                    <span className="training-chart-label-unit">Second</span>
                 </div>
                 <div className="training-chart-wrapper-top">
                     <ResponsiveContainer>
                         <BarChart data={days} syncId="trainingTimeline" margin={{ top: 5, right: 5, left: -20, bottom: 5 }}>
                             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={GRID} />
-                            <XAxis dataKey="date" hide />
+                            <XAxis
+                                dataKey="date"
+                                tickFormatter={formatDay}
+                                tick={{ fill: AXIS_TEXT, fontSize: 11 }}
+                                axisLine={{ stroke: GRID }}
+                                tickLine={false}
+                                minTickGap={24}
+                            />
                             <YAxis
                                 tick={{ fill: AXIS_TEXT, fontSize: 11 }}
                                 axisLine={false}
                                 tickLine={false}
-                                tickFormatter={(val) => `${Math.round(val / 60)}m`}
+                                tickCount={4}
+                                tickFormatter={formatHours}
                             />
                             <Tooltip
                                 cursor={{ fill: BAR, opacity: 0.08 }}
                                 contentStyle={TOOLTIP_STYLE}
-                                formatter={(value: any) => [`${(value / 60).toFixed(1)} Min`, 'Duration']}
+                                labelFormatter={(label) => formatDay(label as string)}
+                                formatter={(value: any) => [formatDuration(Number(value)), 'Duration']}
                             />
                             <Bar
                                 dataKey="durationSeconds"
