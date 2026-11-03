@@ -1,40 +1,36 @@
 .zones-detail-container {
-  max-width: 720px;
+  max-width: 45rem;
   margin: 0 auto;
-  padding: 2rem 1.5rem;
+  padding: var(--space-6) var(--space-5);
 }
 
 .zones-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 1.5rem;
-}
+  margin-bottom: var(--space-5);
 
-.zones-header h1 {
-  margin: 0;
-  font-size: 1.75rem;
-  color: var(--dark-text);
+  h1 {
+    margin: 0;
+    font-size: var(--text-2xl);
+    color: var(--dark-text);
+  }
 }
 
 .zone-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fit, minmax(17.5rem, 1fr));
+  gap: var(--space-4);
 }
 
+/* Extends global .card instead of redefining it */
 .zone-card {
-  background: var(--dark-surface);
-  border: 1px solid var(--dark-border);
-  border-radius: var(--radius-xl);
-  padding: 1.25rem 1.5rem;
-  box-shadow: var(--shadow-card);
-}
+  padding: var(--space-4) var(--space-5);
 
-.zone-card h2 {
-  margin: 0 0 1rem;
-  font-size: 1.15rem;
-  color: var(--dark-text);
+  h2 {
+    margin: 0 0 var(--space-4);
+    font-size: var(--text-lg);
+  }
 }
 
 .zone-list {
@@ -45,28 +41,28 @@
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  padding: 0.6rem 0;
+  padding: var(--space-2) 0;
   border-top: 1px solid var(--dark-border);
-}
 
-.zone-row:first-child {
-  border-top: none;
-}
+  &:first-child {
+    border-top: none;
+  }
 
-.zone-row dt {
-  font-weight: 600;
-  color: var(--dark-text-muted);
-}
+  dt {
+    font-weight: 600;
+    color: var(--dark-text-muted);
+  }
 
-.zone-row dd {
-  margin: 0;
-  color: var(--dark-text);
-  font-variant-numeric: tabular-nums;
+  dd {
+    margin: 0;
+    color: var(--dark-text);
+    font-variant-numeric: tabular-nums;
+  }
 }
 
 .zones-actions {
   display: flex;
-  gap: 0.5rem;
+  gap: var(--space-2);
 }
 
 .zone-value {
@@ -76,31 +72,27 @@
 .zone-inline {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--space-2);
 }
 
+/* Contextual mini sizing on top of default framework input rules */
 .zone-input {
   width: 5rem;
-  padding: 0.3rem 0.5rem;
-  background: var(--dark-surface-inset);
-  border: 1px solid var(--dark-border-strong);
+  padding: var(--space-1) var(--space-2);
   border-radius: var(--radius-md);
-  color: var(--dark-text);
-  font: inherit;
   text-align: right;
-  outline: none;
-}
 
-.zone-input:focus {
-  border-color: var(--accent);
-}
+  &:focus {
+    border-color: var(--accent);
+  }
 
-.zone-input[aria-invalid="true"] {
-  border-color: var(--alert-error-text);
+  &[aria-invalid="true"] {
+    border-color: var(--alert-error-text);
+  }
 }
 
 .field-error {
-  margin: 0.25rem 0 0;
-  font-size: 0.85rem;
+  margin: var(--space-1) 0 0;
+  font-size: var(--text-sm);
   color: var(--alert-error-text);
 }

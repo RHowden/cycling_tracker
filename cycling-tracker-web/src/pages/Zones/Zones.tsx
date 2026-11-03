@@ -115,7 +115,7 @@ function ZoneSetCard({ setKey, title, unit, zones, draft, errors, disabled, onCh
     const zone2 = draft ? toInt(draft.zone2Max) : zones.zone2Max;
 
     return (
-        <section className="zone-card" aria-labelledby={headingId}>
+        <section className="card zone-card" aria-labelledby={headingId}>
             <h2 id={headingId}>{title}</h2>
             <dl className="zone-list">
                 <div className="zone-row">
