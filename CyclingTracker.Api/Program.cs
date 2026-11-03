@@ -45,6 +45,6 @@ app.MapControllers();
 
 // SPA fallback: serve index.html for client-side routes (/dashboard, /session/123),
 // but not for real files (nonfile) and not for /api/* (so unknown API paths get a real 404).
-app.MapFallbackToFile("{*path:nonfile:regex(^(?!api(/|$)).*$)}", "index.html");  
+app.MapFallbackToFile("{*path:nonfile:regex(^(?!api(/|$)).*$)}", "index.html");
 
 app.Run();
