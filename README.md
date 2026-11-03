@@ -67,13 +67,3 @@ npm run dev                               # front end, proxies to the API
 dotnet test
 cd cycling-tracker-web && npm test
 ```
-
-## Next
-
-- Apply the `from` / `to` date filters on the sessions endpoint
-- Real HTTP-to-database integration tests
-- More front end coverage
-
-## Licence
-
-[MIT / whichever you pick]
