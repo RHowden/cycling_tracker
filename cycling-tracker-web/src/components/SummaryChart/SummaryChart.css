@@ -1,21 +1,21 @@
 .training-chart-graph-section {
-  margin-bottom: 16px;
+  margin-bottom: var(--space-4);
 }
 
 .training-chart-graph-header {
   display: flex;
   justify-content: space-between;
-  padding: 0 10px;
-  margin-bottom: 6px;
+  padding: 0 var(--space-2);
+  margin-bottom: var(--space-1);
 }
 
 .training-chart-wrapper-top {
   width: 100%;
-  height: 160px;
+  height: 10rem;
 }
 
 .summary-chart__status {
-  padding: 1rem 0;
-  font-size: 14px;
+  padding: var(--space-4) 0;
+  font-size: var(--text-sm);
   color: var(--dark-text-muted);
 }

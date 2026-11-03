@@ -2,41 +2,37 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 400px;
-  padding: 2rem;
+  min-height: 25rem;
+  padding: var(--space-6);
 }
 
 .error-boundary-card {
-  max-width: 500px;
+  max-width: 31.25rem;
   border-color: var(--alert-error-border);
   text-align: center;
 }
 
 .error-icon {
-  font-size: 3.5rem;
+  font-size: var(--text-4xl);
   display: block;
-  margin-bottom: 1rem;
-}
-
-.prod-error-msg {
-  color: var(--dark-text-muted);
+  margin-bottom: var(--space-4);
 }
 
 .error-stack-trace {
   background-color: var(--dark-surface-inset);
   color: var(--alert-error-text);
-  padding: 1rem;
+  padding: var(--space-4);
   border-radius: var(--radius-md);
   font-family: var(--font-mono);
-  font-size: 0.85rem;
+  font-size: var(--text-sm);
   text-align: left;
   overflow-x: auto;
-  margin: 1.5rem 0;
+  margin: var(--space-5) 0;
   border: 1px solid var(--dark-border-strong);
 }
 
 .error-actions {
   display: flex;
   justify-content: center;
-  gap: 0.75rem;
+  gap: var(--space-3);
 }
