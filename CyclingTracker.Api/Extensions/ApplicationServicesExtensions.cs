@@ -1,3 +1,4 @@
+using CyclingTracker.Api.Services.AdHocSession;
 using CyclingTracker.Api.Services.AthleteZones;
 using CyclingTracker.Api.Services.FileImport;
 using CyclingTracker.Api.Services.SessionDeletion;
@@ -15,6 +16,7 @@ public static class ApplicationServicesExtensions
         services.AddScoped<ISessionQueryService, SessionQueryService>();
         services.AddScoped<ISessionDeletionService, SessionDeletionService>();
         services.AddScoped<IAthleteZonesService, AthleteZonesService>();
+        services.AddScoped<IAdHocSessionService, AdHocSessionService>();
 
         return services;
     }
