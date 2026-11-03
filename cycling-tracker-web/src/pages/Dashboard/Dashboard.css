@@ -1,4 +1,3 @@
-/* Dark table styles: the table lives inside .dark-card */
 .table-container {
   margin-top: 2rem;
   overflow-x: auto; /* keeps the table from breaking narrow screens */

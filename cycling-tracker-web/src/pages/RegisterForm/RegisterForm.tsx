@@ -33,8 +33,8 @@ export function RegisterForm() {
 
 
   return (
-    <form className="dark-card dark-card--narrow" action={formAction}>
-      <h1 className="dark-card__title">Create your account</h1>
+    <form className="card card--form-layout card--narrow" action={formAction}>
+      <h1 className="card__title">Create your account</h1>
 
       <label className="form-field">
         <span>Email</span>
@@ -65,7 +65,7 @@ export function RegisterForm() {
         </ul>
       )}
 
-      <button type="submit" className="btn-accent" disabled={isPending}>
+      <button type="submit" className="btn btn-primary btn-sharp" disabled={isPending}>
         {isPending ? "Creating account…" : "Register"}
       </button>
     </form>

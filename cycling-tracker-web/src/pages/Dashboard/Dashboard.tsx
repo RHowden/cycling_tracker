@@ -24,8 +24,8 @@ export function Dashboard() {
   const displaySessions = sessions.reverse();
 
   return (
-    <div className="dark-card">
-      <h1 className="dark-card__title">Dashboard</h1>
+    <div className="card card--form-layout">
+      <h1 className="card__title">Dashboard</h1>
       <SummaryChart sessions={sessions} />
 
       {/* 2. Top-Level Summary Table */}

@@ -37,8 +37,8 @@ export function LoginForm() {
   const location = useLocation();
   const justRegistered = location.state?.registered === true;
   return (
-    <form className="dark-card dark-card--narrow" action={formAction}>
-      <h1 className="dark-card__title">Log in</h1>
+    <form className="card card--form-layout card--narrow" action={formAction}>
+      <h1 className="card__title">Log in</h1>
 
       {justRegistered && <p className="form-success" role="status">Account created. Please log in.</p>}
 
@@ -71,7 +71,7 @@ export function LoginForm() {
         </ul>
       )}
 
-      <button type="submit" className="btn-accent" disabled={isPending}>
+      <button type="submit" className="btn btn-primary btn-sharp" disabled={isPending}>
         {isPending ? "Logging in…" : "Log in"}
       </button>
     </form>
