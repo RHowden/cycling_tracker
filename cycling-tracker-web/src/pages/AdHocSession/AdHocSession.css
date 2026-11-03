@@ -1,0 +1,32 @@
+form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4); /* Perfectly mimics the card--form-layout vertical spacing */
+}
+
+.form-row-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+  width: 100%;
+}
+
+.form-field select {
+  background: var(--dark-surface-inset);
+  border: 1px solid var(--dark-border-strong);
+  border-radius: var(--radius-sm);
+  padding: var(--space-3);
+  font-size: var(--text-md);
+  color: var(--dark-text);
+  outline: none;
+  transition: border-color 0.2s;
+  width: 100%;
+
+  &:focus-visible {
+    border-color: var(--accent);
+  }
+}
+
+.form-field input {
+  width: 100%;
+}
