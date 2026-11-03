@@ -1,7 +1,7 @@
 using CyclingTracker.Api.Data;
 using CyclingTracker.Api.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 
@@ -37,6 +37,10 @@ public static class AuthExtensions
             services.Configure<CookieAuthenticationOptions>(scheme, options =>
                 ConfigureCookie(options.Cookie));
         }
+
+        services.AddDataProtection()
+            .PersistKeysToDbContext<AppDbContext>()
+            .SetApplicationName("CyclingTracker");
 
         return services;
     }

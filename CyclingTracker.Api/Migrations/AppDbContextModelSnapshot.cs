@@ -17,7 +17,7 @@ namespace CyclingTracker.Api.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.10")
+                .HasAnnotation("ProductVersion", "10.0.14")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -125,6 +125,25 @@ namespace CyclingTracker.Api.Migrations
                         .IsUnique();
 
                     b.ToTable("Sessions");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.DataProtection.EntityFrameworkCore.DataProtectionKey", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("FriendlyName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Xml")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DataProtectionKeys");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
@@ -324,7 +343,7 @@ namespace CyclingTracker.Api.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("SampleData", "Samples", b1 =>
+                    b.OwnsOne("CyclingTracker.Api.Models.SampleData", "Samples", b1 =>
                         {
                             b1.Property<Guid>("SessionId");
 

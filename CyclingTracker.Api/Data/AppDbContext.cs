@@ -2,13 +2,15 @@ using CyclingTracker.Api.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 
 namespace CyclingTracker.Api.Data;
 
 public class AppDbContext(DbContextOptions<AppDbContext> options)
-    : IdentityDbContext<Athlete, IdentityRole<Guid>, Guid>(options)
+    : IdentityDbContext<Athlete, IdentityRole<Guid>, Guid>(options), IDataProtectionKeyContext
 {
 
+    public DbSet<DataProtectionKey> DataProtectionKeys { get; set; } = null!;
     public DbSet<Session> Sessions => Set<Session>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
