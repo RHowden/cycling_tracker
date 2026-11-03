@@ -36,6 +36,30 @@ export type SessionResponse = z.input<typeof SessionSchema>;
 export type Session = z.output<typeof SessionSchema>;
 export type SessionSamples = z.output<typeof SessionSamplesSchema>;
 
+export const SportTypeEnum = ['Other', 'Running', 'Cycling', 'Walking', 'Strength'] as const;
+
+export const CreateSessionSchema = z.object({
+  sport: z.enum(SportTypeEnum, { 
+    error: "Please select a valid sport type" 
+  }),
+  
+  startTime: z.date({
+    error: "A valid start date & time is required",
+  }),
+
+  durationSeconds: z.number({ error: "Duration is required" })
+    .int("Must be a whole number")
+    .min(1, "Duration must be at least 1 second")
+    .max(86400, "Duration cannot exceed 24 hours"),
+
+  avgHeartRate: z.number().int().min(30).max(250).nullable(),
+  avgPowerWatts: z.number().int().min(0).max(2500).nullable(),
+  distanceMetres: z.number().min(0).max(1000000).nullable(),
+});
+
+// Infer the client-side form type automatically
+export type CreateSessionDto = z.infer<typeof CreateSessionSchema>;
+
 const zoneSetSchema = z
   .object({
     zone1Max: z.number().int("Must be a whole number").positive("Must be greater than 0"),

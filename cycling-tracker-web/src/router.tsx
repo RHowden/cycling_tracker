@@ -13,6 +13,7 @@ import { Dashboard } from "./pages/Dashboard/Dashboard";
 import { Session } from "./pages/Session/Session";
 import { FitUpload } from "./pages/FileUpload/FitUpload.tsx";
 import { Zones } from "./pages/Zones/Zones.tsx";
+import { AdHocSession } from "./pages/AdHocSession/AdHocSession.tsx";
 
 import { NotFound } from './pages/NotFound/NotFound.tsx';
 
@@ -75,6 +76,17 @@ export const router = createBrowserRouter([
           {
             index: true,
             element: <Zones />,
+          },
+        ],
+      },
+      {
+        path: "/adhoc_session",
+        element: <AppLayout />,
+        errorElement: <ErrorElement />,
+        children: [
+          {
+            index: true,
+            element: <AdHocSession />,
           },
         ],
       }

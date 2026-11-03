@@ -34,6 +34,10 @@ export function AppLayout() {
         </nav>
 
         <nav className="sidebar-links">
+          <Link to="/adhoc_session" className="sidebar-link">New Session</Link>
+        </nav>
+
+        <nav className="sidebar-links">
           <Link to="/zones" className="sidebar-link">Zones</Link>
         </nav>
 
