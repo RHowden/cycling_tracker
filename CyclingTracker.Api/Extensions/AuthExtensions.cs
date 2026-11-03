@@ -2,6 +2,7 @@ using CyclingTracker.Api.Data;
 using CyclingTracker.Api.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 
 namespace CyclingTracker.Api.Extensions;
@@ -40,6 +41,26 @@ public static class AuthExtensions
         return services;
     }
 
+    /// <summary>
+    /// Azure's ingress terminates TLS, so the container only ever sees plain HTTP.
+    /// Without this, ASP.NET believes every request is insecure: Secure-policy cookies
+    /// lack the Secure flag and generated absolute URLs use http://.
+    /// Requires app.UseForwardedHeaders() as the first middleware.
+    /// Trusting any sender is safe here because the ingress is the only route into the
+    /// container; if it were exposed another way, clients could spoof these headers.
+    /// </summary>
+    public static IServiceCollection AddAzureForwardHeaders(this IServiceCollection services)
+    {
+        services.Configure<ForwardedHeadersOptions>(o =>
+        {
+            o.ForwardedHeaders = ForwardedHeaders.XForwardedProto;
+            o.KnownIPNetworks.Clear();
+            o.KnownProxies.Clear();
+        });
+
+        return services;
+    }
+
     public static IEndpointRouteBuilder MapAuthEndpoints(this IEndpointRouteBuilder endpoints)
     {
         endpoints.MapGroup("/api/auth").MapIdentityApi<Athlete>();
@@ -52,3 +73,4 @@ public static class AuthExtensions
         cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
     }
 }
+

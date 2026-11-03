@@ -7,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services
     .AddPersistence(builder.Configuration)
     .AddAuth()
+    .AddAzureForwardHeaders()
     .AddApplicationServices()
     .AddApiDocs()
     .AddErrorHandling();
@@ -14,6 +15,10 @@ builder.Services
 builder.Services.AddControllers();
 
 var app = builder.Build();
+
+// Required to allow Https detection to work when deployed to azure
+// See AddAzureForwardHeaders for more details
+app.UseForwardedHeaders();
 
 if (app.Configuration.GetValue<bool>("RunMigrations"))
 {
@@ -30,13 +35,6 @@ app.UseStaticFiles();
 if (app.Environment.IsDevelopment())
 {
     app.MapApiDocs();
-}
-else
-{
-    if (Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") != "true")
-    {
-        app.UseHttpsRedirection();
-    }
 }
 
 app.UseAuthentication();
