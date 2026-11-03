@@ -3,7 +3,7 @@ using CyclingTracker.Api.Models;
 using CyclingTracker.Api.Services.AthleteZones;
 using Microsoft.EntityFrameworkCore;
 
-namespace CyclingTracker.Api.IntegrationTest.Services;
+namespace CyclingTracker.Api.IntegrationTests.Services;
 
 [Collection("Postgres")]
 public class AthleteZonesServiceTests(PostgresFixture pg) : DbTestBase(pg)

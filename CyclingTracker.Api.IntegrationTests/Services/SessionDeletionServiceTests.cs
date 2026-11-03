@@ -1,11 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 
 using CyclingTracker.Api.Models;
-using CyclingTracker.Api.Services;
 using CyclingTracker.Api.Enums;
 using CyclingTracker.Api.Services.SessionDeletion;
 
-namespace CyclingTracker.Api.IntegrationTest.Services;
+namespace CyclingTracker.Api.IntegrationTests.Services;
 
 [Collection("Postgres")]
 public class SessionDeletionServiceTests(PostgresFixture pg) : DbTestBase(pg)

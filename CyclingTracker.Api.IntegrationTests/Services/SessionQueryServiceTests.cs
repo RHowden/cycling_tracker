@@ -1,7 +1,7 @@
 using CyclingTracker.Api.Models;
 using CyclingTracker.Api.Services.SessionQuery;
 
-namespace CyclingTracker.Api.IntegrationTest.Services;
+namespace CyclingTracker.Api.IntegrationTests.Services;
 
 [Collection("Postgres")]
 public class SessionQueryServiceTests(PostgresFixture pg) : DbTestBase(pg)
