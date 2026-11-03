@@ -1,58 +1,43 @@
+/* Main App Shell Layout - Handles dashboard frame, sticky sidebar, and scroll regions */
+
 .app-layout-container {
-  display: flex;
-  height: 100vh;
-  width: 100vw;
-  overflow: hidden;
+  /* Apply alongside .layout-fullscreen-shell in your React code */
+  overflow: hidden; /* Blocks global page scrolling so layout sub-slots can handle scroll rules */
 }
 
 .app-sidebar {
-  width: 260px;
+  width: 16.25rem; /* 260px equivalent */
   background-color: var(--dark-surface);
   border-right: 1px solid var(--dark-border);
-  color: var(--dark-text);
   display: flex;
   flex-direction: column;
-  padding: 1.5rem;
-}
+  padding: var(--space-5);
 
-.sidebar-logo {
-  margin-bottom: 2rem;
-  font-size: 1.1rem;
-}
+  .sidebar-logo-wrapper {
+    margin-bottom: var(--space-6);
+  }
 
-.sidebar-links {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
+  .sidebar-links {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
 
-.sidebar-link {
-  color: var(--dark-text-muted);
-  text-decoration: none;
-  padding: 0.75rem 1rem;
-  border-radius: var(--radius-md);
-  transition: background 0.2s, color 0.2s;
-}
-
-.sidebar-link:hover {
-  background-color: var(--dark-surface-inset);
-  color: var(--accent);
-}
-
-.sign-out-button {
-  margin-top: auto;
+  .sign-out-button {
+    margin-top: auto;
+    width: 100%;
+  }
 }
 
 .app-main-wrapper {
   flex: 1;
   display: flex;
   flex-direction: column;
-  background-color: var(--dark-bg);
   overflow: hidden;
 }
 
 .app-content-slot {
   flex: 1;
-  padding: 2rem;
+  padding: var(--space-6);
   overflow-y: auto;
 }

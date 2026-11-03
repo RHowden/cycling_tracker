@@ -162,3 +162,53 @@
   color: var(--accent);
   font-size: var(--text-md);
 }
+
+/* Unified Navigation Link Base */
+.nav-item-link {
+  text-decoration: none !important; /* Force removes the default underline */
+  color: var(--dark-text-muted);
+  font-weight: 600;
+  font-size: var(--text-md);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-md);
+  transition: color 0.2s, background-color 0.2s;
+  display: inline-block; /* Ensures padding registers correctly on <a> tags */
+}
+
+/* Fixes the default browser purple link color on hover and visited */
+.nav-item-link:visited {
+  color: var(--dark-text-muted);
+}
+
+.nav-item-link:hover {
+  background-color: var(--dark-surface-inset);
+  color: var(--accent);
+}
+
+/* Active State (Overrides base states cleanly) */
+.nav-item-link.active, 
+.nav-item-link.active:visited {
+  color: var(--accent-contrast);
+  background-color: var(--accent);
+}
+
+/* Hidden Utility State Fix */
+.nav-item-link.hidden {
+  display: none !important;
+}
+
+/* System Logo Pattern */
+.app-brand-logo {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: var(--text-lg);
+  color: var(--accent);
+  text-decoration: none;
+}
+
+/* Full View Screen Scaffolding Utility */
+.layout-fullscreen-shell {
+  display: flex;
+  height: 100%;
+  background-color: var(--dark-bg);
+}

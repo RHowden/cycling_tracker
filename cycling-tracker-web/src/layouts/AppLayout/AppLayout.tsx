@@ -18,7 +18,7 @@ export function AppLayout() {
   };
 
   return (
-    <div className="app-layout-container">
+    <div className="app-layout-container layout-fullscreen-shell">
       {/* ─── LEFT SIDEBAR ─── */}
       <aside className="app-sidebar">
         <div className="sidebar-logo">
@@ -26,19 +26,19 @@ export function AppLayout() {
         </div>
 
         <nav className="sidebar-links">
-          <Link to="/dashboard" className="sidebar-link">Dashboard</Link>
+          <Link to="/dashboard" className="sidebar-link nav-item-link">Dashboard</Link>
         </nav>
 
         <nav className="sidebar-links">
-          <Link to="/upload" className="sidebar-link">Upload</Link>
+          <Link to="/upload" className="sidebar-link nav-item-link">Upload</Link>
         </nav>
 
         <nav className="sidebar-links">
-          <Link to="/adhoc_session" className="sidebar-link">New Session</Link>
+          <Link to="/adhoc_session" className="sidebar-link nav-item-link">New Session</Link>
         </nav>
 
         <nav className="sidebar-links">
-          <Link to="/zones" className="sidebar-link">Zones</Link>
+          <Link to="/zones" className="sidebar-link nav-item-link">Zones</Link>
         </nav>
 
         <button onClick={handleSignOut} className="btn btn-danger sign-out-button">

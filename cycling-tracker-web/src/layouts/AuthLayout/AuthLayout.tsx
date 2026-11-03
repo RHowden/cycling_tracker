@@ -3,7 +3,7 @@ import "./AuthLayout.css";
 
 export default function AuthLayout() {
   return (
-    <div className="auth-layout-wrapper">
+    <div className="auth-layout-wrapper layout-fullscreen-shell">
       {/* ─── HORIZONTAL MENU BAR ─── */}
       <header className="auth-top-navbar">
         <div className="auth-nav-logo">
@@ -14,7 +14,7 @@ export default function AuthLayout() {
           <NavLink
             to="/login"
             className={({ isActive }) =>
-              isActive ? "auth-nav-link hidden" : "auth-nav-link"
+              isActive ? "nav-item-link hidden" : "nav-item-link"
             }
           >
             Log In
@@ -24,7 +24,7 @@ export default function AuthLayout() {
           <NavLink
             to="/register"
             className={({ isActive }) =>
-              isActive ? "auth-nav-link hidden" : "auth-nav-link"
+              isActive ? "nav-item-link hidden" : "nav-item-link"
             }
           >
             Register
