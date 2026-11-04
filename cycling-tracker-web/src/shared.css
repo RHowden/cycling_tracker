@@ -33,7 +33,7 @@
 
   &.btn-danger {
     background-color: var(--danger);
-    color: #fff;
+    color: var(--dark-text);
 
     &:hover:not(:disabled) {
       background-color: var(--danger-hover);
@@ -96,7 +96,7 @@
 
   &.alert--success {
     background: var(--alert-success-bg);
-    border-color: var(--accent-soft);
+    border-color: var(--alert-success-border);
     color: var(--alert-success-text);
   }
 }
@@ -165,19 +165,14 @@
 
 /* Unified Navigation Link Base */
 .nav-item-link {
-  text-decoration: none !important; /* Force removes the default underline */
+  text-decoration: none;
   color: var(--dark-text-muted);
   font-weight: 600;
   font-size: var(--text-md);
   padding: var(--space-2) var(--space-4);
   border-radius: var(--radius-md);
   transition: color 0.2s, background-color 0.2s;
-  display: inline-block; /* Ensures padding registers correctly on <a> tags */
-}
-
-/* Fixes the default browser purple link color on hover and visited */
-.nav-item-link:visited {
-  color: var(--dark-text-muted);
+  display: inline-block;
 }
 
 .nav-item-link:hover {
@@ -194,7 +189,7 @@
 
 /* Hidden Utility State Fix */
 .nav-item-link.hidden {
-  display: none !important;
+  display: none;
 }
 
 /* System Logo Pattern */

@@ -1,4 +1,4 @@
-import { Outlet, Link, useNavigate } from "react-router";
+import { Outlet, useNavigate, NavLink } from "react-router";
 
 import "./AppLayout.css";
 import { useAuth } from "../../components/AuthContext";
@@ -21,24 +21,15 @@ export function AppLayout() {
     <div className="app-layout-container layout-fullscreen-shell">
       {/* ─── LEFT SIDEBAR ─── */}
       <aside className="app-sidebar">
-        <div className="sidebar-logo">
+        <div className="sidebar-logo-wrapper app-brand-logo">
           <h2> Cycling Tracker</h2>
         </div>
 
         <nav className="sidebar-links">
-          <Link to="/dashboard" className="sidebar-link nav-item-link">Dashboard</Link>
-        </nav>
-
-        <nav className="sidebar-links">
-          <Link to="/upload" className="sidebar-link nav-item-link">Upload</Link>
-        </nav>
-
-        <nav className="sidebar-links">
-          <Link to="/adhoc_session" className="sidebar-link nav-item-link">New Session</Link>
-        </nav>
-
-        <nav className="sidebar-links">
-          <Link to="/zones" className="sidebar-link nav-item-link">Zones</Link>
+          <NavLink to="/dashboard" className="nav-item-link">Dashboard</NavLink>
+          <NavLink to="/upload" className="nav-item-link">Upload</NavLink>
+          <NavLink to="/adhoc_session" className="nav-item-link">New Session</NavLink>
+          <NavLink to="/zones" className="nav-item-link">Zones</NavLink>
         </nav>
 
         <button onClick={handleSignOut} className="btn btn-danger sign-out-button">

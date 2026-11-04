@@ -2,6 +2,8 @@
 
 .auth-layout-wrapper {
   flex-direction: column;
+  height: auto;
+  min-height: 100%;
 }
 
 .auth-top-navbar {

@@ -1,12 +1,11 @@
 /* Main App Shell Layout - Handles dashboard frame, sticky sidebar, and scroll regions */
 
 .app-layout-container {
-  /* Apply alongside .layout-fullscreen-shell in your React code */
   overflow: hidden; /* Blocks global page scrolling so layout sub-slots can handle scroll rules */
 }
 
 .app-sidebar {
-  width: 16.25rem; /* 260px equivalent */
+  width: 18rem; 
   background-color: var(--dark-surface);
   border-right: 1px solid var(--dark-border);
   display: flex;

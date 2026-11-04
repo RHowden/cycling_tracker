@@ -102,8 +102,6 @@ export function Session() {
     return (
         <div className="session-detail-container">
             <header className="session-header">
-                {deleteError && <p className="alert alert--error" role="alert">{deleteError}</p>}
-
                 <h1>Session Details</h1>
                 <button
                     onClick={handleDelete}
@@ -114,7 +112,18 @@ export function Session() {
                 </button>
             </header>
 
-            <main className="card card--padded">
+            {deleteError && (
+                <div className="alert alert--error" role="alert">
+                    <p className="alert__title">Couldn't delete session:</p>
+                    <ul className="alert__list">
+                        {deleteError.map((msg, i) => (
+                            <li key={i}>{msg}</li>
+                        ))}
+                    </ul>
+                </div>
+            )}
+
+            <div className="card card--padded">
                 <div className="stats-grid">
                     <div className="stat-box">
                         <span className="stat-label">Date & Time</span>
@@ -150,7 +159,7 @@ export function Session() {
                 </div>
 
                 {session.samples && <SessionChart samples={session.samples} />}
-            </main>
+            </div>
         </div>
     );
 }

@@ -27,6 +27,7 @@
   --alert-error-border: #4a2226;
   --alert-error-text: #ff8787;
   --alert-success-bg: var(--accent-soft);
+  --alert-success-border: rgb(159 232 112 / 0.3);
   --alert-success-text: var(--accent);
   --form-error-bg: var(--alert-error-bg);
   --form-error-border: var(--alert-error-border);

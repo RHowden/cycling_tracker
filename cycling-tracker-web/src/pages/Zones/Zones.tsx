@@ -72,28 +72,29 @@ interface ZoneInputProps {
 
 function ZoneInput({ id, label, value, error, disabled, onChange }: ZoneInputProps) {
     return (
-        <>
-            <input
-                id={id}
-                className="zone-input"
-                type="number"
-                inputMode="numeric"
-                min={1}
-                step={1}
-                aria-label={label}
-                aria-invalid={error ? true : undefined}
-                aria-describedby={error ? `${id}-error` : undefined}
-                value={value}
-                disabled={disabled}
-                onChange={(e) => onChange(e.target.value)}
-            />
-            {error && (
-                <p id={`${id}-error`} className="field-error">
-                    {error}
-                </p>
-            )}
-        </>
+        <input
+            id={id}
+            className="zone-input"
+            type="number"
+            inputMode="numeric"
+            min={1}
+            step={1}
+            aria-label={label}
+            aria-invalid={error ? true : undefined}
+            aria-describedby={error ? `${id}-error` : undefined}
+            value={value}
+            disabled={disabled}
+            onChange={(e) => onChange(e.target.value)}
+        />
     );
+}
+
+function FieldError({ id, message }: { id: string; message?: string }) {
+    return message ? (
+        <p id={`${id}-error`} className="field-error">
+            {message}
+        </p>
+    ) : null;
 }
 
 interface ZoneSetCardProps {
@@ -135,6 +136,7 @@ function ZoneSetCard({ setKey, title, unit, zones, draft, errors, disabled, onCh
                                     />{' '}
                                     {unit}
                                 </span>
+                                <FieldError id={`${setKey}-zone1Max`} message={errors?.zone1Max} />
                             </div>
                         ) : (
                             <>Up to {zone1} {unit}</>
@@ -159,6 +161,7 @@ function ZoneSetCard({ setKey, title, unit, zones, draft, errors, disabled, onCh
                                     />{' '}
                                     {unit}
                                 </span>
+                                <FieldError id={`${setKey}-zone2Max`} message={errors?.zone2Max} />
                             </div>
                         ) : (
                             <>{zones.zone1Max + 1} to {zones.zone2Max} {unit}</>

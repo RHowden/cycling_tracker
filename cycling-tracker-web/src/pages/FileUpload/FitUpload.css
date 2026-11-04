@@ -21,3 +21,23 @@
     color: var(--alert-error-text);
   }
 }
+
+.fit-upload__list {
+  margin: var(--space-4) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.fit-upload__item {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--dark-border);
+  font-size: var(--text-sm);
+  color: var(--dark-text-muted);
+}
+
+.fit-upload__item.is-done {
+  color: var(--accent);
+}

@@ -34,9 +34,7 @@ export default function AuthLayout() {
 
       {/* ─── CENTERED CONTENT WRAPPER ─── */}
       <main className="auth-page-body">
-        <div >
-          <Outlet />
-        </div>
+        <Outlet />
       </main>
     </div>
   );

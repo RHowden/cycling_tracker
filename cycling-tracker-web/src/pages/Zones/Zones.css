@@ -95,4 +95,6 @@
   margin: var(--space-1) 0 0;
   font-size: var(--text-sm);
   color: var(--alert-error-text);
+  max-width: 14rem; 
+  margin-left: auto;
 }
