@@ -40,3 +40,51 @@
   padding: var(--space-6);
   overflow-y: auto;
 }
+
+/* Mobile: sidebar becomes a top bar */
+@media (max-width: 48rem) {
+  .app-layout-container {
+    flex-direction: column;
+  }
+
+  .app-sidebar {
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2) var(--space-4);
+    padding: var(--space-3) var(--space-4);
+    border-right: none;
+    border-bottom: 1px solid var(--dark-border);
+  }
+
+  .sidebar-logo-wrapper {
+    margin: 0;
+  }
+
+  /* Row 2: the links, full width */
+  .app-sidebar .sidebar-links {
+    order: 3;
+    flex-basis: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+  }
+
+  .app-sidebar .nav-item-link {
+    padding: var(--space-2) var(--space-3);
+    font-size: var(--text-sm);
+  }
+
+  /* Row 1: logo on the left, Sign Out on the right */
+  .app-sidebar .sign-out-button {
+    order: 2;
+    width: auto;
+    margin: 0 0 0 auto;
+    padding: var(--space-2) var(--space-4);
+  }
+
+  .app-content-slot {
+    padding: var(--space-4);
+  }
+}

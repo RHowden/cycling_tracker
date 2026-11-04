@@ -21,7 +21,7 @@ export function Dashboard() {
     );
   }
 
-  const displaySessions = sessions.reverse();
+  const displaySessions = [...sessions].reverse();
 
   return (
     <div className="card card--form-layout">
