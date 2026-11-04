@@ -57,8 +57,6 @@ export const CreateSessionSchema = z.object({
   distanceMetres: z.number().min(0).max(1000000).nullable(),
 });
 
-// Infer the client-side form type automatically
-export type CreateSessionDto = z.infer<typeof CreateSessionSchema>;
 
 const zoneSetSchema = z
   .object({

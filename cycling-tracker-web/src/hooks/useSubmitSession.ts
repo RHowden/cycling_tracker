@@ -1,7 +1,7 @@
 import { useState, ChangeEvent } from "react";
 import { z } from "zod";
 import { apiRequestVoid } from "../api/client";
-import { CreateSessionSchema, SportTypeEnum, CreateSessionDto } from "../api/schemas";
+import { CreateSessionSchema, SportTypeEnum } from "../api/schemas";
 import { ApiError } from "../api/apiErrors";
 
 interface FormState {
